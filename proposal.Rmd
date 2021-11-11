@@ -27,6 +27,9 @@ We plan to show most of the results using tables and data visualization and a da
 
 
 ### Anticipated data sources
+In this project, we use data of Youth Risk Behavior Surveillance System (YRBSS) collected by Centers for Disease Control and Prevention (CDC). The YRBSS was developed in 1990 to monitor health behaviors that contribute markedly to the leading causes of death, disability, and social problems among youth and adults in the United States. The data are collected every two years, and the most up-to-date data were collected in 2019. We will use the data collected in 2019 on the state level.
+
+The dataset is so large that it exceeds the upload limit of github. Therefore, in order to download the dataset, you can use the code in `download_dataset.Rmd`.
 
 ### Planned Analyses, Visualizations and Coding Challenges
 

@@ -5,7 +5,7 @@ Proposal
 
 ### Group Member
 
-Xueqing Huang  
+Xueqing Huang (xh2470)  
 Kaiyu He  
 Yongzi Yu  
 Ruiqi Yan (ry2417)  
@@ -42,3 +42,13 @@ a dashboard which displaying some interactive plots about our results.
 ### Planned Analyses, Visualizations and Coding Challenges
 
 ### Planned timeline
+
+`November 1-13`:  
+Discuss project topic, find data sources, discuss final products and
+planned analyses, and write proposal document.  
+`November 14-20`:  
+Clean up the data based on variables we want to study.  
+`November 21-30`:  
+Analyze data and make plots based on cleaned dataset.  
+`December 1-11`:  
+Write reports and create a webpage for the project.

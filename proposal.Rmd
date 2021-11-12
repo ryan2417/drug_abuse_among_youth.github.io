@@ -22,10 +22,30 @@ According to WHO, the United States has the highest level of illegal drug use co
 Our next step was to examine which patterns are important for the policymakers to make problem-oriented strategies. The most conspicuous one is the drug use by the state. We also expect finding the patterns of different drug use to be helpful, such as average age, race, and gender of illegal drug use by the drug. Moreover, we learned an example of a case-control study from the Epidemiology course illustrating that drug use might be associated with other behaviors affecting personal health, so we would also develop our study to explore patterns in this area.\
 
 ### Intended Final Products
-Firstly, the project will work on the findings on the state level, showing the distribution of overall youth drug use in each state, as well as the trend of youth drug use rate among races, gender, and age in each state. We would like to find states with a high incidence of youth drug use and races that have a disproportionally high rate of youth drug use. Moreover, we are interested in the average age of initial marijuana use and the rate of initial marijuana use before age 13 of each race and gender group and see how it differ among states.\
-The second endpoint of the project is exploring the association between youth drug use and other health risk behaviors. We concern about whether the higher frequency of drug use is correlated with a higher rate of risky behaviors, such as driving after drinking, cell phone use while driving, wearing a seat belt when riding, carrying a weapon and physical fighting, or behaviors with potential health risk, such as early age sexual experience, suicide attempt, tobacco use, alcohol abuse, physical inactivity, underweight/overweight, video game addiction and suicide attempt.\
-Finally, we focus on the difference between marijuana use and other drug use and whether there is a significant risk behaviour difference between teenagers who use marijuana and those who use other drugs.
-We plan to show most of the results using tables and data visualization and a dashboard that displays some interactive plots about our results.\
+- Drug use among youth difference between states
+   - the distribution of overall youth drug use in each state
+   - the trend of youth drug use rate among races, gender, and age in each state. 
+   - find states with a high incidence of youth drug use
+   - find races that have a disproportional high rate of youth drug use  
+   - the average age of initial marijuana use and 
+   - the rate of initial marijuana use before age 13 of each race and gender group and see how it differ among states
+- The association between youth drug use and other health risk behaviors      
+  - the correlation between drug use and the rate of risky behaviors such as:
+    - driving after drinking
+    - cell phone use while driving
+    - wearing a seat belt when riding
+    - carrying a weapon and physical fighting, 
+  - the relationship between drug use and the rate of health related variables, such as
+    - early age sexual experience
+    - suicide attempt
+    - tobacco use
+    - alcohol abuse
+    - physical inactivity
+    - underweight/overweight
+    - video game addiction
+- The difference between marijuana use and other drug use
+  - whether rate of other drug use differs on different frequency of marijuana use 
+  - any significant difference of risky behaviors between teenagers who use marijuana and teenagers who use other drugs
 
 
 ### Anticipated data sources

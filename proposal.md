@@ -9,8 +9,30 @@ Xueqing Huang (xh2470)
 Kaiyu He (kh3074)  
 Yongzi Yu  
 Ruiqi Yan (ry2417)  
+Hao Xu (hx2328)  
 
 ### Motivation
+
+According to WHO, the United States has the highest level of illegal
+drug use compared with other countries in 2019. The two most commonly
+used illicit drugs are marijuana and opioids. Overall drug use was also
+reported to be on the rise. The NSDUH survey in 2019 indicated that
+20.8% of people aged 12 and over had illicit drug use, which is a
+notable increase from 2015 *(Buddy, T. 2021)* . Illegal drug abuse is
+more important to be prevented among the youth, since drugs are more
+harmful to them, such as affecting the growth of brains, impairing
+memories and concentration. Thus, we would like to study the drug use
+abuse among youth to detect some patterns, which would be useful for
+policymakers to develop strategies with explicit targets, and thus
+achieve the most effective results.  
+Our next step was to examine which patterns are important for the
+policymakers to make problem-oriented strategies. The most conspicuous
+one is the drug use by the state. We also expect finding the patterns of
+different drug use to be helpful, such as average age, race, and gender
+of illegal drug use by the drug. Moreover, we learned an example of a
+case-control study from the Epidemiology course illustrating that drug
+use might be associated with other behaviors affecting personal health,
+so we would also develop our study to explore patterns in this area.  
 
 ### Intended Final Products
 
@@ -97,3 +119,9 @@ Clean up the data based on variables we want to study.
 Analyze data and make plots based on cleaned dataset.  
 `December 1-11`:  
 Write reports and create a webpage for the project.
+
+### Reference
+
+Buddy, T. 2021. *U.S. Has High Levels of Illegal Drug Use*. Retrieved
+from
+<https://www.verywellmind.com/us-has-highest-levels-of-illegal-drug-use-67909>

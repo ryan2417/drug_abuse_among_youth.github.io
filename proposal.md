@@ -6,7 +6,7 @@ Proposal
 ### Group Member
 
 Xueqing Huang (xh2470)  
-Kaiyu He  
+Kaiyu He (kh3074)  
 Yongzi Yu  
 Ruiqi Yan (ry2417)  
 
@@ -53,6 +53,38 @@ Therefore, in order to download the dataset, you can use the code in
 `download_dataset.Rmd`.
 
 ### Planned Analyses, Visualizations and Coding Challenges
+
+-   Planned Analyses: As is stated in the *Intended Final Products*, we
+    plan to analyze the distribution of overall youth drug use in each
+    state, exploring the association between youth drug use and other
+    health risk behaviors as well as the difference between marijuana
+    use and other drug use.
+
+-   Visualizations: Plots are dependent on our planned analyses. For the
+    first question, density plot and histogram including drug use
+    proportion, age, state should clearly show the distribution of
+    overall youth drug use in each state. For the second question, we
+    need a *m* × *n*(m different drugs, n different behaviors) panel
+    plot to show the relationship between different drug use and
+    behaviors. Finally, we need pairwise plots of different combinations
+    of drug types to declare the interaction of drug use.
+
+-   Coding Challenges:
+
+    -   The answers collected each year is different because questions
+        have different serial number and content. To handle this we need
+        to adjust our data set specifically according to year. Not a
+        simple function or iteration can solve this.  
+    -   There are tons of missing values in the data set, simply
+        dropping them will cause a huge bias. We need to come up with
+        different ways to deal with the missing value according to
+        specific variables and our outcomes.
+    -   The data set is huge (1.48GB). Some of our teammates’ laptops
+        will stuck if the code is not efficient. And we don’t have
+        enough experience in improving code efficiency.  
+    -   There are many variables included in our final product. We need
+        to show as much information as we can and make our plot as clear
+        as possible to readers at the same time.
 
 ### Planned timeline
 

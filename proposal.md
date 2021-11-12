@@ -122,6 +122,8 @@ Write reports and create a webpage for the project.
 
 ### Reference
 
-Buddy, T. 2021. *U.S. Has High Levels of Illegal Drug Use*. Retrieved
-from
-<https://www.verywellmind.com/us-has-highest-levels-of-illegal-drug-use-67909>
+1.  Buddy, T. 2021. *U.S. Has High Levels of Illegal Drug Use*.
+    Retrieved from
+    <https://www.verywellmind.com/us-has-highest-levels-of-illegal-drug-use-67909>
+
+2.  <https://www.cdc.gov/healthyyouth/data/yrbs/data.htm>

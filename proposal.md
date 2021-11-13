@@ -63,12 +63,15 @@ dashboard that displays some interactive plots about our results.
 
 In this project, we use data of Youth Risk Behavior Surveillance System
 (YRBSS) collected by Centers for Disease Control and Prevention (CDC).
-The YRBSS was developed in 1990 to monitor health behaviors that
-contribute markedly to the leading causes of death, disability, and
-social problems among youth and adults in the United States. The data
-are collected every two years, and the most up-to-date data were
-collected in 2019. We will use the data collected in 2019 on the state
-level.
+YRBSS was established in 1990 to monitor health behaviors among U.S.
+adolescents and adults that are leading causes of death, disability, and
+social problems. Information about YRBSS can be found at [*Youth Risk
+Behavior Surveillance System (YRBSS)
+Overview*](https://www.cdc.gov/healthyyouth/data/yrbs/overview.htm).
+Among six categories of health-related behaviors that YRBSS monitors, we
+mainly focus on drug use abuse among youth. The YRBSS data are collected
+every two years, and the most up-to-date data were collected in 2019. We
+will use the data collected in 2019 on the state level.
 
 The dataset is so large that it exceeds the upload limit of github.
 Therefore, in order to download the dataset, you can use the code in
@@ -126,4 +129,9 @@ Write reports and create a webpage for the project.
     Retrieved from
     <https://www.verywellmind.com/us-has-highest-levels-of-illegal-drug-use-67909>
 
-2.  <https://www.cdc.gov/healthyyouth/data/yrbs/data.htm>
+2.  *Youth Risk Behavior Surveillance System (YRBSS) Overview*.
+    Retrieved from
+    <https://www.cdc.gov/healthyyouth/data/yrbs/overview.htm>
+
+3.  *Analyze Survey Data for Free*. Retrieved from
+    <http://asdfree.com/youth-risk-behavior-surveillance-system-yrbss.html#analysis-examples-with-the-survey-library-45>

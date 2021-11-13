@@ -7,7 +7,7 @@ Proposal
 
 Xueqing Huang (xh2470)  
 Kaiyu He (kh3074)  
-Yongzi Yu  
+Yongzi Yu (yy3103)  
 Ruiqi Yan (ry2417)  
 Hao Xu (hx2328)  
 

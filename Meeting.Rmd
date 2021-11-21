@@ -1,6 +1,6 @@
 ---
 title: "Data"
-output: html_document
+output: github_document
 ---
 
 #### 1 个人体征  
@@ -102,8 +102,6 @@ output: html_document
 4，State + Proportion + drug type (side by side bar chart)只分大麻和其他两种毒品  
 5，State + 大麻初体验average (年龄越早颜色越深)
 
-
-
 ### 问题：2 Analysis over behavior  
 ##### 1，三线图  
 自变量：吸所有的毒品frequency。  
@@ -121,5 +119,21 @@ output: html_document
 
 待定
 
+# Data Tidy
+### 1，自变量清理
+所有的毒品找到对应的问题序列，命名为统一的列名 (均为life time)
+1，marijuana_age 
+2, marijuana 
+3, pain_medicine
+4, cocaine
+5, inhalants
+6, heroin
+7, methamphetamines 
+8, ecstasy
+9, steroid
+10,inject_drug
+
+### 2, 因变量清理
+按照自己划分的问题清理
 
 

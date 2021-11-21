@@ -1,0 +1,74 @@
+---
+title: "Data tidy"
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+library(survey)
+```
+
+```{r}
+yrbss_state_a <- readRDS("data/2019 states a-m.rds")
+yrbss_state_z <- readRDS("data/2019 states n-z.rds")
+yrbss_state = rbind(yrbss_state_a,yrbss_state_z)
+yrbss_state
+```
+
+
+```{r}
+mar_use_situation = 
+  yrbss_state%>%
+  filter(year == 2019)%>%
+  select(sitecode:sexpart2,q45:q57)%>%
+  select(-q46,-q47)
+mar_use_situation%>%
+  
+```
+
+
+```{r}
+library(patchwork)
+mar_use_situation = 
+  yrbss_state%>%
+  filter(year == 2019)%>%
+  select(sitecode:sexpart2,q45:q57)%>%
+  select(-q46,-q47)
+  mutate(sex = recode(sex,'1'='female','2'='male'))%>%
+  mutate(q45=case_when(q45==1~'used mar',q45!=1~'not used mar'))%>%
+  mutate(q48=case_when(q48==1~0,q48!=1~1))%>%
+  mutate(q49=case_when(q49==1~0,q49!=1~1))%>%
+  mutate(q50=case_when(q50==1~0,q50!=1~1))%>%
+  mutate(q51=case_when(q51==1~0,q51!=1~1))%>%
+  mutate(q52=case_when(q52==1~0,q52!=1~1))%>%
+  mutate(q53=case_when(q53==1~0,q53!=1~1))%>%
+  mutate(q54=case_when(q54==1~0,q54!=1~1))%>%
+  mutate(q55=case_when(q55==1~0,q55!=1~1))%>%
+  mutate(q56=case_when(q56==1~0,q56!=1~1))
+
+mar_use_situation%>%
+  select(sitename,q45:q56)%>%
+  group_by(q45)%>%
+  summarize(otherdrugs = q49+q50+q51+q52+q53+q54+q55+q56)%>%
+  group_by(q45,otherdrugs)%>%
+  summarize(n_orbs=n())%>%
+  remove_missing()%>%
+  group_by(q45)%>%
+  mutate(proportation = n_orbs/sum(n_orbs))%>%
+  ggplot(aes(x = otherdrugs,y = proportation,color = q45))+
+  geom_point()+
+  geom_line()+
+  ylab('number of students')+
+  xlab('number of drugs have taked')
+
+mar_use_situation%>%
+  select(sitename,q45:q56)%>%
+  group_by(q45)%>%
+  summarize(otherdrugs = q49+q50+q51+q52+q53+q54+q55+q56)%>%
+  group_by(q45,otherdrugs)%>%
+  summarize(n_orbs=n())%>%
+  remove_missing()%>%
+  filter(otherdrugs==1)
+
+```
+

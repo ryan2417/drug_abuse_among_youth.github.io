@@ -12,6 +12,7 @@ library(survey)
 yrbss_state_a <- readRDS("data/2019 states a-m.rds")
 yrbss_state_z <- readRDS("data/2019 states n-z.rds")
 yrbss_state = rbind(yrbss_state_a,yrbss_state_z)
+yrbss_state = as_tibble(yrbss_state)
 yrbss_state
 ```
 
@@ -45,7 +46,7 @@ yrbss_state
 
 ### 17～19
 ```{r}
-
+yrbss_state
 ```
 
 

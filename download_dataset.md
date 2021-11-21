@@ -2,7 +2,8 @@ Download\_dataset
 ================
 
 This is the file that you can use to download the dataset we use to your
-local computer.
+local computer. For more information, you can refer to *Analyze Survey
+Data for Free* which is listed as the third reference in `proposal.Rmd`.
 
 ``` r
 library(lodown)

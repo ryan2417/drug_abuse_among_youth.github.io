@@ -1,0 +1,182 @@
+---
+title: "Data tidy"
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+library(survey)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  include = FALSE
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d(option = "viridis")
+scale_fill_discrete = scale_fill_viridis_d(option = "viridis")
+```
+
+```{r}
+yrbss_state_a <- readRDS("data/2019 states a-m.rds")
+yrbss_state_z <- readRDS("data/2019 states n-z.rds")
+yrbss_state = rbind(yrbss_state_a,yrbss_state_z)
+yrbss_state = as_tibble(yrbss_state)
+```
+
+### 01～03
+```{r}
+yrbss_state
+```
+
+
+
+### 05～07
+```{r}
+yrbss_state
+```
+
+
+
+### 09～11
+```{r}
+yrbss_state_2009 <-
+  yrbss_state %>% 
+  filter(year == 2009) %>% 
+  mutate(
+    age_marijuana = q46,
+    marijuana = q45,
+    cocaine = q49,
+    inhalants = q51,
+    heroin = q52,
+    methamphetamines = q53,
+    ecstasy = q54,
+    steroid = q55,
+    inject_drug = q56
+      ) %>% 
+  relocate(
+    sitecode,
+    age,
+    sex,
+    race7,
+    age_marijuana,
+    marijuana,
+    cocaine,
+    inhalants,
+    heroin,
+    methamphetamines,
+    ecstasy,
+    steroid,
+    inject_drug
+  )
+yrbss_state_2009 %>% drop_na(sex)
+yrbss_state_2011 <-
+  yrbss_state %>% 
+  filter(year == 2011) %>% 
+  mutate(
+    age_marijuana = q47,
+    marijuana = q46,
+    cocaine = q50,
+    inhalants = q52,
+    heroin = q53,
+    methamphetamines =  q54,
+    ecstasy = q55,
+    steroid = q56,
+    inject_drug = q58
+    ) %>% 
+  relocate(
+    sitecode,
+    age,
+    sex,
+    race7,
+    age_marijuana,
+    marijuana,
+    cocaine,
+    inhalants,
+    heroin,
+    methamphetamines,
+    ecstasy,
+    steroid,
+    inject_drug
+  )
+```
+
+
+
+### 13～15
+```{r}
+yrbss_state
+```
+
+
+
+### 17～19
+```{r}
+yrbss_state
+```
+
+```{r}
+drug_use_tidy <- function(input_list){
+  output <- case_when(input_list == 1 ~ 0,
+                      input_list == 2 ~ 1.5,
+                      input_list == 3 ~ 6,
+                      input_list == 4 ~ 14.5,
+                      input_list == 5 ~ 29.5,
+                      input_list > 5 ~ 40)
+  return(output)
+}
+drug_use_frequency <- function(input_list){
+  output <- case_when(input_list == 0 ~ 0,
+                      input_list > 0 & input_list < 40 ~ 1,
+                      input_list > 40 ~ 2)
+} 
+
+```
+
+```{r}
+yrbss_state_2019_tidy <-
+  yrbss_state %>% 
+  filter(year == 2019) %>% 
+  mutate(
+    age_marijuana = case_when(
+                              q46 == 1 ~ NA_real_,
+                              q46 == 2 ~ 8,
+                              q46 == 3 ~ 9.5,
+                              q46 == 4 ~ 11.5,
+                              q46 == 5 ~ 13.5,
+                              q46 == 6 ~ 15.5,
+                              q46 == 7 ~ 17.5),
+    marijuana = drug_use_tidy(q45),
+    cocaine = drug_use_tidy(q50),
+    prescription = drug_use_tidy(q49),
+    inhale = drug_use_tidy(q51),
+    heroin = drug_use_tidy(q52),
+    methamphetamine = drug_use_tidy(q53),
+    ecstasy = drug_use_tidy(q54),
+    steroid = drug_use_tidy(q55),
+    illegal_injection = case_when(q56 == 1 ~ 0,
+                                  q56 == 2 ~ 20,
+                                  q56 == 3 ~ 40),
+    drug_use_sum = rowSums(across(marijuana:illegal_injection)),
+    drug_use_freq = drug_use_frequency(drug_use_sum),
+    marijuana_use_freq = drug_use_frequency(marijuana),
+    cocaine_use_freq = drug_use_frequency(cocaine),
+    prescription_use_freq = drug_use_frequency(prescription),
+    inhale_use_freq = drug_use_frequency(inhale),
+    heroin_use_freq = drug_use_frequency(heroin),
+    methamphetamine_use_freq = drug_use_frequency(methamphetamine),
+    ecstasy_use_freq = drug_use_frequency(ecstasy),
+    steroid_use_freq = drug_use_frequency(steroid),
+    illegal_injection_use_freq = drug_use_frequency(illegal_injection)
+  ) %>% 
+  select(age_marijuana:illegal_injection_use_freq)
+```
+
+
+

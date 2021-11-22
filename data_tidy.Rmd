@@ -46,65 +46,7 @@ yrbss_state
 
 ### 09～11
 ```{r}
-yrbss_state_2009 <-
-  yrbss_state %>% 
-  filter(year == 2009) %>% 
-  mutate(
-    age_marijuana = q46,
-    marijuana = q45,
-    cocaine = q49,
-    inhalants = q51,
-    heroin = q52,
-    methamphetamines = q53,
-    ecstasy = q54,
-    steroid = q55,
-    inject_drug = q56
-      ) %>% 
-  relocate(
-    sitecode,
-    age,
-    sex,
-    race7,
-    age_marijuana,
-    marijuana,
-    cocaine,
-    inhalants,
-    heroin,
-    methamphetamines,
-    ecstasy,
-    steroid,
-    inject_drug
-  )
-yrbss_state_2009 %>% drop_na(sex)
-yrbss_state_2011 <-
-  yrbss_state %>% 
-  filter(year == 2011) %>% 
-  mutate(
-    age_marijuana = q47,
-    marijuana = q46,
-    cocaine = q50,
-    inhalants = q52,
-    heroin = q53,
-    methamphetamines =  q54,
-    ecstasy = q55,
-    steroid = q56,
-    inject_drug = q58
-    ) %>% 
-  relocate(
-    sitecode,
-    age,
-    sex,
-    race7,
-    age_marijuana,
-    marijuana,
-    cocaine,
-    inhalants,
-    heroin,
-    methamphetamines,
-    ecstasy,
-    steroid,
-    inject_drug
-  )
+
 ```
 
 
@@ -180,7 +122,7 @@ yrbss_state_2019_tidy <-
     ecstasy_use_freq = drug_use_frequency(ecstasy),
     steroid_use_freq = drug_use_frequency(steroid),
     illegal_injection_use_freq = drug_use_frequency(illegal_injection)
-  ) 
+    )
 ```
 
 

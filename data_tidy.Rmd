@@ -135,7 +135,18 @@ drug_use_frequency <- function(input_list){
   output <- case_when(input_list == 0 ~ 0,
                       input_list > 0 & input_list < 40 ~ 1,
                       input_list > 40 ~ 2)
+  return(output)
 } 
+
+age_tidy <- function(input_list) {
+  output <- case_when(input_list == 1 ~ NA_real_,
+                      input_list == 2 ~ 8,
+                      input_list == 3 ~ 9.5,
+                      input_list == 4 ~ 11.5,
+                      input_list == 5 ~ 13.5,
+                      input_list == 6 ~ 15.5,
+                      input_list == 7 ~ 17.5)
+}
 
 ```
 
@@ -144,14 +155,9 @@ yrbss_state_2019_tidy <-
   yrbss_state %>% 
   filter(year == 2019) %>% 
   mutate(
-    age_marijuana = case_when(
-                              q46 == 1 ~ NA_real_,
-                              q46 == 2 ~ 8,
-                              q46 == 3 ~ 9.5,
-                              q46 == 4 ~ 11.5,
-                              q46 == 5 ~ 13.5,
-                              q46 == 6 ~ 15.5,
-                              q46 == 7 ~ 17.5),
+    age_initial_alcohol = age_tidy(q40),
+    age_initial_smoking = age_tidy(q31),
+    age_marijuana = age_tidy(q46),
     marijuana = drug_use_tidy(q45),
     cocaine = drug_use_tidy(q50),
     prescription = drug_use_tidy(q49),
@@ -174,8 +180,7 @@ yrbss_state_2019_tidy <-
     ecstasy_use_freq = drug_use_frequency(ecstasy),
     steroid_use_freq = drug_use_frequency(steroid),
     illegal_injection_use_freq = drug_use_frequency(illegal_injection)
-  ) %>% 
-  select(age_marijuana:illegal_injection_use_freq)
+  ) 
 ```
 
 

@@ -92,17 +92,19 @@ age_tidy <- function(input_list) {
 
 ```
 
+
+
+
 ```{r}
-yrbss_state_2019_tidy <-
+yrbss_state_tidy <-
   yrbss_state %>% 
-  filter(year == 2019) %>% 
+  drop_na(q45, q46, q50, q51, q52, q53, q54, q55, q56) %>% 
   mutate(
     age_initial_alcohol = age_tidy(q40),
     age_initial_smoking = age_tidy(q31),
     age_marijuana = age_tidy(q46),
     marijuana = drug_use_tidy(q45),
     cocaine = drug_use_tidy(q50),
-    prescription = drug_use_tidy(q49),
     inhale = drug_use_tidy(q51),
     heroin = drug_use_tidy(q52),
     methamphetamine = drug_use_tidy(q53),
@@ -115,7 +117,6 @@ yrbss_state_2019_tidy <-
     drug_use_freq = drug_use_frequency(drug_use_sum),
     marijuana_use_freq = drug_use_frequency(marijuana),
     cocaine_use_freq = drug_use_frequency(cocaine),
-    prescription_use_freq = drug_use_frequency(prescription),
     inhale_use_freq = drug_use_frequency(inhale),
     heroin_use_freq = drug_use_frequency(heroin),
     methamphetamine_use_freq = drug_use_frequency(methamphetamine),

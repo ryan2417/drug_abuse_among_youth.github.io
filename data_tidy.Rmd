@@ -133,6 +133,11 @@ yrbss_state_tidy <-
 
 
 
+
+
+
+## Part 2
+
 ```{r}
 crude_analysis <- function(input_df, input_name){
   totaln <- input_df %>% nrow()
@@ -212,9 +217,6 @@ race_analysis <- function(input_df, input_name){
     select(race, statistic, p.value, df = parameter, cramer_v_effect_size)
 }
 ```
-
-
-## Part 2
 
 ### Drunk driving
 

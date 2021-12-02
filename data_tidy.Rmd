@@ -292,16 +292,7 @@ yrbss_state_tidy_drunk_driving <-
 association analysis
 
 ```{r}
-<<<<<<< HEAD
 test_of_association(yrbss_state_tidy_drunk_driving, "drunk_driving")
-=======
-crude_analysis(yrbss_state_tidy_drunk_driving, "drunk_driving")
-
-
-#bootstrap_drunk_driving %>% 
-  #mutate(crude_results = map(.x = strap, ~crude_analysis(strap, "drunk_driving"))) %>% 
-  #unnest(crude_results)
->>>>>>> 285f24b451c04ea14c6c3960c19ac8eea071b1f1
 
 yrbss_state_tidy_drunk_driving %>% 
   group_by(drug_use_freq) %>% 

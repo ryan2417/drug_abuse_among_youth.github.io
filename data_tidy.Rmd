@@ -105,7 +105,7 @@ yrbss_state_tidy <-
   mutate(
     #age_initial_alcohol = age_tidy(q40),
     #age_initial_smoking = age_tidy(q31),
-    #age_marijuana = age_tidy(q46),
+    age_marijuana = age_tidy(q46),
     marijuana = drug_use_tidy(q45),
     cocaine = drug_use_tidy(q50),
     inhale = drug_use_tidy(q51),

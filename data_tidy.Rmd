@@ -270,7 +270,7 @@ test_of_association <- function(input_df, input_name){
     unnest(results) %>% 
     select(-type)
 }
-test_of_association(yrbss_state_tidy_drunk_driving, "drunk_driving")
+
 
 
 ```

@@ -1,0 +1,193 @@
+---
+title: "Drug use over state"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+library(usmap)
+library(viridis)
+library(hash)
+library(wesanderson)
+```
+
+```{r data_import, message=FALSE}
+yrbss_state = read_csv("data/yrbss_state_tidy")
+yrbss_state =
+  yrbss_state%>%
+  select(sitecode,sex,race4,age,age_marijuana:illegal_injection_use_freq)%>%
+  drop_na(sitecode,sex,race4,marijuana:illegal_injection_use_freq)%>%
+  rename(state = sitecode)
+# before drop_na 500222 obs, after drop_na 110260 obs
+# age_marijuana missing means don't take marijuana.
+# don't drop_na age_marijuana still have 489410
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+#-------------------------------------------------------------------------------- Data mutate
+drug_type_df = 
+  yrbss_state %>%
+  select(state,age,sex,race4,drug_use_sum:illegal_injection_use_freq) %>%
+  rename(All_drug          = drug_use_freq,
+         marijuana         = marijuana_use_freq,
+         cocaine           = cocaine_use_freq,
+         inhale            = inhale_use_freq,
+         heroin            = heroin_use_freq,
+         methamphetamine   = methamphetamine_use_freq,
+         ecstasy           = ecstasy_use_freq,
+         steroid           = steroid_use_freq,
+         illegal_injection = illegal_injection_use_freq)
+drug_type_choose = 
+  drug_type_df%>%
+  select(-sex,-age,-state,-race4,-drug_use_sum,-other_drug_sum)%>%
+  colnames()
+#-------------------------------------------------------------------------------- Data mutate
+
+#-------------------------------------------------------------------------------- Chart A Seetings
+
+drug_state_race_df =
+  drug_type_df%>%
+  select(-drug_use_sum,-other_drug_sum,-sex)%>%
+  mutate(race4 = case_when(
+    race4==1 ~ "White",
+    race4==2 ~ "Black",
+    race4==3 ~ "Hispanic/Latino",
+    race4==4 ~ "All Other Races",
+  ))%>%
+  mutate(race4 = as.factor(race4))%>%
+  pivot_longer(All_drug:illegal_injection,
+               names_to = "drug_type",
+               values_to = "dose")%>%
+  count(state,race4,drug_type,dose)%>%
+  group_by(state,race4,drug_type)%>%
+  mutate(sum = sum(n),proportion = n/sum)%>%
+  select(state,race4,drug_type,dose,proportion)
+
+selectInput(
+  "drug_choose_chart2",
+  label = h2("Drug Choose for Racewise proportion plot"),
+  choices = drug_type_choose,
+  selected = "All_drug")
+#-------------------------------------------------------------------------------- Chart A Seetings
+
+
+#-------------------------------------------------------------------------------- Chart B Settings
+drug_use_overview_df = 
+  drug_type_df%>%
+  select(-drug_use_sum,-other_drug_sum)%>%
+  pivot_longer(All_drug:illegal_injection,
+               names_to = "drug_type",
+               values_to = "dose")%>%
+  count(state,drug_type,dose)%>%
+  group_by(state,drug_type)%>%
+  summarize(n,dose,sum = sum(n))%>%
+  mutate(proportion = n/sum)
+#define the dataframe used in chart B
+
+
+selectInput(
+  "drug_type_choose",
+  label = h2("Select Drug Type for the map plot"),
+  choices = drug_type_choose,
+  selected = "All_drug")
+#define the select bar of drug type
+
+dose_choose = c("Heavy Dose","Light Dose","No Drug Use")
+radioButtons(
+  "dose_choose",
+  label = h2("Select dose type for the map plot"),
+  choices = dose_choose,
+  selected = "Light Dose")
+#define the select button of dose
+color_dict = hash()
+color_dict[["Heavy Dose"]] = "red"
+color_dict[["Light Dose"]] = "orange"
+color_dict[["No Drug Use"]] = "blue"
+#-------------------------------------------------------------------------------- Chart B Settings
+
+```
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Drug use proportion of different race in each state.
+
+```{r}
+renderPlotly({
+  drug_state_race_df%>%
+    filter(drug_type == input[["drug_choose_chart2"]])%>%
+    ggplot(aes(x = state,y = proportion,color = dose))+
+    scale_color_manual(values= c("#FF3225","#F5D247","#4728FA"))+
+    geom_col()+
+    facet_grid(~race4)+
+    coord_flip()
+})
+```
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### Map of drug use proportion over US.
+
+```{r}
+renderPlotly({
+  view_try = 
+    drug_use_overview_df %>%
+    filter(drug_type == input[["drug_type_choose"]],dose == input[["dose_choose"]])
+  
+  plot_usmap(data = view_try,values = "proportion", color = color_dict[[input[["dose_choose"]]]]) + 
+  scale_fill_continuous(
+    low = "white", high = color_dict[[input[["dose_choose"]]]], name = "Proportion", label = scales::comma
+  ) + theme(legend.position = "right")
+})
+```
+
+### Proportion Pyramid of students who had drugs
+
+```{r}
+renderPlotly({
+  drug_age_gender_df = 
+    drug_type_df%>%
+    drop_na(age)%>% # drop 325 obs with out age
+    select(sex,age,All_drug:illegal_injection)%>%
+    mutate(sex = case_when(
+      sex == 2 ~ "Male",
+      sex == 1 ~ "Female"
+    ),
+           age = case_when(
+      age == 1 ~ "<13",
+      age == 2 ~ "13~14",
+      age == 3 ~ "14~15",
+      age == 4 ~ "15~16",
+      age == 5 ~ "16~17",
+      age == 6 ~ "17~18",
+      age == 7 ~ "18+"
+    ))%>%
+    mutate(age = as.factor(age))%>%
+    pivot_longer(All_drug:illegal_injection,
+                 names_to = "drug_type",
+                 values_to = "dose")%>%
+    count(sex,age,dose)%>%
+    group_by(sex)%>%
+    mutate(sum = sum(n))%>%
+    filter(dose != "No Drug Use")%>%
+    mutate(proportion = n/sum)
+  
+  drug_age_gender_df%>%
+    ggplot(aes(x = age,fill = sex,y=ifelse(test = sex == "Male",
+                                                  yes = -proportion, no = proportion))) +
+    geom_bar(stat = "identity") +
+    scale_y_continuous(labels = abs, limits = max(drug_age_gender_df$proportion) * c(-1,1)) +
+     labs(x = "Age", y = "Percent population of corresponding sex")+
+    coord_flip()
+})
+```

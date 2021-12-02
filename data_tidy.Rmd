@@ -142,7 +142,7 @@ yrbss_state_tidy <-
 crude_analysis <- function(input_df, input_name){
   totaln <- input_df %>% nrow()
   input_df %>% 
-    group_by(drug_use_freq, across(all_of(input_name))) %>%
+    group_by(drug_use_freq, across(input_name)) %>%
     count() %>%
     pivot_wider(values_from = n, names_from = starts_with(input_name), names_prefix = paste0(input_name,"_")) %>%
     ungroup() %>% 
@@ -236,11 +236,6 @@ Crude Analysis
 
 ```{r}
 crude_analysis(yrbss_state_tidy_drunk_driving, "drunk_driving")
-
-
-bootstrap_drunk_driving %>% 
-  mutate(crude_results = map(.x = strap, ~crude_analysis(strap, "drunk_driving"))) %>% 
-  unnest(crude_results)
 
 yrbss_state_tidy_drunk_driving %>% 
   group_by(drug_use_freq) %>% 

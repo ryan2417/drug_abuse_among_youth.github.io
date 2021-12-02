@@ -8,6 +8,7 @@ library(tidyverse)
 library(survey)
 library(viridis)
 library(modelr)
+library(plotly)
 
 knitr::opts_chunk$set(
   warning = FALSE,
@@ -49,7 +50,7 @@ yrbss_state
 
 ### 09～11
 ```{r}
-
+yrbss_state
 ```
 
 
@@ -93,10 +94,15 @@ age_tidy <- function(input_list) {
                       input_list == 7 ~ 17.5)
 }
 
+if_use = function(input_list){
+  output = case_when(input_list == 0 ~ FALSE,
+                     input_list != 0 ~ TRUE)
+}
+
 ```
 
 
-
+## Part 1
 
 ```{r}
 yrbss_state_tidy <-
@@ -130,7 +136,43 @@ yrbss_state_tidy <-
     )
 ```
 
+### (3) State + Proportion + drug type (side by side bar chart)
 
+```{r}
+state_proportion_drugtype = yrbss_state_tidy %>% 
+  select(sitename, marijuana, cocaine, inhale, heroin, methamphetamine, ecstasy, steroid, illegal_injection) %>% 
+  mutate(marijuana = if_use(marijuana),
+         others = cocaine + inhale + heroin + methamphetamine + 
+           ecstasy + steroid + illegal_injection,
+         others = if_use(others)) %>% 
+  select(sitename, marijuana, others) %>% 
+  group_by(sitename) %>% 
+  summarise(total_population = n(),
+            marijuana = sum(marijuana),
+            others = sum(others)) %>% 
+  mutate(proportion_marijuana = marijuana / total_population,
+         proportion_others = others / total_population,
+         total_proportion = proportion_marijuana + proportion_others) %>% 
+  pivot_longer(proportion_marijuana:proportion_others,
+               names_to = "drug_type",
+               values_to = "proportion") %>% 
+  mutate(drug_type = recode(drug_type, 
+                            proportion_marijuana = "marijuana",
+                            proportion_others = "other drugs"))
+  
+
+state_proportion_plot = ggplot(state_proportion_drugtype, 
+                               aes(x = sitename, y = proportion, 
+                                   fill = drug_type)) + 
+  geom_bar(stat = "identity", position = 'dodge') +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) + 
+  labs(x = "State", 
+       y = "Drug Use Porportion",
+       title = "Side-by-side Bar Plot of Porportion of Drug Use for Marijuana 
+       and Other Drug Type")
+
+ggplotly(state_proportion_plot)
+```
 
 
 

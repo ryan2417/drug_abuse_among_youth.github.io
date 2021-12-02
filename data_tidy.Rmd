@@ -110,6 +110,7 @@ yrbss_state_tidy <-
   yrbss_state %>% 
   drop_na(q45, q46, q50, q51, q52, q53, q54, q55, q56) %>% 
   mutate(
+<<<<<<< HEAD
     grade = fct_recode(factor(grade, ordered = TRUE), 
                        "9th Grade" = "1",
                        "10th Grade" = "2",
@@ -126,6 +127,10 @@ yrbss_state_tidy <-
                        "Hispanic/Latino" = "3",
                        "All other Races" = "4"),
     race4 = fct_explicit_na(race4, "Missing Race"),
+=======
+    age_initial_alcohol = age_tidy(q40),
+    age_initial_smoking = age_tidy(q31),
+>>>>>>> 285f24b451c04ea14c6c3960c19ac8eea071b1f1
     age_marijuana = age_tidy(q46),
     marijuana = drug_use_tidy(q45),
     cocaine = drug_use_tidy(q50),
@@ -287,7 +292,16 @@ yrbss_state_tidy_drunk_driving <-
 association analysis
 
 ```{r}
+<<<<<<< HEAD
 test_of_association(yrbss_state_tidy_drunk_driving, "drunk_driving")
+=======
+crude_analysis(yrbss_state_tidy_drunk_driving, "drunk_driving")
+
+
+#bootstrap_drunk_driving %>% 
+  #mutate(crude_results = map(.x = strap, ~crude_analysis(strap, "drunk_driving"))) %>% 
+  #unnest(crude_results)
+>>>>>>> 285f24b451c04ea14c6c3960c19ac8eea071b1f1
 
 yrbss_state_tidy_drunk_driving %>% 
   group_by(drug_use_freq) %>% 
@@ -759,5 +773,125 @@ yrbss_state_tidy_screening_use %>%
 ```
 
 
+
+## Part 3
+##### 2，额外图  
+1，吸毒各个frequency段的，吸烟初始年龄分布。  
+2, .....................，喝酒初始年龄分布。  
+3, ....................., bmi box plot 分男女 or 金字塔图
+
+## Q1 and Q2
+```{r}
+#tidy q31 smoking and q40 alcohol start age
+firstage_tidy <- function(input_list){
+  output <- case_when(input_list == 1 ~ "never smoke",
+                      input_list == 2 ~ "8 years old or younger",
+                      input_list == 3 ~ "9 or 10 years old",
+                      input_list == 4 ~ "11 or 12 years old",
+                      input_list == 5 ~ "13 or 14 years old",
+                      input_list == 6 ~ "15 or 16 years old",
+                      input_list == 7 ~ "17 years old or older")
+  return(output)
+}
+
+#function for plotting first smoke_age
+drug1_smoke=
+  yrbss_state_tidy %>%
+  mutate(
+    smoke_age = firstage_tidy(q31),
+  ) %>%
+  drop_na(q31)
+
+drug1_smoke %>%
+  group_by(drug_use_freq, smoke_age) %>%
+  summarize(n = n()) %>% 
+  mutate(percentage = n/sum(n),
+         percent = scales::percent(percentage)) %>%    
+  ggplot(
+       aes(x = drug_use_freq,y= percentage,
+           fill =smoke_age )) +        
+  geom_bar(stat = "identity",                                     
+           position = "fill")+
+  scale_y_continuous(breaks = seq(0, 1, .2), 
+                     label = scales::percent) +
+  geom_text(aes(label = percent),                                     
+            size = 3, 
+            position = position_stack(vjust = 0.5)) +
+  scale_fill_brewer(palette = "Set2")+
+  labs(title="smoke start age")
+
+#boxplot
+ggplot(drug1_smoke, 
+       aes(x = factor(drug_use_freq), 
+           y = age_initial_smoking,fill=factor(drug_use_freq))) +        
+  geom_boxplot() +
+  theme(
+    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+    legend.position = "none") +
+  labs(title="smoke start age")
+
+#function for plotting first alcohol_age
+drug1_alcohol=
+  yrbss_state_tidy %>%
+  mutate(
+    alcohol_age = firstage_tidy(q40)
+  ) %>%
+  drop_na(q40) %>%
+  drop_na(drug_use_freq)
+
+drug1_alcohol %>%
+  group_by(drug_use_freq, alcohol_age) %>%
+  summarize(n = n()) %>% 
+  mutate(percentage = n/sum(n),
+         percent = scales::percent(percentage)) %>%    
+  ggplot(
+       aes(x = drug_use_freq,y= percentage,
+           fill =alcohol_age )) +        
+  geom_bar(stat = "identity",                                     
+           position = "fill")+
+  scale_y_continuous(breaks = seq(0, 1, .2), 
+                     label = scales::percent) +
+  geom_text(aes(label = percent),                                     
+            size = 3, 
+            position = position_stack(vjust = 0.5)) +
+  scale_fill_brewer(palette = "Set2")+
+  labs(title="alcohol start age")
+
+#boxplot
+ggplot(drug1_alcohol, 
+       aes(x = factor(drug_use_freq), 
+           y = age_initial_alcohol,fill=factor(drug_use_freq))) +        
+  geom_boxplot() +
+  theme(
+    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+    legend.position = "none") +
+  labs(title="alcohol start age")
+
+```
+
+## BMI
+```{r}
+BMI =
+  yrbss_state_tidy %>%
+  drop_na(drug_use_freq) %>%
+  drop_na(sex)
+
+BMI %>%
+  ggplot(aes(x = factor(drug_use_freq), 
+           y = bmi,fill=factor(drug_use_freq))) +
+  geom_boxplot() +
+  facet_grid(. ~ sex) +  
+  theme(
+    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+    legend.position = "none")+
+  labs(title = "Salary distribution by rank")
+
+#pyramid plot - looks weird
+ggplot(BMI, aes(x = drug_use_freq, y = ifelse(sex == "2", -bmi, bmi), fill =sex)) + 
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = abs, limits = c(-200,200)) +
+  coord_flip()
+
+```
 
 

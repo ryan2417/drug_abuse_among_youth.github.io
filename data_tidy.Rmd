@@ -9,6 +9,7 @@ library(survey)
 library(viridis)
 library(modelr)
 library(plotly)
+library(usmap)
 
 knitr::opts_chunk$set(
   warning = FALSE,
@@ -111,7 +112,7 @@ yrbss_state_tidy <-
   mutate(
     #age_initial_alcohol = age_tidy(q40),
     #age_initial_smoking = age_tidy(q31),
-    #age_marijuana = age_tidy(q46),
+    age_marijuana = age_tidy(q46),
     marijuana = drug_use_tidy(q45),
     cocaine = drug_use_tidy(q50),
     inhale = drug_use_tidy(q51),
@@ -175,6 +176,24 @@ ggplotly(state_proportion_plot)
 ```
 
 
+### (4) State + marijuana start date map
+
+```{r warning = FALSE}
+state_age = yrbss_state_tidy %>% 
+  select(sitename, age_marijuana) %>% 
+  separate(sitename, "region", sep = "\\(") %>% 
+  separate(region, "state", sep = " ") %>% 
+  group_by(state) %>% 
+  summarise(mean_start_age = mean(age_marijuana, na.rm = TRUE))
+
+state_age_plot = plot_usmap(data = state_age, values = "mean_start_age", 
+                            color = "red") + 
+  scale_fill_gradient(low = "white", high = "red", 
+                      name = "Mean Marijuana Start Age", label = scales::comma) + 
+  theme(legend.position = "right")
+
+ggplotly(state_age_plot)
+```
 
 
 

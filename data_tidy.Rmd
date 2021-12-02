@@ -35,38 +35,6 @@ yrbss_state = rbind(yrbss_state_a,yrbss_state_z)
 yrbss_state = as_tibble(yrbss_state)
 ```
 
-### 01～03
-```{r}
-yrbss_state
-```
-
-
-
-### 05～07
-```{r}
-yrbss_state
-```
-
-
-
-### 09～11
-```{r}
-yrbss_state
-```
-
-
-
-### 13～15
-```{r}
-yrbss_state
-```
-
-
-
-### 17～19
-```{r}
-yrbss_state
-```
 
 ```{r}
 drug_use_tidy <- function(input_list){
@@ -110,7 +78,6 @@ yrbss_state_tidy <-
   yrbss_state %>% 
   drop_na(q45, q46, q50, q51, q52, q53, q54, q55, q56) %>% 
   mutate(
-<<<<<<< HEAD
     grade = fct_recode(factor(grade, ordered = TRUE), 
                        "9th Grade" = "1",
                        "10th Grade" = "2",
@@ -127,10 +94,8 @@ yrbss_state_tidy <-
                        "Hispanic/Latino" = "3",
                        "All other Races" = "4"),
     race4 = fct_explicit_na(race4, "Missing Race"),
-=======
     age_initial_alcohol = age_tidy(q40),
     age_initial_smoking = age_tidy(q31),
->>>>>>> 285f24b451c04ea14c6c3960c19ac8eea071b1f1
     age_marijuana = age_tidy(q46),
     marijuana = drug_use_tidy(q45),
     cocaine = drug_use_tidy(q50),
@@ -332,7 +297,7 @@ yrbss_state_tidy_drunk_driving %>%
   geom_bar(stat = "identity", position = "dodge")
 ```
 
-**Marijuana vs Other Drug** 
+#### Marijuana vs Other Drug 
 ```{r}
 yrbss_state_tidy_3 <-
   yrbss_state_tidy %>% 
@@ -399,7 +364,6 @@ yrbss_state_tidy_carrying_weapon %>%
   ggplot(aes(x = drug_use_freq, y = prop_carrying_weapon)) +
   geom_bar(stat = "identity", position = "dodge")
 
-grade_analysis(yrbss_state_tidy_carrying_weapon, "carrying_weapon")
 
 yrbss_state_tidy_carrying_weapon %>% 
   mutate(grade = ifelse(is.na(grade), "Missing", as.character(grade))) %>% 
@@ -419,7 +383,6 @@ yrbss_state_tidy_carrying_weapon %>%
   ggplot(aes(x = drug_use_freq, y = prop_carrying_weapon, fill = sex)) +
   geom_bar(stat = "identity", position = "dodge")
 
-race_analysis(yrbss_state_tidy_carrying_weapon, "carrying_weapon")
 yrbss_state_tidy_carrying_weapon %>% 
   mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
   group_by(drug_use_freq, race4) %>% 
@@ -570,7 +533,7 @@ yrbss_state_tidy_quit_smoke <-
   mutate(
     quit_smoke = case_when(q39 == 2 ~ "Yes",
                            q39 == 3 ~ "No")
-  ) 
+  )
 ```
 
 
@@ -627,7 +590,7 @@ yrbss_state_tidy_physical_fight <-
   drop_na(q17) %>% 
   mutate(
     physical_fight = ifelse(q17 == 1, "No", "Yes")
-  ) 
+  )
 ```
 
 

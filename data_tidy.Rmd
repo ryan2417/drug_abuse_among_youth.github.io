@@ -242,7 +242,6 @@ test_of_association <- function(input_df, input_name){
 ```{r}
 yrbss_state_tidy_drunk_driving <- 
   yrbss_state_tidy %>% 
-  drop_na(q9, q10) %>% 
   mutate(
     drunk_driving = ifelse(q9 > 1 | q10 > 2, "Yes", "No")
   ) %>% 
@@ -296,7 +295,6 @@ yrbss_state_tidy_drunk_driving %>%
 ### cell phone use while driving
 ```{r}
 yrbss_state_tidy_text_driving <- yrbss_state_tidy %>%
-  drop_na(q11) %>% 
   mutate(
     text_driving = ifelse(q11 == 2, "No", "Yes")
   )
@@ -346,7 +344,6 @@ yrbss_state_tidy_text_driving %>%
 
 ```{r}
 yrbss_state_tidy_carrying_weapon <- yrbss_state_tidy %>%
-  drop_na(q14) %>% 
   mutate(
     carrying_weapon = ifelse(q14 == 1, "No", "Yes")
   )
@@ -390,43 +387,6 @@ yrbss_state_tidy_carrying_weapon %>%
   geom_bar(stat = "identity", position = "dodge")
 ```
 
-```{r}
-yrbss_state_tidy %>% 
-  filter(year == 2019) %>% 
-  drop_na(q14) %>% 
-  mutate(
-    carrying_weapon = ifelse(q14 == 1, "No", "Yes"),
-    drug_usage = case_when(other_drug_sum == 0 & marijuana > 0 ~ "marijuana",
-                                other_drug_sum > 0 & marijuana == 0 ~ "other drug",
-                                other_drug_sum > 0 & marijuana > 0 ~ "Both drug",
-                           other_drug_sum == 0 & marijuana == 0 ~ "No drug")
-  ) %>% 
-  filter(drug_usage %in% c("marijuana", "other drug")) %>% 
-  group_by(drug_usage, carrying_weapon) %>% 
-  count() %>% 
-  pivot_wider(values_from = n, names_from = carrying_weapon, names_prefix = "carrying_weapon_") %>% 
-  ungroup() %>%
-  select(-drug_usage) %>% 
-  chisq.test()
-
-yrbss_state_tidy %>% 
-  drop_na(q14) %>% 
-  mutate(
-    carrying_weapon = ifelse(q14 == 1, "No", "Yes"),
-    drug_usage = case_when(other_drug_sum == 0 & marijuana > 0 ~ "marijuana",
-                                other_drug_sum > 0 & marijuana == 0 ~ "other drug",
-                                other_drug_sum > 0 & marijuana > 0 ~ "Both drug",
-                           other_drug_sum == 0 & marijuana == 0 ~ "No drug")
-  ) %>% 
-  filter(drug_usage %in% c("marijuana", "other drug")) %>% 
-  group_by(drug_usage) %>% 
-  summarize(
-    prop_carrying_weapon = sum(carrying_weapon == "Yes")/n()
-  ) %>% 
-  ggplot(aes(x = drug_usage, y = prop_carrying_weapon)) +
-  geom_bar(stat = "identity", position = "dodge")
-```
-
 
 
 ### Suicide Attempt
@@ -434,7 +394,6 @@ yrbss_state_tidy %>%
 ```{r}
 yrbss_state_tidy_suicide_attempt <- 
   yrbss_state_tidy %>%
-  drop_na(q26) %>% 
   mutate(
     suicide_attempt = ifelse(q26 == 1, "Yes", "No")
   )
@@ -478,50 +437,11 @@ yrbss_state_tidy_suicide_attempt %>%
 ```
 
 
-```{r}
-yrbss_state_tidy %>% 
-  filter(year == 2019) %>% 
-  drop_na(q26) %>% 
-  mutate(
-    suicide_attempt = ifelse(q26 == 1, "Yes", "No"),
-    drug_usage = case_when(other_drug_sum == 0 & marijuana > 0 ~ "marijuana",
-                                other_drug_sum > 0 & marijuana == 0 ~ "other drug",
-                                other_drug_sum > 0 & marijuana > 0 ~ "Both drug",
-                           other_drug_sum == 0 & marijuana == 0 ~ "No drug")
-  ) %>% 
-  filter(drug_usage %in% c("marijuana", "other drug")) %>% 
-  group_by(drug_usage, suicide_attempt) %>% 
-  count() %>% 
-  pivot_wider(values_from = n, names_from = suicide_attempt, names_prefix = "suicide_attempt_") %>% 
-  ungroup() %>%
-  select(-drug_usage) %>% 
-  chisq.test()
-
-yrbss_state_tidy %>% 
-  filter(year == 2019) %>% 
-  drop_na(q26) %>% 
-  mutate(
-    suicide_attempt = ifelse(q26 == 1, "Yes", "No"),
-    drug_usage = case_when(other_drug_sum == 0 & marijuana > 0 ~ "marijuana",
-                                other_drug_sum > 0 & marijuana == 0 ~ "other drug",
-                                other_drug_sum > 0 & marijuana > 0 ~ "Both drug",
-                           other_drug_sum == 0 & marijuana == 0 ~ "No drug")
-  ) %>% 
-  filter(drug_usage %in% c("marijuana", "other drug")) %>% 
-  group_by(drug_usage) %>% 
-  summarize(
-    prop_suicide_attempt = sum(suicide_attempt == "Yes")/n()
-  ) %>% 
-  ggplot(aes(x = drug_usage, y = prop_suicide_attempt)) +
-  geom_bar(stat = "identity", position = "dodge")
-```
-
 ### Quit smoking
 
 ```{r}
 yrbss_state_tidy_quit_smoke <- 
   yrbss_state_tidy %>%
-  drop_na(q39) %>% 
   filter(q39 != 1) %>% 
   mutate(
     quit_smoke = case_when(q39 == 2 ~ "Yes",
@@ -559,8 +479,6 @@ yrbss_state_tidy_quit_smoke %>%
   ggplot(aes(x = drug_use_freq, y = prop_quit_smoke, fill = sex)) +
   geom_bar(stat = "identity", position = "dodge")
 
-race_analysis(yrbss_state_tidy_quit_smoke, "quit_smoke")
-
 yrbss_state_tidy_quit_smoke %>% 
   group_by(drug_use_freq, race4) %>% 
   summarize(
@@ -577,7 +495,6 @@ yrbss_state_tidy_quit_smoke %>%
 ```{r}
 yrbss_state_tidy_physical_fight <- 
   yrbss_state_tidy %>%
-  drop_na(q17) %>% 
   mutate(
     physical_fight = ifelse(q17 == 1, "No", "Yes")
   )
@@ -630,10 +547,9 @@ yrbss_state_tidy_physical_fight %>%
 ```{r}
 yrbss_state_tidy_early_sex <- 
   yrbss_state_tidy %>%
-  drop_na(q59) %>% 
   mutate(
     early_sex = ifelse(q59 > 1 & q59 < 5 , "Yes", "No")
-  ) 
+  )
 ```
 
 
@@ -685,7 +601,6 @@ yrbss_state_tidy_early_sex %>%
 ```{r}
 yrbss_state_tidy_screening_use <- 
   yrbss_state_tidy %>%
-  drop_na(q79, q80) %>% 
   mutate(
     q79 = as.numeric(q79),
     q80 = as.numeric(q80),
@@ -764,7 +679,6 @@ yrbss_state_tidy_heavy_screen_use %>%
 ```{r}
 yrbss_state_tidy_sleeping_time <- 
   yrbss_state_tidy %>%
-  drop_na(q88) %>% 
   mutate(
     sleeping_time = as.numeric(q88) + 3
   )

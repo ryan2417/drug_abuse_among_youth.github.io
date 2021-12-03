@@ -275,7 +275,7 @@ race_analysis <- function(input_df, input_name){
     select(race4, chisq_result, totaln) %>% 
     unnest(chisq_result) %>% 
     mutate(cramer_v_effect_size = sqrt(statistic / totaln*parameter)) %>% 
-    select(race, statistic, p.value, df = parameter, cramer_v_effect_size)
+    select(race4, statistic, p.value, df = parameter, cramer_v_effect_size)
 }
 ```
 
@@ -297,11 +297,6 @@ Crude Analysis
 
 ```{r}
 crude_analysis(yrbss_state_tidy_drunk_driving, "drunk_driving")
-
-
-bootstrap_drunk_driving %>% 
-  mutate(crude_results = map(.x = strap, ~crude_analysis(strap, "drunk_driving"))) %>% 
-  unnest(crude_results)
 
 yrbss_state_tidy_drunk_driving %>% 
   group_by(drug_use_freq) %>% 
@@ -964,3 +959,103 @@ yrbss_state_tidy_early_sex %>%
 ```
 
 
+
+
+
+
+
+
+
+### Smoking Status
+
+Based on question 33 in the 2019 YOUTH RISK BEHAVIOR SURVEY, the researchers care about whether students smoked more than 10 cigarettes per day on the days they smoked during the 30 days before the survey. Therefore, we define students who did not smoke as "Never Smoker", 1 to 10 cigarettes per day as "Light Smoker", greater than 10 cigarettes per day as "Heavy Smokers".
+
+
+```{r}
+yrbss_state_tidy_smoking_status <- 
+  yrbss_state_tidy %>% 
+  drop_na(q33) %>% 
+  mutate(
+    smoking_status = case_when(q33 == 1 ~ "Never Smoker",
+                               q33 >= 2 & q33 <= 5 ~ "Light Smoker",
+                               q33 >=6 ~ "Heavy Smoker"),
+    smoking_status = factor(smoking_status, level = c("Never Smoker", "Light Smoker", "Heavy Smoker"))
+  ) %>% 
+  select(smoking_status, drug_use_freq, grade, sex, race4)
+```
+
+Crude Analysis
+
+```{r}
+crude_analysis(yrbss_state_tidy_smoking_status, "smoking_status")
+
+yrbss_state_tidy_smoking_status %>% 
+  group_by(drug_use_freq, smoking_status) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(drug_use_freq == "No Drug Use" ~ sum(n),
+                          drug_use_freq == "Light Dose" ~ sum(n),
+                          drug_use_freq == "Heavy Dose" ~ sum(n)),
+         prop_smoking_status = n/total
+         ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = smoking_status)) +
+  geom_bar(stat = "identity", position = "dodge")
+```
+
+
+Stratified Analysis over Grade
+
+```{r}
+grade_analysis(yrbss_state_tidy_smoking_status, "smoking_status")
+
+yrbss_state_tidy_smoking_status %>% 
+  mutate(grade = ifelse(is.na(grade), "Missing", as.character(grade))) %>% 
+  group_by(drug_use_freq,smoking_status,grade) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(smoking_status == "Never Smoker" ~ sum(n),
+                          smoking_status == "Light Smoker" ~ sum(n),
+                          smoking_status == "Heavy Smoker" ~ sum(n)),
+         prop_smoking_status = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = grade)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(smoking_status ~ .)
+```
+
+Over Gender
+
+```{r}
+gender_analysis(yrbss_state_tidy_smoking_status, "smoking_status")
+
+yrbss_state_tidy_smoking_status %>% 
+  mutate(sex = ifelse(is.na(sex), "Missing", as.character(sex))) %>% 
+  group_by(drug_use_freq,smoking_status,sex) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(smoking_status == "Never Smoker" ~ sum(n),
+                          smoking_status == "Light Smoker" ~ sum(n),
+                          smoking_status == "Heavy Smoker" ~ sum(n)),
+         prop_smoking_status = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = sex)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(smoking_status ~ .)
+
+
+```
+
+Over race
+```{r}
+race_analysis(yrbss_state_tidy_smoking_status, "smoking_status")
+
+yrbss_state_tidy_smoking_status %>% 
+  mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
+  group_by(drug_use_freq, smoking_status,race4) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(smoking_status == "Never Smoker" ~ sum(n),
+                          smoking_status == "Light Smoker" ~ sum(n),
+                          smoking_status == "Heavy Smoker" ~ sum(n)),
+         prop_smoking_status = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = race4)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(smoking_status ~ .)
+```

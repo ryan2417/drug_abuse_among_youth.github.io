@@ -35,38 +35,6 @@ yrbss_state = rbind(yrbss_state_a,yrbss_state_z)
 yrbss_state = as_tibble(yrbss_state)
 ```
 
-### 01～03
-```{r}
-yrbss_state
-```
-
-
-
-### 05～07
-```{r}
-yrbss_state
-```
-
-
-
-### 09～11
-```{r}
-yrbss_state
-```
-
-
-
-### 13～15
-```{r}
-yrbss_state
-```
-
-
-
-### 17～19
-```{r}
-yrbss_state
-```
 
 ```{r}
 drug_use_tidy <- function(input_list){
@@ -108,25 +76,29 @@ if_use = function(input_list){
 ```{r}
 yrbss_state_tidy <-
   yrbss_state %>% 
+<<<<<<< HEAD
   drop_na(q45, q46, q50, q51, q52, q53, q54, q55, q56) %>%
  # drop_na(q9,q10,q14,q17,q26,q39,q59,q79,q80,q88,q33,q42,q89,q8,q11) %>% 
+=======
+  drop_na(q45, q46, q50, q51, q52, q53, q54, q55, q56, q9, q10, q14, q17, q26, q39,q59, q79, q80, q88, q33, q42, q89, q8, q11, grade, race4, sex) %>% 
+>>>>>>> 6ed398572dbe0de88ff2298e12d6ebc583a00546
   mutate(
     grade = fct_recode(factor(grade, ordered = TRUE), 
                        "9th Grade" = "1",
                        "10th Grade" = "2",
                        "11th Grade" = "3",
                        "12th Grade" = "4"),
-    grade = fct_explicit_na(grade, "Missing Grade"),
+    #grade = fct_explicit_na(grade, "Missing Grade"),
     sex = fct_recode(factor(sex, ordered = TRUE), 
                        "female" = "1",
                        "male" = "2"),
-    sex = fct_explicit_na(sex, "Missing Gender"),
+    #sex = fct_explicit_na(sex, "Missing Gender"),
     race4 = fct_recode(factor(race4), 
                        "White" = "1",
                        "Black or African American" = "2",
                        "Hispanic/Latino" = "3",
                        "All other Races" = "4"),
-    race4 = fct_explicit_na(race4, "Missing Race"),
+    #race4 = fct_explicit_na(race4, "Missing Race"),
     age_initial_alcohol = age_tidy(q40),
     age_initial_smoking = age_tidy(q31),
     age_marijuana = age_tidy(q46),
@@ -267,9 +239,8 @@ test_of_association <- function(input_df, input_name){
     mutate(results = map(.x = type, ~association_analysis(input_df, input_name, type = .x))) %>% 
     unnest(results) %>% 
     select(-type)
-}
+  }
 ```
-
 
 ### Drunk driving
 
@@ -288,7 +259,12 @@ yrbss_state_tidy_drunk_driving <-
 association analysis
 
 ```{r}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6ed398572dbe0de88ff2298e12d6ebc583a00546
 test_of_association(yrbss_state_tidy_drunk_driving, "drunk_driving")
+
 
 yrbss_state_tidy_drunk_driving %>% 
   group_by(drug_use_freq) %>% 
@@ -298,8 +274,8 @@ yrbss_state_tidy_drunk_driving %>%
   ggplot(aes(x = drug_use_freq, y = prop_drunk_driving)) +
   geom_bar(stat = "identity", position = "dodge")
 
+
 yrbss_state_tidy_drunk_driving %>% 
-  mutate(grade = ifelse(is.na(grade), "Missing", as.character(grade))) %>% 
   group_by(drug_use_freq, grade) %>% 
   summarize(
     prop_drunk_driving = sum(drunk_driving == "Yes")/n()
@@ -307,8 +283,8 @@ yrbss_state_tidy_drunk_driving %>%
   ggplot(aes(x = drug_use_freq, y = prop_drunk_driving, fill = grade)) +
   geom_bar(stat = "identity", position = "dodge")
 
+
 yrbss_state_tidy_drunk_driving %>% 
-  mutate(sex = ifelse(is.na(sex), "Missing", as.character(sex))) %>% 
   group_by(drug_use_freq, sex) %>% 
   summarize(
     prop_drunk_driving = sum(drunk_driving == "Yes")/n()
@@ -317,7 +293,6 @@ yrbss_state_tidy_drunk_driving %>%
   geom_bar(stat = "identity", position = "dodge")
 
 yrbss_state_tidy_drunk_driving %>% 
-  mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
   group_by(drug_use_freq, race4) %>% 
   summarize(
     prop_drunk_driving = sum(drunk_driving == "Yes")/n()
@@ -327,49 +302,53 @@ yrbss_state_tidy_drunk_driving %>%
 ```
 
 
-#### Marijuana vs Other Drug 
+### cell phone use while driving
 ```{r}
-yrbss_state_tidy_3 <-
-  yrbss_state_tidy %>% 
-  
+yrbss_state_tidy_text_driving <- yrbss_state_tidy %>%
+  drop_na(q11) %>% 
+  mutate(
+    text_driving = ifelse(q11 == 2, "No", "Yes")
+  )
 ```
 
-```{r}
-yrbss_state_tidy %>% 
-  drop_na(q9, q10) %>% 
-  mutate(
-    drug_usage = case_when(other_drug_sum == 0 & marijuana > 0 ~ "marijuana",
-                                other_drug_sum > 0 & marijuana == 0 ~ "other drug",
-                                other_drug_sum > 0 & marijuana > 0 ~ "Both drug",
-                           other_drug_sum == 0 & marijuana == 0 ~ "No drug"),
-    drunk_driving = ifelse(q9 > 1 | q10 > 2, "Yes", "No")
-  ) %>% 
-  filter(drug_usage %in% c("marijuana", "other drug")) %>% 
-  group_by(drug_usage, drunk_driving) %>% 
-  count() %>% 
-  pivot_wider(values_from = n, names_from = drunk_driving, names_prefix = "drunk_driving_") %>% 
-  ungroup() %>%
-  select(-drug_usage) %>% 
-  chisq.test()
 
-yrbss_state_tidy %>% 
-  filter(year == 2019) %>% 
-  drop_na(q9, q10) %>% 
-  mutate(
-    drug_usage = case_when(other_drug_sum == 0 & marijuana > 0 ~ "marijuana",
-                                other_drug_sum > 0 & marijuana == 0 ~ "other drug",
-                                other_drug_sum > 0 & marijuana > 0 ~ "Both drug",
-                           other_drug_sum == 0 & marijuana == 0 ~ "No drug"),
-    drunk_driving = ifelse(q9 > 1 | q10 > 2, "Yes", "No")
-  ) %>% 
-  filter(drug_usage %in% c("marijuana", "other drug")) %>% 
-  group_by(drug_usage) %>% 
+```{r}
+test_of_association(yrbss_state_tidy_text_driving, "text_driving")
+
+yrbss_state_tidy_text_driving %>% 
+  group_by(drug_use_freq) %>% 
   summarize(
-    prop_drunk_driving = sum(drunk_driving == "Yes")/n()
+    prop_text_driving = sum(text_driving == "Yes")/n()
   ) %>% 
-  ggplot(aes(x = drug_usage, y = prop_drunk_driving)) +
-  geom_bar(stat = "identity")
+  ggplot(aes(x = drug_use_freq, y = prop_text_driving)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+
+yrbss_state_tidy_text_driving %>% 
+  group_by(drug_use_freq, grade) %>% 
+  summarize(
+    prop_text_driving = sum(text_driving == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_text_driving, fill = grade)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+yrbss_state_tidy_text_driving %>% 
+  group_by(drug_use_freq, sex) %>% 
+  summarize(
+    prop_text_driving = sum(text_driving == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_text_driving, fill = sex)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+yrbss_state_tidy_text_driving %>% 
+  group_by(drug_use_freq, race4) %>% 
+  summarize(
+    prop_text_driving = sum(text_driving == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_text_driving, fill = race4)) +
+  geom_bar(stat = "identity", position = "dodge")
 ```
+
 
 
 ### Carrying weapon
@@ -394,8 +373,8 @@ yrbss_state_tidy_carrying_weapon %>%
   ggplot(aes(x = drug_use_freq, y = prop_carrying_weapon)) +
   geom_bar(stat = "identity", position = "dodge")
 
+
 yrbss_state_tidy_carrying_weapon %>% 
-  mutate(grade = ifelse(is.na(grade), "Missing", as.character(grade))) %>% 
   group_by(drug_use_freq, grade) %>% 
   summarize(
     prop_carrying_weapon = sum(carrying_weapon == "Yes")/n()
@@ -404,7 +383,6 @@ yrbss_state_tidy_carrying_weapon %>%
   geom_bar(stat = "identity", position = "dodge")
 
 yrbss_state_tidy_carrying_weapon %>% 
-  mutate(sex = ifelse(is.na(sex), "Missing", as.character(sex))) %>% 
   group_by(drug_use_freq, sex) %>% 
   summarize(
     prop_carrying_weapon = sum(carrying_weapon == "Yes")/n()
@@ -413,7 +391,6 @@ yrbss_state_tidy_carrying_weapon %>%
   geom_bar(stat = "identity", position = "dodge")
 
 yrbss_state_tidy_carrying_weapon %>% 
-  mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
   group_by(drug_use_freq, race4) %>% 
   summarize(
     prop_carrying_weapon = sum(carrying_weapon == "Yes")/n()
@@ -466,7 +443,6 @@ yrbss_state_tidy %>%
 ```{r}
 yrbss_state_tidy_suicide_attempt <- 
   yrbss_state_tidy %>%
-  filter(year == 2019) %>% 
   drop_na(q26) %>% 
   mutate(
     suicide_attempt = ifelse(q26 == 1, "Yes", "No")
@@ -486,7 +462,6 @@ yrbss_state_tidy_suicide_attempt %>%
   geom_bar(stat = "identity", position = "dodge")
 
 yrbss_state_tidy_suicide_attempt %>% 
-  mutate(grade = ifelse(is.na(grade), "Missing", as.character(grade))) %>% 
   group_by(drug_use_freq, grade) %>% 
   summarize(
     prop_suicide_attempt = sum(suicide_attempt == "Yes")/n()
@@ -495,7 +470,6 @@ yrbss_state_tidy_suicide_attempt %>%
   geom_bar(stat = "identity", position = "dodge")
 
 yrbss_state_tidy_suicide_attempt %>% 
-  mutate(sex = ifelse(is.na(sex), "Missing", as.character(sex))) %>% 
   group_by(drug_use_freq, sex) %>% 
   summarize(
     prop_suicide_attempt = sum(suicide_attempt == "Yes")/n()
@@ -504,7 +478,6 @@ yrbss_state_tidy_suicide_attempt %>%
   geom_bar(stat = "identity", position = "dodge")
 
 yrbss_state_tidy_suicide_attempt %>% 
-  mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
   group_by(drug_use_freq, race4) %>% 
   summarize(
     prop_suicide_attempt = sum(suicide_attempt == "Yes")/n()
@@ -578,8 +551,8 @@ yrbss_state_tidy_quit_smoke %>%
   ggplot(aes(x = drug_use_freq, y = prop_quit_smoke)) +
   geom_bar(stat = "identity", position = "dodge")
 
+
 yrbss_state_tidy_quit_smoke %>% 
-  mutate(grade = ifelse(is.na(grade), "Missing", as.character(grade))) %>% 
   group_by(drug_use_freq, grade) %>% 
   summarize(
     prop_quit_smoke = sum(quit_smoke == "Yes")/n()
@@ -588,7 +561,6 @@ yrbss_state_tidy_quit_smoke %>%
   geom_bar(stat = "identity", position = "dodge")
 
 yrbss_state_tidy_quit_smoke %>% 
-  mutate(sex = ifelse(is.na(sex), "Missing", as.character(sex))) %>% 
   group_by(drug_use_freq, sex) %>% 
   summarize(
     prop_quit_smoke = sum(quit_smoke == "Yes")/n()
@@ -599,7 +571,6 @@ yrbss_state_tidy_quit_smoke %>%
 race_analysis(yrbss_state_tidy_quit_smoke, "quit_smoke")
 
 yrbss_state_tidy_quit_smoke %>% 
-  mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
   group_by(drug_use_freq, race4) %>% 
   summarize(
     prop_quit_smoke = sum(quit_smoke == "Yes")/n()
@@ -634,8 +605,8 @@ yrbss_state_tidy_physical_fight %>%
   ggplot(aes(x = drug_use_freq, y = prop_physical_fight)) +
   geom_bar(stat = "identity", position = "dodge")
 
+
 yrbss_state_tidy_physical_fight %>% 
-  mutate(grade = ifelse(is.na(grade), "Missing", as.character(grade))) %>% 
   group_by(drug_use_freq, grade) %>% 
   summarize(
     prop_physical_fight = sum(physical_fight == "Yes")/n()
@@ -643,8 +614,8 @@ yrbss_state_tidy_physical_fight %>%
   ggplot(aes(x = drug_use_freq, y = prop_physical_fight, fill = grade)) +
   geom_bar(stat = "identity", position = "dodge")
 
+
 yrbss_state_tidy_physical_fight %>% 
-  mutate(sex = ifelse(is.na(sex), "Missing", as.character(sex))) %>% 
   group_by(drug_use_freq, sex) %>% 
   summarize(
     prop_physical_fight = sum(physical_fight == "Yes")/n()
@@ -652,8 +623,8 @@ yrbss_state_tidy_physical_fight %>%
   ggplot(aes(x = drug_use_freq, y = prop_physical_fight, fill = sex)) +
   geom_bar(stat = "identity", position = "dodge")
 
+
 yrbss_state_tidy_physical_fight %>% 
-  mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
   group_by(drug_use_freq, race4) %>% 
   summarize(
     prop_physical_fight = sum(physical_fight == "Yes")/n()
@@ -687,8 +658,8 @@ yrbss_state_tidy_early_sex %>%
   ggplot(aes(x = drug_use_freq, y = prop_early_sex)) +
   geom_bar(stat = "identity", position = "dodge")
 
+
 yrbss_state_tidy_early_sex %>% 
-  mutate(grade = ifelse(is.na(grade), "Missing", as.character(grade))) %>% 
   group_by(drug_use_freq, grade) %>% 
   summarize(
     prop_early_sex = sum(early_sex == "Yes")/n()
@@ -696,8 +667,8 @@ yrbss_state_tidy_early_sex %>%
   ggplot(aes(x = drug_use_freq, y = prop_early_sex, fill = grade)) +
   geom_bar(stat = "identity", position = "dodge")
 
+
 yrbss_state_tidy_early_sex %>% 
-  mutate(sex = ifelse(is.na(sex), "Missing", as.character(sex))) %>% 
   group_by(drug_use_freq, sex) %>% 
   summarize(
     prop_early_sex = sum(early_sex == "Yes")/n()
@@ -705,15 +676,17 @@ yrbss_state_tidy_early_sex %>%
   ggplot(aes(x = drug_use_freq, y = prop_early_sex, fill = sex)) +
   geom_bar(stat = "identity", position = "dodge")
 
+
 yrbss_state_tidy_early_sex %>% 
-  mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
   group_by(drug_use_freq, race4) %>% 
   summarize(
     prop_early_sex = sum(early_sex == "Yes")/n()
   ) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_early_sex, fill = race4)) +
   geom_bar(stat = "identity", position = "dodge")
+
 ```
+
 
 
 ### Screening Use
@@ -734,20 +707,136 @@ yrbss_state_tidy_screening_use <-
                        q80 > 2 ~ q80 - 2),
     screening_use = tv_use + computer_use
   )
-
 yrbss_state_tidy_screening_use %>% 
   group_by(drug_use_freq, screening_use) %>% 
   count() %>% 
   group_by(drug_use_freq) %>% 
   mutate(
-    total = sum(n)
+    prop = n/sum(n)
   ) %>% 
-  ggplot(aes(x = screening_use, y = n/total)) +
+  ggplot(aes(x = screening_use, y = prop)) +
   geom_bar(stat = "identity") +
   geom_smooth(se = FALSE) +
-  facet_grid(.~drug_use_freq) 
+  facet_grid(.~drug_use_freq)
 ```
 
+
+```{r}
+yrbss_state_tidy_heavy_screen_use <-
+  yrbss_state_tidy_screening_use %>% 
+  mutate(
+    heavy_screen_use = ifelse(screening_use == 5 | screening_use > 5, "Yes", "No")
+  )
+
+
+test_of_association(yrbss_state_tidy_heavy_screen_use, "heavy_screen_use")
+
+yrbss_state_tidy_heavy_screen_use %>%
+  group_by(drug_use_freq) %>% 
+  summarize(
+    prop_heavy_screen_use = sum(heavy_screen_use == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_heavy_screen_use)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+
+yrbss_state_tidy_heavy_screen_use %>% 
+  group_by(drug_use_freq, grade) %>% 
+  summarize(
+    prop_heavy_screen_use = sum(heavy_screen_use == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_heavy_screen_use, fill = grade)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+
+yrbss_state_tidy_heavy_screen_use %>% 
+  group_by(drug_use_freq, sex) %>% 
+  summarize(
+    prop_heavy_screen_use = sum(heavy_screen_use == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_heavy_screen_use, fill = sex)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+
+yrbss_state_tidy_heavy_screen_use %>% 
+  group_by(drug_use_freq, race4) %>% 
+  summarize(
+    prop_heavy_screen_use = sum(heavy_screen_use == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_heavy_screen_use, fill = race4)) +
+  geom_bar(stat = "identity", position = "dodge")
+```
+
+
+### Sleeping time
+
+```{r}
+yrbss_state_tidy_sleeping_time <- 
+  yrbss_state_tidy %>%
+  drop_na(q88) %>% 
+  mutate(
+    sleeping_time = as.numeric(q88) + 3
+  )
+
+yrbss_state_tidy_sleeping_time %>% 
+  group_by(drug_use_freq, sleeping_time) %>% 
+  count() %>% 
+  group_by(drug_use_freq) %>% 
+  mutate(
+    prop = n/sum(n)
+  ) %>% 
+  ggplot(aes(x = sleeping_time, y = prop)) +
+  geom_bar(stat = "identity") +
+  geom_smooth(se = FALSE) +
+  facet_grid(.~drug_use_freq)
+```
+
+
+```{r}
+yrbss_state_tidy_enough_sleep <-
+  yrbss_state_tidy_sleeping_time %>% 
+  mutate(
+    enough_sleep = ifelse(sleeping_time == 8 | sleeping_time > 8, "Yes", "No")
+  )
+
+test_of_association(yrbss_state_tidy_enough_sleep, "enough_sleep")
+
+yrbss_state_tidy_enough_sleep %>%
+  group_by(drug_use_freq) %>% 
+  summarize(
+    prop_enough_sleep = sum(enough_sleep == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_enough_sleep)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+
+yrbss_state_tidy_enough_sleep %>% 
+  mutate(grade = ifelse(is.na(grade), "Missing", as.character(grade))) %>% 
+  group_by(drug_use_freq, grade) %>% 
+  summarize(
+    prop_enough_sleep = sum(enough_sleep == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_enough_sleep, fill = grade)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+
+yrbss_state_tidy_enough_sleep %>% 
+  group_by(drug_use_freq, sex) %>% 
+  summarize(
+    prop_enough_sleep = sum(enough_sleep == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_enough_sleep, fill = sex)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+
+yrbss_state_tidy_enough_sleep %>% 
+  group_by(drug_use_freq, race4) %>% 
+  summarize(
+    prop_enough_sleep = sum(enough_sleep == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_enough_sleep, fill = race4)) +
+  geom_bar(stat = "identity", position = "dodge")
+```
 
 ### Smoking Status
 

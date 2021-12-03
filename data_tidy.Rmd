@@ -235,33 +235,6 @@ test_of_association <- function(input_df, input_name){
     unnest(results) %>% 
     select(-type)
 }
-
-<<<<<<< HEAD
-race_analysis <- function(input_df, input_name){
-  input_df %>% 
-    group_by(race4, drug_use_freq, across(all_of(input_name))) %>%
-    count() %>% 
-    pivot_wider(values_from = n, names_from = starts_with(input_name), 
-                names_prefix = paste0(input_name,"_")) %>% 
-    ungroup() %>% 
-    select(-drug_use_freq) %>% 
-    mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
-    nest(data = starts_with(input_name)) %>% 
-    mutate(
-      chisq_tests = map(.x = data, ~chisq.test(x = .x)),
-      chisq_result = map(chisq_tests, broom::tidy),
-      totaln = map(.x = data, colSums),
-      totaln = map_dbl(.x = totaln, ~reduce(.x, sum))
-    ) %>% 
-    select(race4, chisq_result, totaln) %>% 
-    unnest(chisq_result) %>% 
-    mutate(cramer_v_effect_size = sqrt(statistic / totaln*parameter)) %>% 
-    select(race4, statistic, p.value, df = parameter, cramer_v_effect_size)
-}
-=======
-
-
->>>>>>> d5c2ce5939c25c44c907f7fac6a83b9d89e1dfa7
 ```
 
 ### Drunk driving
@@ -364,6 +337,55 @@ yrbss_state_tidy %>%
   ggplot(aes(x = drug_usage, y = prop_drunk_driving)) +
   geom_bar(stat = "identity")
 ```
+
+
+### cell phone use while driving
+```{r}
+yrbss_state_tidy_text_driving <- yrbss_state_tidy %>%
+  drop_na(q11) %>% 
+  mutate(
+    text_driving = ifelse(q11 == 2, "No", "Yes")
+  )
+```
+
+
+```{r}
+test_of_association(yrbss_state_tidy_text_driving, "text_driving")
+
+yrbss_state_tidy_text_driving %>% 
+  group_by(drug_use_freq) %>% 
+  summarize(
+    prop_text_driving = sum(text_driving == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_text_driving)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+
+yrbss_state_tidy_text_driving %>% 
+  group_by(drug_use_freq, grade) %>% 
+  summarize(
+    prop_text_driving = sum(text_driving == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_text_driving, fill = grade)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+yrbss_state_tidy_text_driving %>% 
+  group_by(drug_use_freq, sex) %>% 
+  summarize(
+    prop_text_driving = sum(text_driving == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_text_driving, fill = sex)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+yrbss_state_tidy_text_driving %>% 
+  group_by(drug_use_freq, race4) %>% 
+  summarize(
+    prop_text_driving = sum(text_driving == "Yes")/n()
+  ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_text_driving, fill = race4)) +
+  geom_bar(stat = "identity", position = "dodge")
+```
+
 
 
 ### Carrying weapon

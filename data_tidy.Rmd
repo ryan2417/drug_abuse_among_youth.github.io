@@ -108,7 +108,8 @@ if_use = function(input_list){
 ```{r}
 yrbss_state_tidy <-
   yrbss_state %>% 
-  drop_na(q45, q46, q50, q51, q52, q53, q54, q55, q56) %>% 
+  drop_na(q45, q46, q50, q51, q52, q53, q54, q55, q56) %>%
+ # drop_na(q9,q10,q14,q17,q26,q39,q59,q79,q80,q88,q33,q42,q89,q8,q11) %>% 
   mutate(
     grade = fct_recode(factor(grade, ordered = TRUE), 
                        "9th Grade" = "1",
@@ -287,8 +288,6 @@ yrbss_state_tidy_drunk_driving <-
 association analysis
 
 ```{r}
-crude_analysis(yrbss_state_tidy_drunk_driving, "drunk_driving")
-
 test_of_association(yrbss_state_tidy_drunk_driving, "drunk_driving")
 
 yrbss_state_tidy_drunk_driving %>% 

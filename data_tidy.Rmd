@@ -236,8 +236,32 @@ test_of_association <- function(input_df, input_name){
     select(-type)
 }
 
+<<<<<<< HEAD
+race_analysis <- function(input_df, input_name){
+  input_df %>% 
+    group_by(race4, drug_use_freq, across(all_of(input_name))) %>%
+    count() %>% 
+    pivot_wider(values_from = n, names_from = starts_with(input_name), 
+                names_prefix = paste0(input_name,"_")) %>% 
+    ungroup() %>% 
+    select(-drug_use_freq) %>% 
+    mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
+    nest(data = starts_with(input_name)) %>% 
+    mutate(
+      chisq_tests = map(.x = data, ~chisq.test(x = .x)),
+      chisq_result = map(chisq_tests, broom::tidy),
+      totaln = map(.x = data, colSums),
+      totaln = map_dbl(.x = totaln, ~reduce(.x, sum))
+    ) %>% 
+    select(race4, chisq_result, totaln) %>% 
+    unnest(chisq_result) %>% 
+    mutate(cramer_v_effect_size = sqrt(statistic / totaln*parameter)) %>% 
+    select(race4, statistic, p.value, df = parameter, cramer_v_effect_size)
+}
+=======
 
 
+>>>>>>> d5c2ce5939c25c44c907f7fac6a83b9d89e1dfa7
 ```
 
 ### Drunk driving
@@ -257,7 +281,10 @@ yrbss_state_tidy_drunk_driving <-
 association analysis
 
 ```{r}
+crude_analysis(yrbss_state_tidy_drunk_driving, "drunk_driving")
+
 test_of_association(yrbss_state_tidy_drunk_driving, "drunk_driving")
+
 
 yrbss_state_tidy_drunk_driving %>% 
   group_by(drug_use_freq) %>% 
@@ -827,6 +854,323 @@ yrbss_state_tidy_enough_sleep %>%
 ```
 
 
+### Smoking Status
+
+Based on question 33 in the 2019 YOUTH RISK BEHAVIOR SURVEY, the researchers care about whether students smoked more than 10 cigarettes per day on the days they smoked during the 30 days before the survey. Therefore, we define students who did not smoke as "Never Smoker", 1 to 10 cigarettes per day as "Light Smoker", greater than 10 cigarettes per day as "Heavy Smokers".
+
+
+```{r}
+yrbss_state_tidy_smoking_status <- 
+  yrbss_state_tidy %>% 
+  drop_na(q33) %>% 
+  mutate(
+    smoking_status = case_when(q33 == 1 ~ "Never Smoker",
+                               q33 >= 2 & q33 <= 5 ~ "Light Smoker",
+                               q33 >=6 ~ "Heavy Smoker"),
+    smoking_status = factor(smoking_status, level = c("Never Smoker", "Light Smoker", "Heavy Smoker"))
+  ) %>% 
+  select(smoking_status, drug_use_freq, grade, sex, race4)
+```
+
+Association Analysis
+
+```{r}
+# test_of_association(yrbss_state_tidy_smoking_status, "smoking_status")
+
+yrbss_state_tidy_smoking_status %>% 
+  group_by(drug_use_freq, smoking_status) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(drug_use_freq == "No Drug Use" ~ sum(n),
+                          drug_use_freq == "Light Dose" ~ sum(n),
+                          drug_use_freq == "Heavy Dose" ~ sum(n)),
+         prop_smoking_status = n/total
+         ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = smoking_status)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+# Stratified Analysis over Grade
+yrbss_state_tidy_smoking_status %>% 
+  mutate(grade = ifelse(is.na(grade), "Missing", as.character(grade))) %>% 
+  group_by(drug_use_freq,smoking_status,grade) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(smoking_status == "Never Smoker" ~ sum(n),
+                          smoking_status == "Light Smoker" ~ sum(n),
+                          smoking_status == "Heavy Smoker" ~ sum(n)),
+         prop_smoking_status = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = grade)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(smoking_status ~ .)
+
+# Over Gender
+yrbss_state_tidy_smoking_status %>% 
+  mutate(sex = ifelse(is.na(sex), "Missing", as.character(sex))) %>% 
+  group_by(drug_use_freq,smoking_status,sex) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(smoking_status == "Never Smoker" ~ sum(n),
+                          smoking_status == "Light Smoker" ~ sum(n),
+                          smoking_status == "Heavy Smoker" ~ sum(n)),
+         prop_smoking_status = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = sex)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(smoking_status ~ .)
+
+# Over race
+yrbss_state_tidy_smoking_status %>% 
+  mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
+  group_by(drug_use_freq, smoking_status,race4) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(smoking_status == "Never Smoker" ~ sum(n),
+                          smoking_status == "Light Smoker" ~ sum(n),
+                          smoking_status == "Heavy Smoker" ~ sum(n)),
+         prop_smoking_status = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = race4)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(smoking_status ~ .)
+```
+
+
+### Binge Drinking 
+
+Based on question 42 in the 2019 YOUTH RISK BEHAVIOR SURVEY, we define students who did not have binge drinking as "No Binge Drinking", 1 to 5 days of binge drinking in the past 30 days as "Light Binge Drinking", greater than 5days as "Heavy Binge Drinking".
+
+
+```{r}
+yrbss_state_tidy_binge_drinking <- 
+  yrbss_state_tidy %>% 
+  drop_na(q42) %>% 
+  mutate(
+    binge_drinking = case_when(q42 == 1 ~ "No Binge Drinking",
+                               q42 >= 2 & q42 <= 4 ~ "Light Binge Drinking",
+                               q42 >=5 ~ "Heavy Binge Drinking"),
+    binge_drinking = factor(binge_drinking, level = c("No Binge Drinking", "Light Binge Drinking", "Heavy Binge Drinking"))
+  ) %>% 
+  select(binge_drinking, drug_use_freq, grade, sex, race4)
+```
+
+Association Analysis
+
+```{r}
+# test_of_association(yrbss_state_tidy_smoking_status, "smoking_status")
+
+yrbss_state_tidy_binge_drinking %>% 
+  group_by(drug_use_freq, binge_drinking) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(drug_use_freq == "No Drug Use" ~ sum(n),
+                          drug_use_freq == "Light Dose" ~ sum(n),
+                          drug_use_freq == "Heavy Dose" ~ sum(n)),
+         prop_binge_drinking = n/total
+         ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_binge_drinking, fill = binge_drinking)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+# Stratified Analysis over Grade
+yrbss_state_tidy_binge_drinking %>% 
+  mutate(grade = ifelse(is.na(grade), "Missing", as.character(grade))) %>% 
+  group_by(drug_use_freq,binge_drinking,grade) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(binge_drinking == "No Binge Drinking" ~ sum(n),
+                          binge_drinking == "Light Binge Drinking" ~ sum(n),
+                          binge_drinking == "Heavy Binge Drinking" ~ sum(n)),
+         prop_binge_drinking = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_binge_drinking, fill = grade)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(binge_drinking ~ .)
+
+# Over Gender
+yrbss_state_tidy_binge_drinking %>% 
+  mutate(sex = ifelse(is.na(sex), "Missing", as.character(sex))) %>% 
+  group_by(drug_use_freq,binge_drinking,sex) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(binge_drinking == "No Binge Drinking" ~ sum(n),
+                          binge_drinking == "Light Binge Drinking" ~ sum(n),
+                          binge_drinking == "Heavy Binge Drinking" ~ sum(n)),
+         prop_binge_drinking = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_binge_drinking, fill = sex)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(binge_drinking ~ .)
+
+# Over race
+yrbss_state_tidy_binge_drinking %>% 
+  mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
+  group_by(drug_use_freq, binge_drinking,race4) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(binge_drinking == "No Binge Drinking" ~ sum(n),
+                          binge_drinking == "Light Binge Drinking" ~ sum(n),
+                          binge_drinking == "Heavy Binge Drinking" ~ sum(n)),
+         prop_binge_drinking = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_binge_drinking, fill = race4)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(binge_drinking ~ .)
+```
+
+
+### Seat belt use 
+Resource: question 8
+
+```{r}
+yrbss_state_tidy_seat_belt <- 
+  yrbss_state_tidy %>% 
+  drop_na(q8) %>% 
+  mutate(
+    seat_belt = case_when(q8 <= 2 ~ "Never or Rarely",
+                          q8 == 3 ~ "Sometimes",
+                          q8 >= 4 ~ "Most of the time or Always"),
+    seat_belt = factor(seat_belt, level = c("Never or Rarely", "Sometimes", "Most of the time or Always"))
+  ) %>% 
+  select(seat_belt, drug_use_freq, grade, sex, race4)
+```
+
+Association Analysis
+
+```{r}
+# test_of_association(yrbss_state_tidy_smoking_status, "smoking_status")
+
+yrbss_state_tidy_seat_belt %>% 
+  group_by(drug_use_freq, seat_belt) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(drug_use_freq == "No Drug Use" ~ sum(n),
+                          drug_use_freq == "Light Dose" ~ sum(n),
+                          drug_use_freq == "Heavy Dose" ~ sum(n)),
+         prop_seat_belt = n/total
+         ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_seat_belt, fill = seat_belt)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+# Stratified Analysis over Grade
+yrbss_state_tidy_seat_belt %>% 
+  mutate(grade = ifelse(is.na(grade), "Missing", as.character(grade))) %>% 
+  group_by(drug_use_freq,seat_belt,grade) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(seat_belt == "Never or Rarely" ~ sum(n),
+                          seat_belt == "Sometimes" ~ sum(n),
+                          seat_belt == "Most of the time or Always" ~ sum(n)),
+         prop_seat_belt = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_seat_belt, fill = grade)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(seat_belt ~ .)
+
+# Over Gender
+yrbss_state_tidy_seat_belt %>% 
+  mutate(sex = ifelse(is.na(sex), "Missing", as.character(sex))) %>% 
+  group_by(drug_use_freq,seat_belt,sex) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(seat_belt == "Never or Rarely" ~ sum(n),
+                          seat_belt == "Sometimes" ~ sum(n),
+                          seat_belt == "Most of the time or Always" ~ sum(n)),
+         prop_seat_belt = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_seat_belt, fill = sex)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(seat_belt ~ .)
+
+# Over race
+yrbss_state_tidy_seat_belt %>% 
+  mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
+  group_by(drug_use_freq, seat_belt,race4) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(seat_belt == "Never or Rarely" ~ sum(n),
+                          seat_belt == "Sometimes" ~ sum(n),
+                          seat_belt == "Most of the time or Always" ~ sum(n)),
+         prop_seat_belt = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_seat_belt, fill = race4)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(seat_belt ~ .)
+```
+
+### Grades in school 
+Resource: question 89
+exclude option "None of these grades" and "Not sure"
+
+```{r}
+yrbss_state_tidy_grades_school <- 
+  yrbss_state_tidy %>% 
+  drop_na(q89) %>% 
+  filter(q89 < 6) %>% 
+  mutate(
+    grades_school = case_when(q89 == 1 ~ "Mostly A's",
+                       q89 == 2 ~ "Mostly B's",
+                       q89 == 3 ~ "Mostly C's",
+                       q89 >= 4 ~ "Mostly Below C's"),
+    grades_school = factor(grades_school, level = c("Mostly A's", "Mostly B's", "Mostly C's", "Mostly Below C's"))
+  ) %>% 
+  select(grades_school, drug_use_freq, grade, sex, race4)
+```
+
+Association Analysis
+
+```{r}
+# test_of_association(yrbss_state_tidy_smoking_status, "smoking_status")
+
+yrbss_state_tidy_grades_school %>% 
+  group_by(drug_use_freq, grades_school) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(drug_use_freq == "No Drug Use" ~ sum(n),
+                          drug_use_freq == "Light Dose" ~ sum(n),
+                          drug_use_freq == "Heavy Dose" ~ sum(n)),
+         prop_grades_school = n/total
+         ) %>% 
+  ggplot(aes(x = drug_use_freq, y = prop_grades_school, fill = grades_school)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+# Stratified Analysis over Grade
+yrbss_state_tidy_grades_school %>% 
+  mutate(grade = ifelse(is.na(grade), "Missing", as.character(grade))) %>% 
+  group_by(drug_use_freq,grades_school,grade) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(grades_school == "Mostly A's" ~ sum(n),
+                          grades_school == "Mostly B's" ~ sum(n),
+                          grades_school == "Mostly C's" ~ sum(n),
+                          grades_school == "Mostly Below C's" ~ sum(n)),
+         prop_grades_school = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_grades_school, fill = grade)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(grades_school ~ .)
+
+# Over Gender
+yrbss_state_tidy_grades_school %>% 
+  mutate(sex = ifelse(is.na(sex), "Missing", as.character(sex))) %>% 
+  group_by(drug_use_freq,grades_school,sex) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(grades_school == "Mostly A's" ~ sum(n),
+                          grades_school == "Mostly B's" ~ sum(n),
+                          grades_school == "Mostly C's" ~ sum(n),
+                          grades_school == "Mostly Below C's" ~ sum(n)),
+         prop_grades_school = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_grades_school, fill = sex)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(grades_school ~ .)
+
+# Over race
+yrbss_state_tidy_grades_school %>% 
+  mutate(race4 = ifelse(is.na(race4), "Missing", as.character(race4))) %>% 
+  group_by(drug_use_freq, grades_school,race4) %>% 
+  summarize(n = n()) %>% 
+  mutate(total = case_when(grades_school == "Mostly A's" ~ sum(n),
+                          grades_school == "Mostly B's" ~ sum(n),
+                          grades_school == "Mostly C's" ~ sum(n),
+                          grades_school == "Mostly Below C's" ~ sum(n)),
+         prop_grades_school = n/total
+         ) %>%
+  ggplot(aes(x = drug_use_freq, y = prop_grades_school, fill = race4)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(grades_school ~ .)
+```
+
+
+
+
+
+
 ## Part 3
 ##### 2，额外图  
 1，吸毒各个frequency段的，吸烟初始年龄分布。  
@@ -946,5 +1290,12 @@ ggplot(BMI, aes(x = drug_use_freq, y = ifelse(sex == "2", -bmi, bmi), fill =sex)
   coord_flip()
 
 ```
+
+
+
+
+
+
+
 
 

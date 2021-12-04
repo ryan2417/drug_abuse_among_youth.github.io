@@ -229,7 +229,22 @@ Here is a table summarized the overall distribution of important variables by dr
 ## Three-line-table
 
 ```{r three-line}
-table1(~ drunk_driving + carrying_weapon + suicide_attempt + quit_smoke + physical_fight + early_sex + screening_use + smoking_status + binge_drinking + seat_belt + grades_school| drug_use_freq, data = df, caption = "Table 1: Distribution of risky behaviors by drug use status")
+label(yrbss_state_tidy$drunk_driving) = "Drunk Driving"
+label(yrbss_state_tidy$text_driving) = "Text Driving"
+label(yrbss_state_tidy$carrying_weapon) = "Weapon Carrying"
+label(yrbss_state_tidy$suicide_attempt) = "Suicide Attempt"
+label(yrbss_state_tidy$quit_smoke) = "Quit Smoking"
+label(yrbss_state_tidy$physical_fight) = "Physical Fight"
+label(yrbss_state_tidy$early_sex) = "Sexual Intercourse"
+label(yrbss_state_tidy$screening_use) = "Screening Use"
+label(yrbss_state_tidy$sleeping_time) = "Sleeping Time"
+label(yrbss_state_tidy$smoking_status) = "Smoking Status"
+label(yrbss_state_tidy$binge_drinking) = "Binge Dringking"
+label(yrbss_state_tidy$seat_belt) = "Seat Belt Use"
+label(yrbss_state_tidy$grades_school) = "Grades in School"
+
+
+table1(~ drunk_driving + text_driving + carrying_weapon + suicide_attempt + quit_smoke + physical_fight + early_sex + screening_use + sleeping_time + smoking_status + binge_drinking + seat_belt + grades_school| drug_use_freq, data = yrbss_state_tidy, caption = "Table 1: Distribution of risky behaviors by drug use status")
 ```
 
 
@@ -850,7 +865,8 @@ Based on question 33 in the 2019 YOUTH RISK BEHAVIOR SURVEY, the researchers car
 
 ```{r}
 smoking_status_crude = 
-  association_analysis(yrbss_state_tidy, "smoking_status", "crude")
+  association_analysis(yrbss_state_tidy, "smoking_status", "crude") %>% 
+  mutate(type = "crude")
 
 # chi-square of grade
 smoking_status_grade =
@@ -872,11 +888,13 @@ smoking_status_grade =
       select(stratum = starts_with("grade"), 
              statistic, p.value, 
              df = parameter, 
-             cramer_v_effect_size)
+             cramer_v_effect_size) %>% 
+  mutate(type = "grade")
 
 # chi-square of gender
 smoking_status_gender = 
-  association_analysis(yrbss_state_tidy, "smoking_status", "sex")
+  association_analysis(yrbss_state_tidy, "smoking_status", "sex") %>% 
+  mutate(type = "sex")
 
 # chi-square of race
 smoking_status_race = 
@@ -898,7 +916,16 @@ smoking_status_race =
       select(stratum = starts_with("race4"), 
              statistic, p.value, 
              df = parameter, 
-             cramer_v_effect_size)
+             cramer_v_effect_size) %>% 
+  mutate(type = "race")
+
+output = 
+  bind_rows(smoking_status_crude, smoking_status_grade,smoking_status_gender, smoking_status_race) %>% 
+  mutate(type = factor(type, levels = c("crude","grade", "sex", "race")))
+  
+kbl(output[, -6], caption = "Table **: Drug Use Status vs Binge Drinking") %>%
+    kable_paper("hover", full_width = F) %>% 
+    pack_rows(index = table(output$type))
 ```
 
 ```{r}
@@ -908,10 +935,11 @@ yrbss_state_tidy %>%
   mutate(prop_smoking_status = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = smoking_status)) +
   geom_bar(stat = "identity", position = "dodge") +
- # scale_color_manual(values=c('#56B4E9', '#E69F00', '#999999'))
+  scale_fill_manual(values = c('#00CC00', '#FFA500', '#FF4500')) + 
   labs(title = "Proportion of Smoking Status Among Drug Use Frequency",
        x = "Drug Use Frequency",
-       y = "Proportion")
+       y = "Proportion",
+       fill = "Smoking Status") 
 ```
 
 ```{r}
@@ -922,6 +950,7 @@ yrbss_state_tidy %>%
   mutate(prop_smoking_status = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = smoking_status)) +
   geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c('#00CC00', '#FFA500', '#FF4500')) + 
   facet_grid(. ~ grade) +
   labs(title = "Stratified Analysis of Smoking Stauts over Grade",
        x = "Drug Use Frequency",
@@ -936,6 +965,7 @@ yrbss_state_tidy %>%
   mutate(prop_smoking_status = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = smoking_status)) +
   geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c('#00CC00', '#FFA500', '#FF4500')) + 
   facet_grid(. ~ sex)
   labs(title = "Stratified Analysis of Smoking Stauts over Gender",
        x = "Drug Use Frequency",
@@ -965,7 +995,7 @@ yrbss_state_tidy %>%
 Based on question 42 in the 2019 YOUTH RISK BEHAVIOR SURVEY, we define students who did not have binge drinking as "No Binge Drinking", 1 to 5 days of binge drinking in the past 30 days as "Light Binge Drinking", greater than 5days as "Heavy Binge Drinking".
 
 ```{r}
-test_of_association(yrbss_state_tidy, "binge_drinking")
+test_of_association(yrbss_state_tidy, "binge_drinking", "Table **: Drug Use Status vs Binge Drinking")
 ```
 
 ```{r}
@@ -975,7 +1005,7 @@ yrbss_state_tidy %>%
   mutate(prop_binge_drinking = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_binge_drinking, fill = binge_drinking)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Proportion of Binge Drinking Among Drug Use Frequency",
+  labs(title = "Proportion of Binge Drinking Among Drug Use Status",
        x = "Drug Use Frequency",
        y = "Proportion")
 ```
@@ -1030,7 +1060,8 @@ yrbss_state_tidy %>%
 Resource: question 8
 
 ```{r}
-test_of_association(yrbss_state_tidy, "seat_belt")
+test_of_association(yrbss_state_tidy, "seat_belt", "Table **: Drug Use Status vs Seat Belt Use")
+
 ```
 
 ```{r}
@@ -1100,7 +1131,7 @@ yrbss_state_tidy_grades_school <-
 ```
 
 ```{r}
-test_of_association(yrbss_state_tidy_grades_school, "grades_school")
+test_of_association(yrbss_state_tidy_grades_school, "grades_school", "Table **: Drug Use Status vs Grades in School")
 ```
 
 ```{r}

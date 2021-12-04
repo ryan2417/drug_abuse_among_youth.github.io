@@ -288,6 +288,7 @@ test_of_association(yrbss_state_tidy_additional, "drunk_driving", "Table 2: Drug
 ```
 
 Overall:
+
 ```{r}
 yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq) %>% 
@@ -302,6 +303,7 @@ yrbss_state_tidy_additional %>%
 ```
 
 Stratified Analysis:
+
 ```{r}
 yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq, grade) %>% 

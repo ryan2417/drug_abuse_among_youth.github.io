@@ -290,8 +290,7 @@ race_analysis <- function(input_df, input_name){
     mutate(cramer_v_effect_size = sqrt(statistic / totaln*parameter)) %>% 
     select(race4, statistic, p.value, df = parameter, cramer_v_effect_size)
 }
-=======
->>>>>>> d5c2ce5939c25c44c907f7fac6a83b9d89e1dfa7
+
 ```
 
 

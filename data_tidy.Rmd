@@ -136,6 +136,7 @@ yrbss_state_tidy <-
     )
 ```
 
+
 ### (3) State + Proportion + drug type (side by side bar chart)
 
 ```{r}
@@ -173,9 +174,6 @@ state_proportion_plot = ggplot(state_proportion_drugtype,
 
 ggplotly(state_proportion_plot)
 ```
-
-
-
 
 
 ## Part 2

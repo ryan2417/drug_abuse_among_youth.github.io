@@ -14,7 +14,6 @@ library(plotly)
 library(usmap)
 library(viridis)
 library(hash)
-library(wesanderson)
 ```
 
 ```{r data_import, message=FALSE}
@@ -113,7 +112,6 @@ color_dict[["Heavy Dose"]] = "red"
 color_dict[["Light Dose"]] = "orange"
 color_dict[["No Drug Use"]] = "blue"
 #-------------------------------------------------------------------------------- Chart B Settings
-
 ```
 
 Column {data-width=600}
@@ -128,7 +126,7 @@ renderPlotly({
     ggplot(aes(x = state,y = proportion,color = dose))+
     scale_color_manual(values= c("#FF3225","#F5D247","#4728FA"))+
     geom_col()+
-    facet_grid(~race4)+
+    facet_wrap(~race4)+
     coord_flip()
 })
 ```
@@ -149,6 +147,8 @@ renderPlotly({
     low = "white", high = color_dict[[input[["dose_choose"]]]], name = "Proportion", label = scales::comma
   ) + theme(legend.position = "right")
 })
+
+?plot_usmap
 ```
 
 ### Proportion Pyramid of students who had drugs

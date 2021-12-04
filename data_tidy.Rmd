@@ -829,6 +829,16 @@ yrbss_state_tidy_enough_sleep %>%
   geom_bar(stat = "identity", position = "dodge")
 ```
 
+
+
+```{r}
+# function
+crude_graph = function()
+```
+
+
+
+
 ### Smoking Status
 
 Based on question 33 in the 2019 YOUTH RISK BEHAVIOR SURVEY, the researchers care about whether students smoked more than 10 cigarettes per day on the days they smoked during the 30 days before the survey. Therefore, we define students who did not smoke as "Never Smoker", 1 to 10 cigarettes per day as "Light Smoker", greater than 10 cigarettes per day as "Heavy Smokers".
@@ -849,7 +859,12 @@ yrbss_state_tidy_smoking_status <-
 Association Analysis
 
 ```{r}
-test_of_association(yrbss_state_tidy_smoking_status, "smoking_status")
+
+association_analysis(yrbss_state_tidy_smoking_status, "smoking_status", "crude")
+
+association_analysis(yrbss_state_tidy_smoking_status, "smoking_status", "sex")
+
+
 
 yrbss_state_tidy_smoking_status %>% 
   group_by(drug_use_freq, smoking_status) %>% 

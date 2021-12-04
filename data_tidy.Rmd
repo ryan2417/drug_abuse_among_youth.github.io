@@ -70,7 +70,7 @@ if_use = function(input_list){
 
 ```
 
-
+ 
 ## Part 1
 
 ```{r}
@@ -238,7 +238,10 @@ test_of_association <- function(input_df, input_name){
     mutate(results = map(.x = type, ~association_analysis(input_df, input_name, type = .x))) %>% 
     unnest(results) %>% 
     select(-type)
-  }
+
+}
+
+
 ```
 
 ### Drunk driving
@@ -1130,7 +1133,6 @@ table1(~ drunk_driving + carrying_weapon + suicide_attempt + quit_smoke + physic
 ```
 
 
-
 ## Part 3
 ##### 2，额外图  
 1，吸毒各个frequency段的，吸烟初始年龄分布。  
@@ -1159,15 +1161,24 @@ drug1_smoke=
   ) %>%
   drop_na(q31)
 
+
 drug1_smoke %>%
   group_by(drug_use_freq, smoke_age) %>%
+  filter(smoke_age != "never") %>%
   summarize(n = n()) %>% 
   mutate(percentage = n/sum(n),
-         percent = scales::percent(percentage)) %>% 
-  mutate(position = rank(-percentage)) %>%
+         percent = scales::percent(percentage),
+         smoke_age = factor(smoke_age, 
+                            levels = c("never",
+                                       "8 years old or younger",
+                                       "9 or 10 years old",
+                                       "11 or 12 years old",
+                                       "13 or 14 years old",
+                                       "15 or 16 years old",
+                                       "17 years old or older"))) %>% 
   ggplot(
        aes(x = drug_use_freq, y = percentage,
-           fill = reorder(smoke_age,-percentage),group = position)
+           fill = smoke_age)
        ) +
   geom_bar(stat = "identity",                                     
            position = "dodge") +
@@ -1183,7 +1194,7 @@ drug1_smoke %>%
 #boxplot
 ggplot(drug1_smoke, 
        aes(x = factor(drug_use_freq), 
-           y = age_initial_smoking,fill=factor(drug_use_freq))) +        
+           y = age_initial_smoking,fill=factor(drug_use_freq))) +     
   geom_boxplot() +
   theme(
     axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
@@ -1205,13 +1216,21 @@ drug1_alcohol=
 
 drug1_alcohol %>%
   group_by(drug_use_freq, alcohol_age) %>%
+    filter(alcohol_age != "never") %>%
   summarize(n = n()) %>% 
   mutate(percentage = n/sum(n),
-         percent = scales::percent(percentage)) %>% 
-  mutate(position = rank(-percentage)) %>%
+         percent = scales::percent(percentage),
+         alcohol_age = factor(alcohol_age, 
+                            levels = c("never",
+                                       "8 years old or younger",
+                                       "9 or 10 years old",
+                                       "11 or 12 years old",
+                                       "13 or 14 years old",
+                                       "15 or 16 years old",
+                                       "17 years old or older"))) %>% 
   ggplot(
        aes(x = drug_use_freq, y = percentage,
-           fill = reorder(alcohol_age,-percentage),group = position)
+           fill = alcohol_age)
        ) +
   geom_bar(stat = "identity",                                     
            position = "dodge") +
@@ -1251,6 +1270,9 @@ BMI %>%
     axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
     legend.position = "none")+
   labs(title = "Salary distribution by rank")
+
+#heavy tail - more dose have higher BMI 
+
 
 #pyramid plot - looks weird
 ggplot(BMI, aes(x = drug_use_freq, y = ifelse(sex == "2", -bmi, bmi), fill =sex)) + 

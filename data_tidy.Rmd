@@ -102,10 +102,7 @@ if_use = function(input_list){
 
 ```
 
- sex = fct_recode(factor(sex, ordered = TRUE), 
-                       "female" = "1",
-                       "male" = "2"),
- sex = fct_explicit_na(sex, "Missing Gender"),
+ 
 ## Part 1
 
 ```{r}
@@ -119,8 +116,10 @@ yrbss_state_tidy <-
                        "11th Grade" = "3",
                        "12th Grade" = "4"),
     grade = fct_explicit_na(grade, "Missing Grade"),
-   
-    
+    sex = fct_recode(factor(sex, ordered = TRUE), 
+                       "female" = "1",
+                       "male" = "2"),
+    sex = fct_explicit_na(sex, "Missing Gender"),
     race4 = fct_recode(factor(race4), 
                        "White" = "1",
                        "Black or African American" = "2",

@@ -1,0 +1,36 @@
+Final report
+1, 视频2⃣️
+
+2，report 网页
+    <1>, yml 模板 <Prevalence Trend of Suicide Commitments>  <Vehicle Collision in New York City>1⃣️ ky
+    <2>, Shiny
+        <1>, statewise plot <Shiny:  Prevalence Trend of Suicide Commitments> 1⃣️ ky,xh
+        <2>, Regression1⃣️ rq $ 学生是否吸毒预测model.2⃣️  <Evicted in Brooklyn>
+    <3>, Data <Risky Coffee??> 🍦
+        <1>, Data source 1⃣️ xq
+        <2>, Data cleaning 1⃣️ ky,yz,xh,rq,xq
+        <3>, Variable desciribe 1⃣️ ky,yz,xh,rq,xq
+      
+    <4>, data analysis1⃣️.   
+        <1> Data exploration1⃣️  ky，xh 🍦
+            <1> 美国总体毒品使用分析1⃣️
+        <2> Data analysis1⃣️ rq,yz,xq 🍦
+            <1> 三线图分析1⃣️
+            <2> 回归模型。1⃣️
+
+    <5>, Related work2⃣️ 🍦
+        <1> Yrbss copy paste
+        <2> NCDAS
+        
+    <6>, Report。<Risky Coffee??> <The Heart Project> 🍦
+        <1>, Motivation2⃣️
+        <2>, Conclusion <一两张表>2⃣️
+        <3>, Discuss2⃣️
+        <4>, Strength & Limitation2⃣️
+    <7>, about  🍦
+        <1>, proposal2⃣️
+        <2>, 个人介绍？？2⃣️
+ 
+        
+
+

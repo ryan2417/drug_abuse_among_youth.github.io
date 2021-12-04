@@ -214,7 +214,7 @@ yrbss_state_tidy_additional <-
     smoke_age = firstage_tidy(q31),
     alcohol_age = firstage_tidy(q40)
     ) %>% 
-  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, sleeping_time, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age)
+  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, sleeping_time, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age) 
 ```
 
 This data analysis uses the resulted data set cleaned by the processing described in part 2 of [Data]("3,Data Description.html"). According to our motivation, we are interested the relationship between drug use and youth behaviors. In this analysis, we will explore the association between drug use status and each health behavior variables.
@@ -229,19 +229,20 @@ Here is a table summarized the overall distribution of important variables by dr
 ## Three-line-table
 
 ```{r three-line}
-label(yrbss_state_tidy$drunk_driving) = "Drunk Driving"
-label(yrbss_state_tidy$text_driving) = "Text Driving"
-label(yrbss_state_tidy$carrying_weapon) = "Weapon Carrying"
-label(yrbss_state_tidy$suicide_attempt) = "Suicide Attempt"
-label(yrbss_state_tidy$quit_smoke) = "Quit Smoking"
-label(yrbss_state_tidy$physical_fight) = "Physical Fight"
-label(yrbss_state_tidy$early_sex) = "Sexual Intercourse"
-label(yrbss_state_tidy$screening_use) = "Screening Use"
-label(yrbss_state_tidy$sleeping_time) = "Sleeping Time"
-label(yrbss_state_tidy$smoking_status) = "Smoking Status"
-label(yrbss_state_tidy$binge_drinking) = "Binge Dringking"
-label(yrbss_state_tidy$seat_belt) = "Seat Belt Use"
-label(yrbss_state_tidy$grades_school) = "Grades in School"
+
+label(yrbss_state_tidy_additional$drunk_driving) = "Drunk Driving"
+label(yrbss_state_tidy_additional$text_driving) = "Text Driving"
+label(yrbss_state_tidy_additional$carrying_weapon) = "Weapon Carrying"
+label(yrbss_state_tidy_additional$suicide_attempt) = "Suicide Attempt"
+label(yrbss_state_tidy_additional$quit_smoke) = "Quit Smoking"
+label(yrbss_state_tidy_additional$physical_fight) = "Physical Fight"
+label(yrbss_state_tidy_additional$early_sex) = "Sexual Intercourse"
+label(yrbss_state_tidy_additional$screening_use) = "Screening Use"
+label(yrbss_state_tidy_additional$sleeping_time) = "Sleeping Time"
+label(yrbss_state_tidy_additional$smoking_status) = "Smoking Status"
+label(yrbss_state_tidy_additional$binge_drinking) = "Binge Dringking"
+label(yrbss_state_tidy_additional$seat_belt) = "Seat Belt Use"
+label(yrbss_state_tidy_additional$grades_school) = "Grades in School"
 
 
 table1(~ drunk_driving + text_driving + carrying_weapon + suicide_attempt + quit_smoke + physical_fight + early_sex + screening_use + sleeping_time + smoking_status + binge_drinking + seat_belt + grades_school| drug_use_freq, data = yrbss_state_tidy, caption = "Table 1: Distribution of risky behaviors by drug use status")
@@ -866,12 +867,12 @@ Based on question 33 in the 2019 YOUTH RISK BEHAVIOR SURVEY, the researchers car
 
 ```{r}
 smoking_status_crude = 
-  association_analysis(yrbss_state_tidy, "smoking_status", "crude") %>% 
+  association_analysis(yrbss_state_tidy_additional, "smoking_status", "crude") %>% 
   mutate(type = "crude")
 
 # chi-square of grade
 smoking_status_grade =
-  yrbss_state_tidy %>% 
+  yrbss_state_tidy_additional %>% 
       group_by(across(all_of("grade")), drug_use_freq, across(all_of("smoking_status"))) %>%
       count() %>% 
       pivot_wider(values_from = n, names_from = starts_with("smoking_status"), names_prefix = "smoking_status") %>% 
@@ -894,12 +895,12 @@ smoking_status_grade =
 
 # chi-square of gender
 smoking_status_gender = 
-  association_analysis(yrbss_state_tidy, "smoking_status", "sex") %>% 
+  association_analysis(yrbss_state_tidy_additional, "smoking_status", "sex") %>% 
   mutate(type = "sex")
 
 # chi-square of race
 smoking_status_race = 
-  yrbss_state_tidy %>% 
+  yrbss_state_tidy_additional %>% 
       group_by(across(all_of("race4")), drug_use_freq, across(all_of("smoking_status"))) %>%
       count() %>% 
       pivot_wider(values_from = n, names_from = starts_with("smoking_status"), names_prefix = "smoking_status") %>% 
@@ -930,22 +931,22 @@ kbl(output[, -6], caption = "Table **: Drug Use Status vs Binge Drinking") %>%
 ```
 
 ```{r}
-yrbss_state_tidy %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq, smoking_status) %>% 
   summarize(n = n()) %>% 
   mutate(prop_smoking_status = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = smoking_status)) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = c('#00CC00', '#FFA500', '#FF4500')) + 
-  labs(title = "Proportion of Smoking Status Among Drug Use Frequency",
-       x = "Drug Use Frequency",
+  labs(title = "Proportion of Smoking Status Among Drug Use Status",
+       x = "Drug Use Status",
        y = "Proportion",
        fill = "Smoking Status") 
 ```
 
 ```{r}
 # Stratified Analysis over Grade
-yrbss_state_tidy %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq,grade, smoking_status) %>% 
   summarize(n = n()) %>% 
   mutate(prop_smoking_status = n/sum(n)) %>% 
@@ -960,7 +961,7 @@ yrbss_state_tidy %>%
 
 ```{r}
 # Over Gender
-yrbss_state_tidy %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq,sex, smoking_status,) %>% 
   summarize(n = n()) %>% 
   mutate(prop_smoking_status = n/sum(n)) %>% 
@@ -978,7 +979,7 @@ yrbss_state_tidy %>%
 
 ```{r}
 # Over race
-yrbss_state_tidy %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq, race4, smoking_status) %>% 
   summarize(n = n()) %>% 
   mutate(prop_smoking_status = n/sum(n)) %>% 
@@ -996,11 +997,11 @@ yrbss_state_tidy %>%
 Based on question 42 in the 2019 YOUTH RISK BEHAVIOR SURVEY, we define students who did not have binge drinking as "No Binge Drinking", 1 to 5 days of binge drinking in the past 30 days as "Light Binge Drinking", greater than 5days as "Heavy Binge Drinking".
 
 ```{r}
-test_of_association(yrbss_state_tidy, "binge_drinking", "Table **: Drug Use Status vs Binge Drinking")
+test_of_association(yrbss_state_tidy_additional, "binge_drinking", "Table **: Drug Use Status vs Binge Drinking")
 ```
 
 ```{r}
-yrbss_state_tidy %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq, binge_drinking) %>% 
   summarize(n = n()) %>% 
   mutate(prop_binge_drinking = n/sum(n)) %>% 
@@ -1014,7 +1015,7 @@ yrbss_state_tidy %>%
 
 ```{r}
 # Stratified Analysis over Grade
-yrbss_state_tidy %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq,grade, binge_drinking) %>% 
   summarize(n = n()) %>% 
   mutate(prop_binge_drinking = n/sum(n)) %>% 
@@ -1029,7 +1030,7 @@ yrbss_state_tidy %>%
 
 ```{r}
 # Over Gender
-yrbss_state_tidy %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq,sex,binge_drinking) %>% 
   summarize(n = n()) %>% 
   mutate(prop_binge_drinking = n/sum(n)) %>% 
@@ -1044,7 +1045,7 @@ yrbss_state_tidy %>%
 
 ```{r}
 # Over race
-yrbss_state_tidy %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq, race4, binge_drinking) %>% 
   summarize(n = n()) %>% 
   mutate(prop_binge_drinking = n/sum(n)) %>% 
@@ -1061,12 +1062,12 @@ yrbss_state_tidy %>%
 Resource: question 8
 
 ```{r}
-test_of_association(yrbss_state_tidy, "seat_belt", "Table **: Drug Use Status vs Seat Belt Use")
+test_of_association(yrbss_state_tidy_additional, "seat_belt", "Table **: Drug Use Status vs Seat Belt Use")
 
 ```
 
 ```{r}
-yrbss_state_tidy %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq, seat_belt) %>% 
   summarize(n = n()) %>% 
   mutate(prop_seat_belt = n/sum(n)) %>% 
@@ -1079,7 +1080,7 @@ yrbss_state_tidy %>%
 
 ```{r}
 # Stratified Analysis over Grade
-yrbss_state_tidy%>% 
+yrbss_state_tidy_additional%>% 
   group_by(drug_use_freq,grade, seat_belt) %>% 
   summarize(n = n()) %>% 
   mutate(prop_seat_belt = n/sum(n)) %>% 
@@ -1093,7 +1094,7 @@ yrbss_state_tidy%>%
 
 ```{r}
 # Over Gender
-yrbss_state_tidy %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq,sex, seat_belt) %>% 
   summarize(n = n()) %>% 
   mutate(prop_seat_belt = n/sum(n)) %>% 
@@ -1109,7 +1110,7 @@ yrbss_state_tidy %>%
 
 ```{r}
 # Over race
-yrbss_state_tidy %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq, race4, seat_belt) %>% 
   summarize(n = n()) %>% 
   mutate(prop_seat_belt = n/sum(n)) %>% 
@@ -1126,17 +1127,17 @@ Resource: question 89
 exclude option "None of these grades" and "Not sure"
 
 ```{r}
-yrbss_state_tidy_grades_school <- 
-  yrbss_state_tidy %>% 
+yrbss_state_tidy_additional_grades_school <- 
+  yrbss_state_tidy_additional %>% 
   filter(grades_school %in% c("Mostly A's", "Mostly B's", "Mostly C's","Mostly Below C's"))
 ```
 
 ```{r}
-test_of_association(yrbss_state_tidy_grades_school, "grades_school", "Table **: Drug Use Status vs Grades in School")
+test_of_association(yrbss_state_tidy_additional_grades_school, "grades_school", "Table **: Drug Use Status vs Grades in School")
 ```
 
 ```{r}
-yrbss_state_tidy_grades_school %>% 
+yrbss_state_tidy_additional_grades_school %>% 
   group_by(drug_use_freq, grades_school) %>% 
   summarize(n = n()) %>% 
   mutate(prop_grades_school = n/sum(n)) %>% 
@@ -1149,7 +1150,7 @@ yrbss_state_tidy_grades_school %>%
 
 ```{r}
 # Stratified Analysis over Grade
-yrbss_state_tidy_grades_school %>% 
+yrbss_state_tidy_additional_grades_school %>% 
   group_by(drug_use_freq,grade, grades_school) %>% 
   summarize(n = n()) %>% 
   mutate(prop_grades_school = n/sum(n)) %>% 
@@ -1163,7 +1164,7 @@ yrbss_state_tidy_grades_school %>%
 
 ```{r}
 # Over Gender
-yrbss_state_tidy_grades_school %>% 
+yrbss_state_tidy_additional_grades_school %>% 
   group_by(drug_use_freq,sex, grades_school) %>% 
   summarize(n = n()) %>% 
   mutate(prop_grades_school = n/sum(n)) %>% 
@@ -1177,7 +1178,7 @@ yrbss_state_tidy_grades_school %>%
 
 ```{r}
 # Over race
-yrbss_state_tidy_grades_school %>% 
+yrbss_state_tidy_additional_grades_school %>% 
   group_by(drug_use_freq, race4, grades_school) %>% 
   summarize(n = n()) %>% 
   mutate(prop_grades_school = n/sum(n)) %>% 

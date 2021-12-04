@@ -132,7 +132,7 @@ yrbss_state = as_tibble(yrbss_state)
 
 
 ```{r tidy data}
-yrbss_state_tidy <-
+yrbss_state_tidy_additional <-
   yrbss_state %>% 
   drop_na(q31, q40, q45, q46, q50, q51, q52, q53, q54, q55, q56, q9, q10, q14, q17, q26, q39,q59, q79, q80, q88, q33, q42, q89, q8, q11, grade, race4, sex) %>% 
   mutate(
@@ -214,7 +214,7 @@ yrbss_state_tidy <-
     smoke_age = firstage_tidy(q31),
     alcohol_age = firstage_tidy(q40)
     ) %>% 
-  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, sleeping_time, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age,)
+  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, sleeping_time, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age)
 ```
 
 This data analysis uses the resulted data set cleaned by the processing described in part 2 of [Data]("3,Data Description.html"). According to our motivation, we are interested the relationship between drug use and youth behaviors. In this analysis, we will explore the association between drug use status and each health behavior variables.
@@ -259,7 +259,7 @@ $$
 H_0:\text{There is no association between drug use and the health-related variable of interest}
 H_1:\text{There is an association between drug use and the health-related variable of interest}
 $$
-Besides the chi-square test, we also use the Cramer's V Effect Size to measure the magnitude of the association. It is measure bt the manner:
+Other than the chi-square test, we also use the Cramer's V Effect Size to measure the magnitude of the association. It is measure by the manner:
 $$
 V = \sqrt{\frac{X^2}{n*df}}
 $$
@@ -279,10 +279,11 @@ tibble(
 
 
 
+
 ### Drunk driving
 
 ```{r}
-test_of_association(yrbss_state_tidy, "drunk_driving", "Table 2: Drug Use Status vs Drunk Driving")
+test_of_association(yrbss_state_tidy_additional, "drunk_driving", "Table 2: Drug Use Status vs Drunk Driving")
 ```
 
 

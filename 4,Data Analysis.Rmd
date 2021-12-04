@@ -8,6 +8,7 @@ library(tidyverse)
 library(survey)
 library(viridis)
 library(table1)
+library(kableExtra)
 
 knitr::opts_chunk$set(
   warning = FALSE,
@@ -106,15 +107,18 @@ association_analysis <- function(input_df, input_name, type){
   return(output)
 }
 
-test_of_association <- function(input_df, input_name){
+test_of_association <- function(input_df, input_name, table_name){
   output <- tibble(
     type = c("crude", "grade", "sex", "race4")
   )
-  output %>% 
-    mutate(results = map(.x = type, ~association_analysis(input_df, input_name, type = .x))) %>% 
-    unnest(results) %>% 
-    select(-type)
-
+  output <- output %>% 
+    mutate(results = map(.x = type, ~association_analysis(input_df, input_name, type = .x)),
+           type = ifelse(type == "race4", "race", type),
+           type = factor(type, levels = c("crude","grade", "sex", "race"))) %>% 
+    unnest(results)
+  kbl(output[, -1], caption = table_name) %>%
+    kable_paper("hover", full_width = F) %>% 
+    pack_rows(index = table(output$type))
 }
 
 ```
@@ -213,34 +217,61 @@ yrbss_state_tidy <-
   select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, sleeping_time, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age,)
 ```
 
+This data analysis uses the resulted data set cleaned by the processing described in part 2 of [Data]("3,Data Description.html"). According to our motivation, we are interested the relationship between drug use and youth behaviors. In this analysis, we will explore the association between drug use status and each health behavior variables.
+
+There are three kinds of health-related variables and we will use different methods to analyze: 
+ - Bi-level categorical variables: drunk driving, carrying weapon, suicide attempt, physical fight, quit-smoking, early-age sexual intercourse, heavy screening usage, enough sleeping
+ - Multivariate categorical variables: smoking status, binge drinking status, seat belt usage, GPA
+ - Quantitative Variables: initial smoking age, initial drinking age, BMI
+ 
+Here is a table summarized the overall distribution of important variables by drug use status.
+
 ## Three-line-table
 
 ```{r three-line}
 table1(~ drunk_driving + carrying_weapon + suicide_attempt + quit_smoke + physical_fight + early_sex + screening_use + smoking_status + binge_drinking + seat_belt + grades_school| drug_use_freq, data = df, caption = "Table 1: Distribution of risky behaviors by drug use status")
 ```
 
-## Hypothesis Testing: Chi-square Test with visualization of drug status comparison
+
+
+## Hypothesis Testing with visualization of drug status comparison
+
+### Chi-square Test
+
+For bi-level and multi-level categorical variables, we test the independence of two categorical variables, so we should use the R X C chi-square test with hypotheses that 
+
+$$
+H_0:\text{There is no association between drug use and the health-related variable of interest}
+H_1:\text{There is an association between drug use and the health-related variable of interest}
+$$
+Besides the chi-square test, we also use the Cramer's V Effect Size to measure the magnitude of the association. It is measure bt the manner:
+$$
+V = \sqrt{\frac{X^2}{n*df}}
+$$
+where $X^2$ is the chi-square statistic, n is the sample size and $df$ is the degrees of freedom.\
+
+Usually, we use the table below to assess the association through the Cramer's V effect size
+
+```{r}
+tibble(
+  df = 1:5,
+  small_effect = c(0.10, 0.07, 0.06, 0.05, 0.04),
+  medium_effect = c(0.3, 0.21, 0.17, 0.15, 0.13),
+  large_effect = c(0.5, 0.35, 0.29, 0.25, 0.22)
+) %>% 
+  knitr::kable()
+```
+
+
 
 ### Drunk driving
 
 ```{r}
-yrbss_state_tidy_drunk_driving <- 
-  yrbss_state_tidy %>% 
-  drop_na(q9, q10) %>% 
-  mutate(
-    drunk_driving = ifelse(q9 > 1 | q10 > 2, "Yes", "No")
-  ) %>% 
-  select(
-    drunk_driving, drug_use_freq, grade, sex, race4
-  )
+test_of_association(yrbss_state_tidy, "drunk_driving", "Table 2: Drug Use Status vs Drunk Driving")
 ```
 
-association analysis
 
 ```{r}
-test_of_association(yrbss_state_tidy_drunk_driving, "drunk_driving")
-
-
 yrbss_state_tidy_drunk_driving %>% 
   group_by(drug_use_freq) %>% 
   summarize(

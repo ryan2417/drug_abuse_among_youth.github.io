@@ -9,11 +9,154 @@ In this project, we use data of Youth Risk Behavior Surveillance System (YRBSS) 
 
 The dataset is so large that it exceeds the upload limit of github. Therefore, in order to download the dataset, you can use the code in `download_dataset.Rmd` (https://github.com/ryan2417/drug_abuse_among_youth.github.io/blob/main/download_dataset.Rmd).
 
+```{r import data, eval = FALSE}
+yrbss_state_a <- readRDS("data/2019 states a-m.rds")
+yrbss_state_z <- readRDS("data/2019 states n-z.rds")
+yrbss_state = rbind(yrbss_state_a,yrbss_state_z)
+yrbss_state = as_tibble(yrbss_state)
+```
 
 
-# Data Cleaning 
-```{r}
-#yrbss_state
+# Data Cleaning
+
+The most important variable we are concerned about is the overall drug use status, but there is no question asked about the overall drug use in the YRBSS questionnaire so we imputed a variable `drug_use_freq` based on the aggregation of the answers of specific drug types. The survey asked about the lifetime use frequency of eight different types of drugs include: marijuana, cocaine, heroine, methamphetamine, inhale drug, ecstasy, steroid and injection drug. Each question have six options of answer: 0 times, 1 or 2 times, 3 to 9 times, 10 to 19 times, 20 to 39 times and 40 or more times (There is one more option for marijuana, 99 or more times). We assigned a numeric value which equivalent to the average of the range for each drug type. For example, if the answer is 1 or 2 times, the value is 1.5. For the answer 40 or more times, the value is 40. Then, we summed up the value across all drug types for each observation and classified the drug use status according to the sum. If the sum is 0, the overall drug use frequency is a no drug use; if the sum is greater than 0 but less than 40, the overall drug use frequency is light dose; the rest are the heavy dose user. We omitted observations who have at least one missing value on any of the drug type since we have no information to impute the missing value. 
+
+```{r eval = FALSE}
+drug_use_tidy <- function(input_list){
+  output <- case_when(input_list == 1 ~ 0,
+                      input_list == 2 ~ 1.5,
+                      input_list == 3 ~ 6,
+                      input_list == 4 ~ 14.5,
+                      input_list == 5 ~ 29.5,
+                      input_list > 5 ~ 40)
+  return(output)
+}
+
+drug_use_frequency <- function(input_list){
+  output <- case_when(input_list == 0 ~ "No Drug Use",
+                      input_list > 0 & input_list < 40 ~ "Light Dose",
+                      input_list >= 40 ~ "Heavy Dose")
+  factor(output, levels = c("No Drug Use", "Light Dose", "Heavy Dose"))
+}
+
+
+yrbss_state_tidy <- 
+  yrbss_state %>% 
+  drop_na(q45, q46, q50, q51, q52, q53, q54, q55, q56) %>% 
+  mutate(
+    age_initial_alcohol = age_tidy(q40),
+    age_initial_smoking = age_tidy(q31),
+    age_marijuana = age_tidy(q46),
+    marijuana = drug_use_tidy(q45),
+    cocaine = drug_use_tidy(q50),
+    inhale = drug_use_tidy(q51),
+    heroin = drug_use_tidy(q52),
+    methamphetamine = drug_use_tidy(q53),
+    ecstasy = drug_use_tidy(q54),
+    steroid = drug_use_tidy(q55),
+    illegal_injection = case_when(q56 == 1 ~ 0,
+                                  q56 == 2 ~ 20,
+                                  q56 == 3 ~ 40),
+    drug_use_sum = rowSums(across(marijuana:illegal_injection)),
+    drug_use_freq = drug_use_frequency(drug_use_sum))
+```
+
+## Data Exploration
+
+## Data Analysis
+
+The data analysis part explored the association between drug use status and other health-related behaviors. The original questionnaire used some ranges of frequency to set answers, but we are concerned about whether the student experienced the behavior or not, so we categorized some variables into bi-level(Yes/No), such as drunk driving, carrying weapon, suicide attempt, physical fight, etc. However, there are some variables which are reasonable to reclassify into more than two categories, such as smoking, drinking, seat belt use and GPA. All these variables are reclassified and factorized. For the questions about age of first drinking and first smoking, we assigned a numeric value for the average of each range for convenience. Some demographic characteristics variables, initial smoking age, initial drinking age, grade, gender and race are converted to a readable text and factorized. The observations who had at least one missing value in any of the variables are removed. The resulted data set has 91854 observations with 20 variables.
+
+```{r eval = FALSE}
+age_tidy <- function(input_list) {
+  output <- case_when(input_list == 1 ~ NA_real_,
+                      input_list == 2 ~ 8,
+                      input_list == 3 ~ 9.5,
+                      input_list == 4 ~ 11.5,
+                      input_list == 5 ~ 13.5,
+                      input_list == 6 ~ 15.5,
+                      input_list == 7 ~ 17.5)
+}
+firstage_tidy <- function(input_list){
+  output <- case_when(input_list == 1 ~ "never",
+                      input_list == 2 ~ "8 years old or younger",
+                      input_list == 3 ~ "9 or 10 years old",
+                      input_list == 4 ~ "11 or 12 years old",
+                      input_list == 5 ~ "13 or 14 years old",
+                      input_list == 6 ~ "15 or 16 years old",
+                      input_list == 7 ~ "17 years old or older")
+  return(output)
+}
+
+yrbss_state_tidy_additional<-
+  yrbss_state_tidy %>% 
+  drop_na(q31, q40, q9, q10, q14, q17, q26, q39,q59, q79, q80, q88, q33, q42, q89, q8, q11, grade, race4, sex) %>% 
+  mutate(
+    grade = fct_recode(factor(grade, ordered = TRUE), 
+                       "9th Grade" = "1",
+                       "10th Grade" = "2",
+                       "11th Grade" = "3",
+                       "12th Grade" = "4"),
+    sex = fct_recode(factor(sex, ordered = TRUE), 
+                       "female" = "1",
+                       "male" = "2"),
+    race4 = fct_recode(factor(race4), 
+                       "White" = "1",
+                       "Black or African American" = "2",
+                       "Hispanic/Latino" = "3",
+                       "All other Races" = "4"),
+    age_initial_alcohol = age_tidy(q40),
+    age_initial_smoking = age_tidy(q31),
+    drunk_driving = ifelse(q9 > 1 | q10 > 2, "Yes", "No"),
+    drunk_driving = factor(drunk_driving, level = c("Yes", "No")),
+    text_driving = ifelse(q11 == 2, "No", "Yes"),
+    text_driving = factor(text_driving, level = c("Yes", "No")),
+    carrying_weapon = ifelse(q14 == 1, "No", "Yes"),
+    carrying_weapon = factor(carrying_weapon, level = c("Yes", "No")),
+    suicide_attempt = ifelse(q26 == 1, "Yes", "No"),
+    suicide_attempt = factor(suicide_attempt, level = c("Yes", "No")),
+    quit_smoke = case_when(q39 == 1 ~ "Never Smoke",
+                           q39 == 2 ~ "Yes",
+                           q39 == 3 ~ "No"),
+    quit_smoke = factor(quit_smoke, level = c("Never Smoke", "Yes", "No")),
+    physical_fight = ifelse(q17 == 1, "No", "Yes"),
+    physical_fight = factor(physical_fight, level = c("Yes", "No")),
+    early_sex = ifelse(q59 > 1 & q59 < 5 , "Yes", "No"),
+    early_sex = factor(early_sex, level = c("Yes", "No")),
+    q79 = as.numeric(q79),
+    q80 = as.numeric(q80),
+    tv_use = case_when(q79 == 1 ~ 0, 
+                       q79 == 2 ~ 0.5,
+                       q79 > 2 ~ q79 - 2),
+    computer_use = q80 - 2,
+    computer_use = case_when(q80 == 1 ~ 0, 
+                       q80 == 2 ~ 0.5,
+                       q80 > 2 ~ q80 - 2),
+    screening_use = tv_use + computer_use,
+    sleeping_time = as.numeric(q88) + 3,
+    smoking_status = case_when(q33 == 1 ~ "Never Smoker",
+                               q33 >= 2 & q33 <= 5 ~ "Light Smoker",
+                               q33 >=6 ~ "Heavy Smoker"),
+    smoking_status = factor(smoking_status, level = c("Never Smoker", "Light Smoker", "Heavy Smoker")),
+    binge_drinking = case_when(q42 == 1 ~ "No Binge Drinking",
+                               q42 >= 2 & q42 <= 4 ~ "Light Binge Drinking",
+                               q42 >=5 ~ "Heavy Binge Drinking"),
+    binge_drinking = factor(binge_drinking, level = c("No Binge Drinking", "Light Binge Drinking", "Heavy Binge Drinking")),
+    seat_belt = case_when(q8 <= 2 ~ "Never or Rarely",
+                          q8 == 3 ~ "Sometimes",
+                          q8 >= 4 ~ "Most of the time or Always"),
+    seat_belt = factor(seat_belt, level = c("Never or Rarely", "Sometimes", "Most of the time or Always")),
+    grades_school = case_when(q89 == 1 ~ "Mostly A's",
+                       q89 == 2 ~ "Mostly B's",
+                       q89 == 3 ~ "Mostly C's",
+                       q89 %in% c(4,5) ~ "Mostly Below C's",
+                       q89 == 6 ~ "None of these grades",
+                       q89 == 7 ~ "Not sure"),
+    grades_school = factor(grades_school, level = c("Mostly A's", "Mostly B's", "Mostly C's", "Mostly Below C's", "None of these grades", "Not sure")),
+    smoke_age = firstage_tidy(q31),
+    alcohol_age = firstage_tidy(q40)
+    ) %>% 
+  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, sleeping_time, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age)
 ```
 
 # Variable desciribe

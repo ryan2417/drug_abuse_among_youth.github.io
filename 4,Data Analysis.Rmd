@@ -651,12 +651,13 @@ The plots illustrate a positive relationship between drug use status and proport
 
 ### Early-age Sexual Intercourse
 
-
-
 ```{r}
 test_of_association(yrbss_state_tidy_additional, "early_sex", "Table 8: Drug Use Status vs Early-Age Sexual Intercourse")
+```
+From Table 8, all p-value are significantly small and the effect size are around 0.4, it shows that the association between drug use status and early age sex is strong. The effect size over each stratum is close to each other, so the interaction effect is negligible. 
 
-yrbss_state_tidy_early_sex %>%
+```{r}
+yrbss_state_tidy_additional %>%
   group_by(drug_use_freq) %>% 
   summarize(
     prop_early_sex = sum(early_sex == "Yes")/n()
@@ -668,7 +669,7 @@ yrbss_state_tidy_early_sex %>%
        title = "Plot 7: Proportion of Early-Age Sexual Intercourse Among Drug Use Status")
 
 
-yrbss_state_tidy_early_sex %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq, grade) %>% 
   summarize(
     prop_early_sex = sum(early_sex == "Yes")/n()
@@ -680,7 +681,7 @@ yrbss_state_tidy_early_sex %>%
        title = "Plot 7.1: Proportion of Early-Age Sexual Intercourse Among Drug Use Status")
 
 
-yrbss_state_tidy_early_sex %>% 
+yrbss_state_tidy_additional%>% 
   group_by(drug_use_freq, sex) %>% 
   summarize(
     prop_early_sex = sum(early_sex == "Yes")/n()
@@ -692,7 +693,7 @@ yrbss_state_tidy_early_sex %>%
        title = "Plot 7.2: Proportion of Early-Age Sexual Intercourse Among Drug Use Status")
 
 
-yrbss_state_tidy_early_sex %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq, race4) %>% 
   summarize(
     prop_early_sex = sum(early_sex == "Yes")/n()
@@ -704,15 +705,16 @@ yrbss_state_tidy_early_sex %>%
        title = "Plot 7.3: Proportion of Early-Age Sexual Intercourse Among Drug Use Status")
 
 ```
-
+The plots illustrate a positive relationship between drug use status and proportion of early age sex, so the proportion of early age sex is higher when the drug use is heavier. 
+9th Grade has highest proportion of having early age sex regardless of drug use status while male has higher proportion of having early age sex than female ar all drug use status.
+Hispanic race has higher proportion of having early age sex when they used heavy dose compared to did not use drug and used light dose drug, which implies a high risky sexual behavior can be triggered when they use heavy dose drug.
 
 
 ### Screening Use
 
 ```{r}
-yrbss_state_tidy_screening_use <- 
-  yrbss_state_tidy %>%
-  drop_na(q79, q80) %>% 
+
+  yrbss_state_tidy_additional %>%
   mutate(
     q79 = as.numeric(q79),
     q80 = as.numeric(q80),
@@ -725,6 +727,7 @@ yrbss_state_tidy_screening_use <-
                        q80 > 2 ~ q80 - 2),
     screening_use = tv_use + computer_use
   )
+
 yrbss_state_tidy_screening_use %>% 
   group_by(drug_use_freq, screening_use) %>% 
   count() %>% 

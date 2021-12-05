@@ -179,7 +179,7 @@ yrbss_state_tidy_additional <-
     quit_smoke = factor(quit_smoke, level = c("Never Smoke", "Yes", "No")),
     physical_fight = ifelse(q17 == 1, "No", "Yes"),
     physical_fight = factor(physical_fight, level = c("Yes", "No")),
-    early_sex = ifelse(q59 > 1 & q59 < 5 , "Yes", "No"),
+    early_sex = ifelse(q59 > 1 & q59 <= 5 , "Yes", "No"),
     early_sex = factor(early_sex, level = c("Yes", "No")),
     q79 = as.numeric(q79),
     q80 = as.numeric(q80),
@@ -287,6 +287,9 @@ Besides the crude analysis which test the association for all observations in th
 test_of_association(yrbss_state_tidy_additional, "drunk_driving", "Table 2: Drug Use Status vs Drunk Driving")
 ```
 
+
+From Table 2, we can see that the overall p-value is significantly small and the p-value of each stratum is significantly small to say that there is association between drug use status and drunk driving. There are differences of effect size among grade, gender and race, implying some interaction effect, but the lowest effect size is still above 0.22, suggesting a moderate association between drug use status and the drunk driving. The effect size demonstrates that the association might be stronger among higher grade, male and white race.
+
 Overall:
 
 ```{r}
@@ -344,13 +347,18 @@ yrbss_state_tidy_additional %>%
        title = "Plot 1.3: Proportion of Drunk Driving Among Drug Use Status")
 ```
 
+All proportion plots display that an increasing level of drug use frequency has a higher proportion of drunk driving. The dose-response relationship also verifies the existence of the association.
 
 ### cell phone use while driving
 
 
 ```{r}
 test_of_association(yrbss_state_tidy_additional, "text_driving", "Table 3: Drug Use Status vs Cell Phone Use During Driving")
+```
 
+From Table 3, we can see that not all p-values are significant enough to conclude an association between drug_use status and cell phone use while driving. Since younger children have much less chance of driving than older children, it is make sense that the association is heavily impacted by the grade. However, it also shows no association between drug_use status and cell phone use while driving among Black or African American and all other races. In a conservative perspective, we would conclude that the association between drug_use status and cell phone use while driving is weak, especially among Black or African American and all other races students.
+
+```{r}
 yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq) %>% 
   summarize(
@@ -394,16 +402,22 @@ yrbss_state_tidy_additional %>%
   geom_bar(stat = "identity", position = "dodge") +
   labs(y = "Proportion of Cell Phone Use During Driving",
        x = "Drug Use Status",
-       title = "Plot 2.3: Proportion of Cell Phone Use During Driving Among Drug Use Status")
+       title = "Plot 2.3: Proportion of Cell Phone Use During Driving Among Drug Use Status",
+       fill = "race")
 ```
 
+The overall proportion of cell phone use while driving rises while the level of drug use rises. However, the increment is small and invisible after stratifying by races. Female tends to have higher proportion of cell phone use while driving regardless of drug use status.
 
 
 ### Carrying weapon
 
 ```{r}
 test_of_association(yrbss_state_tidy_additional, "carrying_weapon", "Table 4: Drug Use Status vs Carrying Weapon")
+```
 
+From Table 4, we can see that all p-values are significantly small to conclude that there is association between drug use status and carrying weapon. The overall effect size is around 0.26 while the lowest effect size is greater than 0.2, so we are confident to say that it is an medium association. However, the large difference of effect size among gender and race implies the interaction effects of gender and race on the association. The association between drug use status and carrying weapon is stronger among male compared to female; the association between drug use status and carrying weapon is strongest among Black or African American and weakest among White.
+
+```{r}
 yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq) %>% 
   summarize(
@@ -450,7 +464,7 @@ yrbss_state_tidy_additional %>%
        title = "Plot 3.3: Proportion of Carrying Weapon Among Drug Use Status")
 ```
 
-
+All plots demonstrate an rising trend of proportion of carrying weapon with the increase level of drug use frequency. The proportion of carrying weapon boosts from light dose drug use to heavy dose drug use. 9th Grade has highest proportion of carrying weapon regardless of drug use status while male has higher proportion of carrying weapon than female ar all drug use status. The proportion of Black and African American students carrying weapon suddenly escalates on heavy dose drug use.  
 
 
 ### Suicide Attempt
@@ -458,7 +472,11 @@ yrbss_state_tidy_additional %>%
 
 ```{r}
 test_of_association(yrbss_state_tidy_additional, "suicide_attempt", "Table 5: Drug Use Status vs Suicide Attempt")
+```
 
+From Table 5, we can see that all p-values are small enough, so we could reject the null hypothesis that there is association between drug use status and suicide attempt. The overall effect size is around 0.33 while the lowest effect size is greater than 0.21, so the association is moderately strong. The interaction effect of race in the association is detected by the difference of effect size among different races. The association is strongest for all other races while it is weakest for Black or African American.
+
+```{r}
 yrbss_state_tidy_additional %>%
   group_by(drug_use_freq) %>% 
   summarize(
@@ -504,15 +522,21 @@ yrbss_state_tidy_additional %>%
        title = "Plot 4.3: Proportion of Suicide Attempt Among Drug Use Status")
 ```
 
+Based on these proportion plots, the proportion of suicide attempt increases while the level of drug use frequency goes up. This trend also shows up at each stratum in the stratified plot. The dose-response relationship supports our conclusion about the association between suicide attempt and drug use status. 
+
 
 ### Quit smoking
-
 
 
 ```{r}
 yrbss_state_tidy_quit_smoke <- yrbss_state_tidy_additional %>% filter(quit_smoke != "Never Smoke")
 test_of_association(yrbss_state_tidy_quit_smoke, "quit_smoke", "Table 6: Drug Use Status vs Quit Smoking")
+```
 
+For quit smoking, we should focus on students who smoke so the number of non-smokers won't bias our results. After filtering out the nonsmokers, the resulted table is in Table 6. Some p-values are not significantly small enough to conclude the association. The overall effect size is around 0.08 and the difference of effect size among grades and among races are significantly large, so the confounding and interaction effects heavily impacted the analysis of association. We would conclude that there is no association between drug use status and quit smoking.   
+
+
+```{r}
 yrbss_state_tidy_quit_smoke %>%
   group_by(drug_use_freq) %>% 
   summarize(
@@ -560,6 +584,7 @@ yrbss_state_tidy_quit_smoke %>%
        title = "Plot 5.3: Proportion of Quit Smoking Among Drug Use Status")
 ```
 
+The proportion bar plots do not demonstrate any dose-response relationship since the proportion has no trend of increasing or decreasing across the drug use status. Moreover, the difference of proportion is small between each drug use status. Thus, these plots support the conclusion in the analysis table that there is no association between quit smoking and drug use status.
 
 
 ### physical fight
@@ -568,7 +593,11 @@ yrbss_state_tidy_quit_smoke %>%
 
 ```{r}
 test_of_association(yrbss_state_tidy_additional, "physical_fight", "Table 7: Drug Use Status vs Physical Fight")
+```
 
+From Table 7, we can see that all p-value are significantly small and the effect size are around 0.4, it is the association between drug use status and physical fight is strong. The effect size over each stratum is very close to each other, so the interaction effect is negligible. 
+
+```{r}
 yrbss_state_tidy_additional %>%
   group_by(drug_use_freq) %>% 
   summarize(
@@ -616,6 +645,8 @@ yrbss_state_tidy_additional %>%
        x = "Drug Use Status",
        title = "Plot 6.3: Proportion of Physical Fight Among Drug Use Status")
 ```
+
+The plots illustrate a positive relationship between drug use status and proportion of physical fight, so the proportion of physical fight is higher when the drug use is heavier. This positive trend is stable in each stratum in the stratified plot. The plots are consistent with our conclusion based on the statistical analysis table and enhance the inference about the association between drug use status and physical fight.
 
 
 ### Early-age Sexual Intercourse

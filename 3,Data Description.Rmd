@@ -173,13 +173,13 @@ yrbss_state_tidy_additional<-
 * `quit_smoke` : whether a student ever try to quit using all tobacco products during the past 12 months. Classified as "Never Smoke", "Yes" and "No".
 * `physical_fight` : classified as "Yes" or "No". If a student were in a physical fight at least 1 time during the past 12 months, then is classified as "Yes". Otherwise, "No".
 * `early_sex` : classified as "Yes" or "No". If a student had sexual intercourse for the first time before the age of 14, then is classified as "Yes". Otherwise, "No".
-* `screening_use`: Hours of watching TV or using a computer on an average school day. 
-* `sleeping_time`
-* `smoking_status`
-* `binge_drinking`
-* `seat_belt`
-* `grades_school`
-* `smoke_age`
-* `alcohol_age`
+* `screening_use`: hours of watching TV or using a computer on an average school day. 
+* `sleeping_time` : hours of sleep on an average school night.
+* `smoking_status : classified as "Never Smoker", "Light Smoker", and "Heavy Smokers". During the past 30 days, students who did not smoke are classified as "Never Smoker", 1 to 10 cigarettes per day are classified as "Light Smoker", greater than 10 cigarettes per day are classified as "Heavy Smokers".
+* `binge_drinking` : classified as "No Binge Drinking", "Light Binge Drinking", and "Heavy Binge Drinking". Based on question 42 in original dataset, during the past 30 days, students who did not have binge drinking are classified as "No Binge Drinking", 1 to 5 days of binge drinking as "Light Binge Drinking", greater than 5days as "Heavy Binge Drinking".
+* `seat_belt` : classified as "Never or Rarely", "Sometimes", and "Most of the time or Always".
+* `grades_school` : classified as "Mostly A's", "Mostly B's", "Mostly C's", "Mostly Below C's", "None of these grades", and "Not sure".
+* `smoke_age` : 
+* `alcohol_age` : 
 
 

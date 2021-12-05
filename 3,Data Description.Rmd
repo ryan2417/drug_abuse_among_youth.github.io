@@ -7,7 +7,7 @@ output: html_document
 
 In this project, we use data of Youth Risk Behavior Surveillance System (YRBSS) collected by Centers for Disease Control and Prevention (CDC). YRBSS was established in 1990 to monitor health behaviors among U.S. adolescents and adults that are leading causes of death, disability, and social problems. Information about YRBSS can be found at [*Youth Risk Behavior Surveillance System (YRBSS) Overview*](https://www.cdc.gov/healthyyouth/data/yrbs/overview.htm). Among six categories of health-related behaviors that YRBSS monitors, we mainly focus on drug use abuse among youth. The YRBSS data are collected every two years, and the most up-to-date data were collected in 2019. We will use the data collected in 2019 on the state level.
 
-The dataset is so large that it exceeds the upload limit of github. Therefore, in order to download the dataset, you can use the code in `download_dataset.Rmd` (https://github.com/ryan2417/drug_abuse_among_youth.github.io/blob/main/download_dataset.Rmd).
+The dataset is so large that it exceeds the upload limit of github. Therefore, in order to download the dataset, you can use the code in [`download_dataset.Rmd`] (https://github.com/ryan2417/drug_abuse_among_youth.github.io/blob/main/download_dataset.Rmd).
 
 ```{r import data, eval = FALSE}
 yrbss_state_a <- readRDS("data/2019 states a-m.rds")
@@ -160,4 +160,26 @@ yrbss_state_tidy_additional<-
 ```
 
 # Variable desciribe
+
+* `drug_use_freq` : frequency of drug use. Classified as "No Drug Use", "Light Dose", and "Heavy Dose".
+* `grade` : classified as "9th Grade", "10th Grade", "11th Grade", and "12th Grade".
+* `sex` : classified as "female" or "male".
+* `bmi` : body mass index. Extracted from the original dataset.
+* `race4` : race of subjects. Classified as "White", "Black or African American", "Hispanic/Latino", and "All other Races".
+* `drunk_driving` : classified as "Yes" or "No". If a student ride in a vehicle driven by someone who had been drinking alcohol or himself/herself drive a vehicle when he/she had been drinking at least 1 time in the past 30 days, then is classified as "Yes". Otherwise, "No". 
+* `text_driving` : classified as "Yes" or "No". If a student text or e-mail while driving at least 1 days in the past 30 days, then is classified as "Yes". Otherwise, "No". 
+* `carrying_weapon` : classified as "Yes" or "No". If a student who carry a gun at least 1 days in the past 12 month, then is classified as "Yes". Otherwise, "No". 
+* `suicide_attempt` : classified as "Yes" or "No". If a student ever seriously consider attempting suicide during the past 12 months, then is classified as "Yes". Otherwise, "No". 
+* `quit_smoke` : whether a student ever try to quit using all tobacco products during the past 12 months. Classified as "Never Smoke", "Yes" and "No".
+* `physical_fight` : classified as "Yes" or "No". If a student were in a physical fight at least 1 time during the past 12 months, then is classified as "Yes". Otherwise, "No".
+* `early_sex` : classified as "Yes" or "No". If a student had sexual intercourse for the first time before the age of 14, then is classified as "Yes". Otherwise, "No".
+* `screening_use`: Hours of watching TV or using a computer on an average school day. 
+* `sleeping_time`
+* `smoking_status`
+* `binge_drinking`
+* `seat_belt`
+* `grades_school`
+* `smoke_age`
+* `alcohol_age`
+
 

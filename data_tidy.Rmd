@@ -161,7 +161,6 @@ ggplotly(state_proportion_plot)
 ```
 
 
-<<<<<<< HEAD
 =======
 ### (4) State + marijuana start date map
 
@@ -1284,17 +1283,16 @@ BMI %>%
   theme(
     axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
     legend.position = "none")+
-  labs(title = "Salary distribution by rank")
+  labs(title = "BMI for no drug use/light dose/heavy dose subjects")
 
-#heavy tail - more dose have higher BMI 
-
-
-#pyramid plot - looks weird
-ggplot(BMI, aes(x = drug_use_freq, y = ifelse(sex == "2", -bmi, bmi), fill =sex)) + 
-  geom_bar(stat = "identity") +
-  scale_y_continuous(labels = abs, limits = c(-200,200)) +
-  coord_flip()
-
+density_plot=
+  ggplot(BMI, aes(x=bmi, color=sex)) +
+  geom_density()+
+  geom_vline(data=BMI, aes(xintercept=mean(bmi), color=sex),
+             linetype="dashed") + 
+  facet_grid(. ~ drug_use_freq) +
+  labs(title = "density plot for BMI")
+density
 ```
 
 

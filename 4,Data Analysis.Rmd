@@ -1081,8 +1081,6 @@ yrbss_state_tidy_additional %>%
        y = "Proportion") 
 ```
 
-
-
 ```{r}
 # Over race
 yrbss_state_tidy_additional %>% 
@@ -1166,38 +1164,19 @@ yrbss_state_tidy_additional_grades_school %>%
 ```
 
 
-
-
 ## Part 3
-##### 2，额外图  
-1，吸毒各个frequency段的，吸烟初始年龄分布。  
-2, .....................，喝酒初始年龄分布。  
-3, ....................., bmi box plot 分男女 or 金字塔图
-
-## Q1
+###2 Smoke initial age, Alcohol initial age, and BMI 
+-  More heavy dose subjects started to smoke when they were 9 to 10 and 11 to 12 years old compared to no drug use subjects and light dose drug use subjects. For those who used light dose drug, highest percentage of them started to smoke when they were 13 or 14 years old. For those who used heavy dose drug, most of them started to smoke when they were 15 or 16 years old. It shows that heavy dose subjects start to smoke earlier.
+-  Similar things can be seen in drinking alcohol start age. More heavy dose subjects started to drink alcohol when they were 8 years old or younger and 11 or 12 years old compared to no drug use subjects and light dose drug use subjects. For no drug use and light dose drug use subjects, most of them started to drink alcohol when they were 15 or 16 years old. For heavy dose drug use subjects, most of them started to drink alcohol earlier at 13 or 14 years old. It shows that heavy dose subjects also start to drink alcohol earlier.
+-  Density plots of BMI are all right-skewed, which means that the mean is greater than the median. Highest percentage of observations fall in 20-30 bmi. Based on the box-plot, medians for three dose usgae groups are similar. 
+## Q11
 ```{r}
-#tidy q31 smoking and q40 alcohol start age
-firstage_tidy <- function(input_list){
-  output <- case_when(input_list == 1 ~ "never",
-                      input_list == 2 ~ "8 years old or younger",
-                      input_list == 3 ~ "9 or 10 years old",
-                      input_list == 4 ~ "11 or 12 years old",
-                      input_list == 5 ~ "13 or 14 years old",
-                      input_list == 6 ~ "15 or 16 years old",
-                      input_list == 7 ~ "17 years old or older")
-  return(output)
-}
-
 #function for plotting first smoke_age
 drug1_smoke=
-  yrbss_state_tidy %>%
+  yrbss_state_tidy_additional %>%
   mutate(
     smoke_age = firstage_tidy(q31),
   ) %>%
-  drop_na(q31)
-
-
-drug1_smoke %>%
   group_by(drug_use_freq, smoke_age) %>%
   filter(smoke_age != "never") %>%
   summarize(n = n()) %>% 
@@ -1238,18 +1217,16 @@ ggplot(drug1_smoke,
 ```
 
 ## Q2-alcohol
+-  
 ```{r}
 #function for plotting first alcohol_age
 drug1_alcohol=
-  yrbss_state_tidy %>%
+  yrbss_state_tidy_additional %>%
   mutate(
     alcohol_age = firstage_tidy(q40)
   ) %>%
   drop_na(q40) %>%
-  drop_na(drug_use_freq)
-
-
-drug1_alcohol %>%
+  drop_na(drug_use_freq) %>%
   group_by(drug_use_freq, alcohol_age) %>%
     filter(alcohol_age != "never") %>%
   summarize(n = n()) %>% 
@@ -1292,7 +1269,7 @@ ggplot(drug1_alcohol,
 ## Q3-BMI
 ```{r}
 BMI =
-  yrbss_state_tidy %>%
+  yrbss_state_tidy_additional %>%
   drop_na(drug_use_freq) %>%
   drop_na(sex)
 
@@ -1304,16 +1281,15 @@ BMI %>%
   theme(
     axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
     legend.position = "none")+
-  labs(title = "Salary distribution by rank")
+  labs(title = "BMI for no drug use/light dose/heavy dose subjects")
 
-#heavy tail - more dose have higher BMI 
-
-
-#pyramid plot - looks weird
-ggplot(BMI, aes(x = drug_use_freq, y = ifelse(sex == "2", -bmi, bmi), fill =sex)) + 
-  geom_bar(stat = "identity") +
-  scale_y_continuous(labels = abs, limits = c(-200,200)) +
-  coord_flip()
+density_plot=
+  ggplot(BMI, aes(x=bmi, color=sex)) +
+  geom_density()+
+  geom_vline(data=BMI, aes(xintercept=mean(bmi), color=sex),
+             linetype="dashed") + 
+  facet_grid(. ~ drug_use_freq) +
+  labs(title = "density plot for BMI")
 
 ```
 

@@ -646,7 +646,7 @@ yrbss_state_tidy_additional %>%
        title = "Plot 6.3: Proportion of Physical Fight Among Drug Use Status")
 ```
 
-The plots illustrate positive relationship between drug use status and proportion of physical fight, so the proportion of physical fight is higher when the drug use frequency is heavier. This positive trend is stable in each stratum in the stratified plot. The plots are consistent with our conclusion based on the statistical analysis table and enhance the inference about the association between drug use status and physical fight.
+The plots illustrate a positive relationship between drug use status and proportion of physical fight, so the proportion of physical fight is higher when the drug use is heavier. This positive trend is stable in each stratum in the stratified plot. The plots are consistent with our conclusion based on the statistical analysis table and enhance the inference about the association between drug use status and physical fight.
 
 
 ### Early-age Sexual Intercourse

@@ -193,15 +193,9 @@ yrbss_state_tidy_additional <-
                        q80 == 2 ~ 0.5,
                        q80 > 2 ~ q80 - 2),
     screening_use = tv_use + computer_use,
-<<<<<<< HEAD
     heavy_screen_use = ifelse(screening_use >= 5, "Yes", "No"),
     sleeping_time = as.numeric(q88) + 3,
     enough_sleep = ifelse(sleeping_time >= 8, "Yes", "No"),
-=======
-     heavy_screen_use = ifelse(screening_use == 5 | screening_use > 5, "Yes", "No"),
-    sleeping_time = as.numeric(q88) + 3,
-    enough_sleep = ifelse(sleeping_time == 8 | sleeping_time > 8, "Yes", "No"),
->>>>>>> 3e613aca5c9533666d388f8111eb6044f5f13c42
     smoking_status = case_when(q33 == 1 ~ "Never Smoker",
                                q33 >= 2 & q33 <= 5 ~ "Light Smoker",
                                q33 >=6 ~ "Heavy Smoker"),
@@ -224,11 +218,7 @@ yrbss_state_tidy_additional <-
     smoke_age = firstage_tidy(q31),
     alcohol_age = firstage_tidy(q40)
     ) %>% 
-<<<<<<< HEAD
   select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, heavy_screen_use, sleeping_time, enough_sleep, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age, age_initial_alcohol, age_initial_smoking)
-=======
-  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use,  heavy_screen_use,sleeping_time, enough_sleep,smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age, age_initial_alcohol, age_initial_smoking) 
->>>>>>> 3e613aca5c9533666d388f8111eb6044f5f13c42
 ```
 
 This data analysis uses the resulted data set cleaned by the processing described in data analysis part of [Data]("3,Data Description.html"). According to our motivation, we are interested the relationship between drug use and youth behaviors. In this analysis, we will explore the association between drug use status and each health behavior variables.
@@ -740,13 +730,9 @@ yrbss_state_tidy_additional %>%
 
 
 ```{r}
-<<<<<<< HEAD
 test_of_association(input_name = "heavy_screen_use", table_name = "Table 9: Drug Use Status vs Heavy Screening Use")
-=======
-test_of_association(yrbss_state_tidy_additional, "heavy_screen_use", "Table 9: Drug Use Status vs Heavy Screening Use")
 ```
 From Table 9, p-value is not significantly small and effect size is small, implying that there is not a strong assiciation between screening use and drug use frequency. 
->>>>>>> 3e613aca5c9533666d388f8111eb6044f5f13c42
 
 
 ```{r}
@@ -818,13 +804,10 @@ yrbss_state_tidy_additional %>%
 
 
 ```{r}
-<<<<<<< HEAD
 test_of_association(input_name = "enough_sleep", table_name = "Table 10: Drug Use Status vs Enough Sleeping")
-=======
-test_of_association(yrbss_state_tidy_additional, "enough_sleep", "Table 10: Drug Use Status vs Enough Sleeping")
 ```
 From Table 10, we can see that the overall p-value is significantly small. However, the effect size is around 0.1, suggesting the association is not that strong. 
->>>>>>> 3e613aca5c9533666d388f8111eb6044f5f13c42
+
 
 ```{r}
 yrbss_state_tidy_additional %>%

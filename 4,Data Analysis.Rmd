@@ -191,7 +191,9 @@ yrbss_state_tidy_additional <-
                        q80 == 2 ~ 0.5,
                        q80 > 2 ~ q80 - 2),
     screening_use = tv_use + computer_use,
+     heavy_screen_use = ifelse(screening_use == 5 | screening_use > 5, "Yes", "No"),
     sleeping_time = as.numeric(q88) + 3,
+    enough_sleep = ifelse(sleeping_time == 8 | sleeping_time > 8, "Yes", "No"),
     smoking_status = case_when(q33 == 1 ~ "Never Smoker",
                                q33 >= 2 & q33 <= 5 ~ "Light Smoker",
                                q33 >=6 ~ "Heavy Smoker"),
@@ -214,7 +216,7 @@ yrbss_state_tidy_additional <-
     smoke_age = firstage_tidy(q31),
     alcohol_age = firstage_tidy(q40)
     ) %>% 
-  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, sleeping_time, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age, age_initial_alcohol, age_initial_smoking) 
+  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use,  heavy_screen_use,sleeping_time, enough_sleep,smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age, age_initial_alcohol, age_initial_smoking) 
 ```
 
 This data analysis uses the resulted data set cleaned by the processing described in data analysis part of [Data]("3,Data Description.html"). According to our motivation, we are interested the relationship between drug use and youth behaviors. In this analysis, we will explore the association between drug use status and each health behavior variables.
@@ -589,8 +591,6 @@ The proportion bar plots do not demonstrate any dose-response relationship since
 
 ### physical fight
 
-
-
 ```{r}
 test_of_association(yrbss_state_tidy_additional, "physical_fight", "Table 7: Drug Use Status vs Physical Fight")
 ```
@@ -713,22 +713,7 @@ Hispanic race has higher proportion of having early age sex when they used heavy
 ### Screening Use
 
 ```{r}
-
-  yrbss_state_tidy_additional %>%
-  mutate(
-    q79 = as.numeric(q79),
-    q80 = as.numeric(q80),
-    tv_use = case_when(q79 == 1 ~ 0, 
-                       q79 == 2 ~ 0.5,
-                       q79 > 2 ~ q79 - 2),
-    computer_use = q80 - 2,
-    computer_use = case_when(q80 == 1 ~ 0, 
-                       q80 == 2 ~ 0.5,
-                       q80 > 2 ~ q80 - 2),
-    screening_use = tv_use + computer_use
-  )
-
-yrbss_state_tidy_screening_use %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq, screening_use) %>% 
   count() %>% 
   group_by(drug_use_freq) %>% 
@@ -744,7 +729,11 @@ yrbss_state_tidy_screening_use %>%
 
 ```{r}
 test_of_association(yrbss_state_tidy_additional, "heavy_screen_use", "Table 9: Drug Use Status vs Heavy Screening Use")
+```
+From Table 9, p-value is not significantly small and effect size is small, implying that there is not a strong assiciation between screening use and drug use frequency. 
 
+
+```{r}
 yrbss_state_tidy_additional %>%
   group_by(drug_use_freq) %>% 
   summarize(
@@ -792,19 +781,13 @@ yrbss_state_tidy_additional %>%
        x = "Drug Use Status",
        title = "Plot 8.3: Proportion of Heavy Screening Use Among Drug Use Status")
 ```
-
+All plots show that there is not too much difference of screening use for different drug use frequency groups.
 
 ### Sleeping time
+The density plot shows that heavy dose use subjects sleep less than no drug use subjects and light dose use subjects. Also, there are more portions of subjects who sleep less than 5 hours for heavy dose use compared to no drug use and light dose use. 
 
 ```{r}
-yrbss_state_tidy_sleeping_time <- 
-  yrbss_state_tidy %>%
-  drop_na(q88) %>% 
-  mutate(
-    sleeping_time = as.numeric(q88) + 3
-  )
-
-yrbss_state_tidy_sleeping_time %>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq, sleeping_time) %>% 
   count() %>% 
   group_by(drug_use_freq) %>% 
@@ -820,7 +803,10 @@ yrbss_state_tidy_sleeping_time %>%
 
 ```{r}
 test_of_association(yrbss_state_tidy_additional, "enough_sleep", "Table 10: Drug Use Status vs Enough Sleeping")
+```
+From Table 10, we can see that the overall p-value is significantly small. However, the effect size is around 0.1, suggesting the association is not that strong. 
 
+```{r}
 yrbss_state_tidy_additional %>%
   group_by(drug_use_freq) %>% 
   summarize(
@@ -869,14 +855,15 @@ yrbss_state_tidy_additional %>%
        x = "Drug Use Status",
        title = "Plot 9.3: Proportion of Enough Sleeping Among Drug Use Status")
 ```
+The "enough sleeping" plots shows that heavy dose subjects tend to have least proportions of having enough sleep in all grades and races. Male subjects tend to have more enough sleeping for no drug and use light dose, whereas they tend to have less enough sleeping time when use heavy dose of drug. It infers an association between sleeping time and drug use frequency. 
+
 
 ### Smoking Status
 
 Based on question 33 in the 2019 YOUTH RISK BEHAVIOR SURVEY, the researchers care about whether students smoked more than 10 cigarettes per day on the days they smoked during the 30 days before the survey. Therefore, we define students who did not smoke as "Never Smoker", 1 to 10 cigarettes per day as "Light Smoker", greater than 10 cigarettes per day as "Heavy Smokers".
 
 ```{r}
-smoking_status_crude = 
-  association_analysis(yrbss_state_tidy_additional, "smoking_status", "crude") %>% 
+association_analysis(yrbss_state_tidy_additional, "smoking_status", "crude") %>% 
   mutate(type = "crude")
 
 # chi-square of grade

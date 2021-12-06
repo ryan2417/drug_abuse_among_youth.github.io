@@ -214,10 +214,10 @@ yrbss_state_tidy_additional <-
     smoke_age = firstage_tidy(q31),
     alcohol_age = firstage_tidy(q40)
     ) %>% 
-  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, sleeping_time, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age) 
+  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, sleeping_time, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age, age_initial_alcohol, age_initial_smoking) 
 ```
 
-This data analysis uses the resulted data set cleaned by the processing described in part 2 of [Data]("3,Data Description.html"). According to our motivation, we are interested the relationship between drug use and youth behaviors. In this analysis, we will explore the association between drug use status and each health behavior variables.
+This data analysis uses the resulted data set cleaned by the processing described in data analysis part of [Data]("3,Data Description.html"). According to our motivation, we are interested the relationship between drug use and youth behaviors. In this analysis, we will explore the association between drug use status and each health behavior variables.
 
 There are three kinds of health-related variables and we will use different methods to analyze: 
  - Bi-level categorical variables: drunk driving, carrying weapon, suicide attempt, physical fight, quit-smoking, early-age sexual intercourse, heavy screening usage, enough sleeping
@@ -1330,3 +1330,86 @@ summary(one.way)
 
 
 ## Logistic regression
+```{r}
+
+library(glmnet)
+
+yrbss_state_tidy_glm <- 
+  yrbss_state_tidy_additional %>% 
+  mutate(drug_use = ifelse(drug_use_freq == "No Drug Use", 0, 1))
+
+model_fit <- glm(drug_use ~ grade + sex + race4 + drunk_driving + drunk_driving : grade + drunk_driving : sex + drunk_driving : race4 + carrying_weapon + carrying_weapon : race4 + carrying_weapon : sex + + suicide_attempt + suicide_attempt : race4 + physical_fight + early_sex + binge_drinking + smoking_status + seat_belt + grades_school + sleeping_time + smoking_status:race4 + binge_drinking:race4 + seat_belt:race4 + 
+    grades_school:race4 + grades_school:grade + smoke_age + alcohol_age, data = yrbss_state_tidy_glm)
+
+step(model_fit, direction = "both")
+
+model_fit_AIC <-  glm(formula = drug_use ~ grade + sex + race4 + drunk_driving + 
+    carrying_weapon + suicide_attempt + physical_fight + early_sex + 
+    binge_drinking + smoking_status + grades_school + sleeping_time + 
+    smoke_age + alcohol_age + grade:drunk_driving + sex:drunk_driving + 
+    race4:carrying_weapon, data = yrbss_state_tidy_glm)
+
+step(model_fit, direction = "both", k = log(19854))
+
+model_fit_BIC <- glm(formula = drug_use ~ grade + sex + race4 + suicide_attempt + 
+    physical_fight + early_sex + smoking_status + binge_drinking + 
+    grades_school + smoke_age + alcohol_age, data = yrbss_state_tidy_glm)
+
+y <- yrbss_state_tidy_glm %>% pull(drug_use)
+x <- model.matrix(drug_use ~ grade + sex + race4 + drunk_driving + drunk_driving : grade + drunk_driving : sex + drunk_driving : race4 + carrying_weapon + carrying_weapon : race4 + carrying_weapon : sex + + suicide_attempt + suicide_attempt : race4 + physical_fight + early_sex + binge_drinking + smoking_status + seat_belt + grades_school + sleeping_time + smoking_status:race4 + binge_drinking:race4 + seat_belt:race4 + 
+    grades_school:race4 + grades_school:grade + smoke_age + alcohol_age, data = yrbss_state_tidy_glm)[, -1]
+lambda = 10^(seq(3, -2, -0.1))
+
+lasso_fit =
+  glmnet(x, y, lambda = lambda_opt)
+
+lasso_cv =
+  cv.glmnet(x, y, lambda = lambda)
+
+lambda_opt = lasso_cv$lambda.min
+
+lasso_fit %>% 
+  broom::tidy() %>% 
+  complete(term, lambda, fill = list(estimate = 0)) %>% 
+  filter(term != "(Intercept)") %>% 
+  ggplot(aes(x = log(lambda), y = estimate, color = term)) +
+  geom_line() +
+  geom_vline(xintercept = log(lambda_opt))
+
+model_fit_lasso <- glm(drug_use ~ grade + race4 + drunk_driving + suicide_attempt + physical_fight + early_sex + smoking_status + binge_drinking + grades_school + seat_belt + sleeping_time + race4:grades_school + smoke_age + alcohol_age, data = yrbss_state_tidy_glm)
+```
+
+Cross_Validation
+
+```{r}
+library(modelr)
+cv_df <- crossv_mc(yrbss_state_tidy_glm, 100, id = "group_id") %>% 
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble)
+  )
+
+cv_results <- cv_df %>% mutate(
+  model_fit_AIC = map(.x = train, ~glm(drug_use ~ grade + sex + race4 + drunk_driving + 
+    carrying_weapon + suicide_attempt + physical_fight + early_sex + 
+    binge_drinking + smoking_status + grades_school + sleeping_time + 
+    smoke_age + alcohol_age + grade:drunk_driving + sex:drunk_driving + 
+    race4:carrying_weapon, data = .x)),
+  model_fit_BIC = map(.x = train, ~ glm(drug_use ~ grade + sex + race4 + suicide_attempt + 
+    physical_fight + early_sex + smoking_status + binge_drinking + 
+    grades_school + smoke_age + alcohol_age, data = .x)),
+  model_fit_lasso = map(.x = train, ~glm(drug_use ~ grade + race4 + drunk_driving + suicide_attempt + physical_fight + early_sex + smoking_status + binge_drinking + grades_school + seat_belt + sleeping_time + race4:grades_school + smoke_age + alcohol_age, data = .x))
+) %>% 
+  mutate(
+    rmse_AIC = map2_dbl(.x = model_fit_AIC, .y = test, ~rmse(model = .x, data = .y)),
+    rmse_BIC = map2_dbl(.x = model_fit_BIC, .y = test, ~rmse(model = .x, data = .y)),
+    rmse_lasso = map2_dbl(.x = model_fit_lasso, .y = test, ~rmse(model = .x, data = .y))
+  )
+
+cv_results %>% select(group_id, starts_with("rmse_")) %>% 
+  pivot_longer(cols = rmse_AIC:rmse_lasso, names_to = "model_type", values_to = "rmse", names_prefix = "rmse_") %>% 
+  ggplot(aes(x = rmse, fill = model_type)) +
+  geom_density(alpha = 0.3)
+
+```
+

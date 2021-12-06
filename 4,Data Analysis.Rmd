@@ -73,9 +73,10 @@ association_analysis <- function(input_df, input_name, type){
     totaln <- input_df %>% nrow()
     output <- 
       input_df %>% 
-      group_by(drug_use_freq, across(input_name)) %>%
-      count() %>%
+      group_by(drug_use_freq, across(all_of(input_name))) %>%
+      count() %>% 
       pivot_wider(values_from = n, names_from = starts_with(input_name)) %>%
+      mutate_all(~replace(., is.na(.), 0)) %>% 
       ungroup() %>% 
       select(-drug_use_freq) %>% 
       chisq.test() %>% 
@@ -89,6 +90,7 @@ association_analysis <- function(input_df, input_name, type){
       group_by(across(all_of(type)), drug_use_freq, across(all_of(input_name))) %>%
       count() %>% 
       pivot_wider(values_from = n, names_from = starts_with(input_name), names_prefix = input_name) %>% 
+      mutate_all(~replace(., is.na(.), 0)) %>% 
       ungroup() %>% 
       select(-drug_use_freq) %>% 
       nest(data = starts_with(input_name)) %>% 
@@ -107,7 +109,7 @@ association_analysis <- function(input_df, input_name, type){
   return(output)
 }
 
-test_of_association <- function(input_df, input_name, table_name){
+test_of_association <- function(input_df = yrbss_state_tidy_additional, input_name, table_name){
   output <- tibble(
     type = c("crude", "grade", "sex", "race4")
   )
@@ -191,7 +193,9 @@ yrbss_state_tidy_additional <-
                        q80 == 2 ~ 0.5,
                        q80 > 2 ~ q80 - 2),
     screening_use = tv_use + computer_use,
+    heavy_screen_use = ifelse(screening_use >= 5, "Yes", "No"),
     sleeping_time = as.numeric(q88) + 3,
+    enough_sleep = ifelse(sleeping_time >= 8, "Yes", "No"),
     smoking_status = case_when(q33 == 1 ~ "Never Smoker",
                                q33 >= 2 & q33 <= 5 ~ "Light Smoker",
                                q33 >=6 ~ "Heavy Smoker"),
@@ -214,7 +218,7 @@ yrbss_state_tidy_additional <-
     smoke_age = firstage_tidy(q31),
     alcohol_age = firstage_tidy(q40)
     ) %>% 
-  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, sleeping_time, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age, age_initial_alcohol, age_initial_smoking) 
+  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, heavy_screen_use, sleeping_time, enough_sleep, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age, age_initial_alcohol, age_initial_smoking)
 ```
 
 This data analysis uses the resulted data set cleaned by the processing described in data analysis part of [Data]("3,Data Description.html"). According to our motivation, we are interested the relationship between drug use and youth behaviors. In this analysis, we will explore the association between drug use status and each health behavior variables.
@@ -245,7 +249,7 @@ label(yrbss_state_tidy_additional$seat_belt) = "Seat Belt Use"
 label(yrbss_state_tidy_additional$grades_school) = "Grades in School"
 
 
-table1(~ drunk_driving + text_driving + carrying_weapon + suicide_attempt + quit_smoke + physical_fight + early_sex + screening_use + sleeping_time + smoking_status + binge_drinking + seat_belt + grades_school| drug_use_freq, data = yrbss_state_tidy, caption = "Table 1: Distribution of risky behaviors by drug use status")
+table1(~ drunk_driving + text_driving + carrying_weapon + suicide_attempt + quit_smoke + physical_fight + early_sex + screening_use + sleeping_time + smoking_status + binge_drinking + seat_belt + grades_school| drug_use_freq, data = yrbss_state_tidy_additional, caption = "Table 1: Distribution of risky behaviors by drug use status")
 ```
 
 
@@ -284,7 +288,7 @@ Besides the crude analysis which test the association for all observations in th
 ### Drunk driving
 
 ```{r}
-test_of_association(yrbss_state_tidy_additional, "drunk_driving", "Table 2: Drug Use Status vs Drunk Driving")
+test_of_association(input_name = "drunk_driving", table_name = "Table 2: Drug Use Status vs Drunk Driving")
 ```
 
 
@@ -353,7 +357,7 @@ All proportion plots display that an increasing level of drug use frequency has 
 
 
 ```{r}
-test_of_association(yrbss_state_tidy_additional, "text_driving", "Table 3: Drug Use Status vs Cell Phone Use During Driving")
+test_of_association(input_name = "text_driving", table_name = "Table 3: Drug Use Status vs Cell Phone Use During Driving")
 ```
 
 From Table 3, we can see that not all p-values are significant enough to conclude an association between drug_use status and cell phone use while driving. Since younger children have much less chance of driving than older children, it is make sense that the association is heavily impacted by the grade. However, it also shows no association between drug_use status and cell phone use while driving among Black or African American and all other races. In a conservative perspective, we would conclude that the association between drug_use status and cell phone use while driving is weak, especially among Black or African American and all other races students.
@@ -412,7 +416,7 @@ The overall proportion of cell phone use while driving rises while the level of 
 ### Carrying weapon
 
 ```{r}
-test_of_association(yrbss_state_tidy_additional, "carrying_weapon", "Table 4: Drug Use Status vs Carrying Weapon")
+test_of_association(input_name = "carrying_weapon", table_name = "Table 4: Drug Use Status vs Carrying Weapon")
 ```
 
 From Table 4, we can see that all p-values are significantly small to conclude that there is association between drug use status and carrying weapon. The overall effect size is around 0.26 while the lowest effect size is greater than 0.2, so we are confident to say that it is an medium association. However, the large difference of effect size among gender and race implies the interaction effects of gender and race on the association. The association between drug use status and carrying weapon is stronger among male compared to female; the association between drug use status and carrying weapon is strongest among Black or African American and weakest among White.
@@ -471,7 +475,7 @@ All plots demonstrate an rising trend of proportion of carrying weapon with the 
 
 
 ```{r}
-test_of_association(yrbss_state_tidy_additional, "suicide_attempt", "Table 5: Drug Use Status vs Suicide Attempt")
+test_of_association(input_name = "suicide_attempt", table_name = "Table 5: Drug Use Status vs Suicide Attempt")
 ```
 
 From Table 5, we can see that all p-values are small enough, so we could reject the null hypothesis that there is association between drug use status and suicide attempt. The overall effect size is around 0.33 while the lowest effect size is greater than 0.21, so the association is moderately strong. The interaction effect of race in the association is detected by the difference of effect size among different races. The association is strongest for all other races while it is weakest for Black or African American.
@@ -592,7 +596,7 @@ The proportion bar plots do not demonstrate any dose-response relationship since
 
 
 ```{r}
-test_of_association(yrbss_state_tidy_additional, "physical_fight", "Table 7: Drug Use Status vs Physical Fight")
+test_of_association(input_name = "physical_fight", table_name = "Table 7: Drug Use Status vs Physical Fight")
 ```
 
 From Table 7, we can see that all p-value are significantly small and the effect size are around 0.4, it is the association between drug use status and physical fight is strong. The effect size over each stratum is very close to each other, so the interaction effect is negligible. 
@@ -652,7 +656,7 @@ The plots illustrate a positive relationship between drug use status and proport
 ### Early-age Sexual Intercourse
 
 ```{r}
-test_of_association(yrbss_state_tidy_additional, "early_sex", "Table 8: Drug Use Status vs Early-Age Sexual Intercourse")
+test_of_association(input_name = "early_sex", table_name = "Table 8: Drug Use Status vs Early-Age Sexual Intercourse")
 ```
 From Table 8, all p-value are significantly small and the effect size are around 0.4, it shows that the association between drug use status and early age sex is strong. The effect size over each stratum is close to each other, so the interaction effect is negligible. 
 
@@ -743,7 +747,7 @@ yrbss_state_tidy_screening_use %>%
 
 
 ```{r}
-test_of_association(yrbss_state_tidy_additional, "heavy_screen_use", "Table 9: Drug Use Status vs Heavy Screening Use")
+test_of_association(input_name = "heavy_screen_use", table_name = "Table 9: Drug Use Status vs Heavy Screening Use")
 
 yrbss_state_tidy_additional %>%
   group_by(drug_use_freq) %>% 
@@ -819,7 +823,7 @@ yrbss_state_tidy_sleeping_time %>%
 
 
 ```{r}
-test_of_association(yrbss_state_tidy_additional, "enough_sleep", "Table 10: Drug Use Status vs Enough Sleeping")
+test_of_association(input_name = "enough_sleep", table_name = "Table 10: Drug Use Status vs Enough Sleeping")
 
 yrbss_state_tidy_additional %>%
   group_by(drug_use_freq) %>% 

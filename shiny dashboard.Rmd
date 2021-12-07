@@ -17,7 +17,8 @@ library(viridis)
 ```
 
 ```{r importdata}
-yrbss_state_tidy <- read_csv("./data/yrbss_state_lite.csv")
+yrbss_state_tidy <- read_csv("./data/yrbss_state_lite.csv") %>% 
+  mutate(sitecode = recode(sitecode, "AZB" = "AZ"))
 
 if_use = function(input_list){
   output = case_when(input_list == 0 ~ FALSE,
@@ -51,8 +52,7 @@ state_age = yrbss_state_tidy %>%
   mutate(state = sitecode) %>% 
   select(-sitecode) %>% 
   group_by(state, marijuana_use_freq) %>% 
-  summarise(mean_start_age = mean(age_marijuana, na.rm = TRUE)) %>% 
-  mutate(state = recode(state, "AZB" = "AZ"))
+  summarise(mean_start_age = mean(age_marijuana, na.rm = TRUE))
 ```
 
 Column {.sidebar}

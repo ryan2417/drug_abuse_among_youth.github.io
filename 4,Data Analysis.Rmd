@@ -865,6 +865,8 @@ The "enough sleeping" plots shows that heavy dose subjects tend to have least pr
 
 Based on question 33 in the 2019 YOUTH RISK BEHAVIOR SURVEY, the researchers care about whether students smoked more than 10 cigarettes per day on the days they smoked during the 30 days before the survey. Therefore, we define students who did not smoke as "Never Smoker", 1 to 10 cigarettes per day as "Light Smoker", greater than 10 cigarettes per day as "Heavy Smokers".
 
+Based on association analysis, p-value are significantly small and effect size is around 0.8. It implies that there is a association between smoking status and drug use frequency.  
+
 ```{r}
 association_analysis(yrbss_state_tidy_additional, "smoking_status", "crude") %>% 
   mutate(type = "crude")
@@ -891,12 +893,13 @@ smoking_status_grade =
              df = parameter, 
              cramer_v_effect_size) %>% 
   mutate(type = "grade")
+smoking_status_grade
 
 # chi-square of gender
 smoking_status_gender = 
   association_analysis(yrbss_state_tidy_additional, "smoking_status", "sex") %>% 
   mutate(type = "sex")
-
+smoking_status_gender
 # chi-square of race
 smoking_status_race = 
   yrbss_state_tidy_additional %>% 
@@ -919,7 +922,7 @@ smoking_status_race =
              df = parameter, 
              cramer_v_effect_size) %>% 
   mutate(type = "race")
-
+smoking_status_race
 output = 
   bind_rows(smoking_status_crude, smoking_status_grade,smoking_status_gender, smoking_status_race) %>% 
   mutate(type = factor(type, levels = c("crude","grade", "sex", "race")))
@@ -928,6 +931,7 @@ kbl(output[, -6], caption = "Table **: Drug Use Status vs Binge Drinking") %>%
     kable_paper("hover", full_width = F) %>% 
     pack_rows(index = table(output$type))
 ```
+Based on the plot, it shows that heavy dose subjects tend to smoke more because there are more light dose and heavy dose smokers compared to no drug use and light dose drug use subjects. Higher portions of heavy smokers are 9th grade subjects and male gender. In addition, for heavy dose subjects, there are higher portions of heavy smokers in white race compared to Hispanic and Black race.
 
 ```{r}
 yrbss_state_tidy_additional %>% 

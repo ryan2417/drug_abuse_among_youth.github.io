@@ -1,0 +1,109 @@
+---
+title: "Drug Use Proportion & Marijuana Start Age"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(usmap)
+library(shiny)
+library(plotly)
+library(viridis)
+```
+
+```{r importdata}
+yrbss_state_tidy <- read_csv("./data/yrbss_state_lite.csv")
+
+if_use = function(input_list){
+  output = case_when(input_list == 0 ~ FALSE,
+                     input_list != 0 ~ TRUE)
+}
+
+state_proportion_drugtype = yrbss_state_tidy %>% 
+  select(sitecode, marijuana, cocaine, inhale, heroin, methamphetamine, ecstasy, steroid, illegal_injection) %>% 
+  mutate(marijuana = if_use(marijuana),
+         others = cocaine + inhale + heroin + methamphetamine + 
+           ecstasy + steroid + illegal_injection,
+         others = if_use(others)) %>% 
+  select(sitecode, marijuana, others) %>% 
+  group_by(sitecode) %>% 
+  summarise(total_population = n(),
+            marijuana = sum(marijuana),
+            others = sum(others)) %>% 
+  mutate(proportion_marijuana = marijuana / total_population,
+         proportion_others = others / total_population,
+         total_proportion = proportion_marijuana + proportion_others) %>% 
+  pivot_longer(proportion_marijuana:proportion_others,
+               names_to = "drug_type",
+               values_to = "proportion") %>% 
+  mutate(drug_type = recode(drug_type, 
+                            proportion_marijuana = "marijuana",
+                            proportion_others = "other drugs"))
+
+state_age = yrbss_state_tidy %>% 
+  select(sitecode, marijuana_use_freq, age_marijuana) %>% 
+  filter(marijuana_use_freq != "No Drug Use") %>% 
+  mutate(state = sitecode) %>% 
+  select(-sitecode) %>% 
+  group_by(state, marijuana_use_freq) %>% 
+  summarise(mean_start_age = mean(age_marijuana, na.rm = TRUE)) %>% 
+  mutate(state = recode(state, "AZB" = "AZ"))
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+max_pro = 1
+min_pro = 0
+  
+sliderInput(
+  "proportion_range", 
+  label = h3("Choose Total Drug Use Proportion Range for the Bar Plot"), 
+  min = min_pro, max = max_pro, value = c(0, 1))
+
+radioButtons(
+  "drug_use", 
+  label = h3("Choose Marijuana Usage for the Map Plot"),
+  choices = c("Heavy Dose", "Light Dose"), selected = "Heavy Dose")
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Side-by-side Bar Plot of Porportion of Drug Use for Marijuana and Other Drug Type
+
+```{r}
+renderPlotly({ 
+  state_proportion_drugtype %>% 
+  filter(between(total_proportion, input$proportion_range[1], 
+                 input$proportion_range[2])) %>% 
+  plot_ly(x = ~sitecode, y = ~proportion, 
+          color = ~drug_type, type = "bar")
+
+})
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Mean Marijuana Start Age
+
+```{r}
+renderPlotly({
+  state_age = state_age %>% 
+    filter(marijuana_use_freq == input$drug_use)
+  
+  map_plot = plot_usmap(data = state_age, values = "mean_start_age", color = "red") + 
+  scale_fill_gradient(
+    low = "white", high = "red", name = "Mean Marijuana Start Age", label = scales::comma
+  ) + theme(legend.position = "right")
+  
+  ggplotly(map_plot)
+})
+```

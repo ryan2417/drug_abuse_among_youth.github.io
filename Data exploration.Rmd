@@ -310,6 +310,7 @@ Inhale = drug_state_race_df%>%
 ```
 
 - Form the follwing plots we can tell that
+
 ## All_drug
 ```{r}
 ggplotly(Drug_sum)

@@ -123,7 +123,7 @@ Column {data-width=600}
 renderPlotly({
   drug_state_race_df%>%
     filter(drug_type == input[["drug_choose_chart2"]])%>%
-    ggplot(aes(x = state,y = proportion,color = dose))+
+    ggplot(aes(x = fct_reorder(state,proportion),y = proportion,color = dose))+
     scale_color_manual(values= c("#FF3225","#F5D247","#4728FA"))+
     geom_col()+
     facet_wrap(~race4)+

@@ -171,7 +171,7 @@ pre code {
 <div id="data-source" class="section level1">
 <h1>Data Source</h1>
 <p>In this project, we use data of Youth Risk Behavior Surveillance System (YRBSS) collected by Centers for Disease Control and Prevention (CDC). YRBSS was established in 1990 to monitor health behaviors among U.S. adolescents and adults that are leading causes of death, disability, and social problems. Information about YRBSS can be found at <a href="https://www.cdc.gov/healthyyouth/data/yrbs/overview.htm"><em>Youth Risk Behavior Surveillance System (YRBSS) Overview</em></a>. Among six categories of health-related behaviors that YRBSS monitors, we mainly focus on drug use abuse among youth. The YRBSS data are collected every two years, and the most up-to-date data were collected in 2019. We will use the data collected in 2019 on the state level.</p>
-<p>The dataset is so large that it exceeds the upload limit of github. Therefore, in order to download the dataset, you can use the code in [<code>download_dataset.Rmd</code>] (<a href="https://github.com/ryan2417/drug_abuse_among_youth.github.io/blob/main/download_dataset.Rmd" class="uri">https://github.com/ryan2417/drug_abuse_among_youth.github.io/blob/main/download_dataset.Rmd</a>).</p>
+<p>The dataset is so large that it exceeds the upload limit of github. Therefore, in order to download the dataset, you can use the code in <a href="https://github.com/ryan2417/drug_abuse_among_youth.github.io/blob/main/download_dataset.Rmd"><em>download_dataset.Rmd</em></a>.</p>
 <pre class="r"><code>yrbss_state_a &lt;- readRDS(&quot;data/2019 states a-m.rds&quot;)
 yrbss_state_z &lt;- readRDS(&quot;data/2019 states n-z.rds&quot;)
 yrbss_state = rbind(yrbss_state_a,yrbss_state_z)
@@ -338,6 +338,8 @@ yrbss_state_tidy_additional&lt;-
 </div>
 <div id="variable-desciribe" class="section level1">
 <h1>Variable desciribe</h1>
+<div id="for-the-yrbss_state_tidy_additional-dataset" class="section level4">
+<h4>For the <code>yrbss_state_tidy_additional</code> dataset:</h4>
 <ul>
 <li><code>drug_use_freq</code> : frequency of drug use. Classified as “No Drug Use”, “Light Dose”, and “Heavy Dose”.</li>
 <li><code>grade</code> : classified as “9th Grade”, “10th Grade”, “11th Grade”, and “12th Grade”.</li>
@@ -360,6 +362,7 @@ yrbss_state_tidy_additional&lt;-
 <li><code>smoke_age</code> : classified as “never”,“8 years old or younger”,“9 or 10 years old”,“11 or 12 years old”, “13 or 14 years old”,“15 or 16 years old”,“17 years old or older”</li>
 <li><code>alcohol_age</code> : classified as “never”,“8 years old or younger”,“9 or 10 years old”,“11 or 12 years old”, “13 or 14 years old”,“15 or 16 years old”,“17 years old or older”</li>
 </ul>
+</div>
 <div id="for-the-state-wise-tidy-dataset" class="section level4">
 <h4>For the state-wise tidy dataset:</h4>
 <ul>

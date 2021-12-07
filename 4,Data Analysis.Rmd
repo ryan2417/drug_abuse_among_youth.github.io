@@ -191,7 +191,7 @@ yrbss_state_tidy_additional <-
                        q80 == 2 ~ 0.5,
                        q80 > 2 ~ q80 - 2),
     screening_use = tv_use + computer_use,
-     heavy_screen_use = ifelse(screening_use == 5 | screening_use > 5, "Yes", "No"),
+    heavy_screen_use = ifelse(screening_use == 5 | screening_use > 5, "Yes", "No"),
     sleeping_time = as.numeric(q88) + 3,
     enough_sleep = ifelse(sleeping_time == 8 | sleeping_time > 8, "Yes", "No"),
     smoking_status = case_when(q33 == 1 ~ "Never Smoker",
@@ -784,7 +784,7 @@ yrbss_state_tidy_additional %>%
 All plots show that there is not too much difference of screening use for different drug use frequency groups.
 
 ### Sleeping time
-The density plot shows that heavy dose use subjects sleep less than no drug use subjects and light dose use subjects. Also, there are more portions of subjects who sleep less than 5 hours for heavy dose use compared to no drug use and light dose use. 
+The density plot shows that heavy dose use subjects sleep less than no drug use subjects and light dose use subjects. Also, more portions of subjects sleep less than 5 hours for heavy dose use compared to no drug use and light dose use subjects. 
 
 ```{r}
 yrbss_state_tidy_additional %>% 

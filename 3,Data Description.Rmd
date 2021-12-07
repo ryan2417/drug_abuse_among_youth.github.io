@@ -14,6 +14,7 @@ yrbss_state_a <- readRDS("data/2019 states a-m.rds")
 yrbss_state_z <- readRDS("data/2019 states n-z.rds")
 yrbss_state = rbind(yrbss_state_a,yrbss_state_z)
 yrbss_state = as_tibble(yrbss_state)
+yrbss_state_tidy <- read_csv("./data/yrbss_state_lite.csv")
 ```
 
 
@@ -62,6 +63,24 @@ yrbss_state_tidy <-
 ```
 
 ## Data Exploration
+
+### The State-wise Drug Use Analysis
+
+Firstly, we are interested in the drug use in each states, so we use our cleaned data according to states to do the following 5 topics of research. Each of the 5 researches are focusing on our interested topics across all the states.
+
+#### The Overall Drug Use
+
+#### Drug Use Proportion for Each Race
+
+#### Drug Use Proportion of Different Age and Gender
+
+#### Marijuana and Other Durgs Use Proportion
+
+Marijuana is the most abused drug, we are interested in the marijuana drug use proportion, as well as all other drugs use proportion across the states. The analysis plot is in the dashboard. According to the plot, we found that Arizona has the largest proportion of marijuana use among the youth, which is 52%. Arizona also has the highest other drug use proportion of 32%. We could also found in the plot that the states having high proportion of marijuana use are those in which marijuana use is legal, whereas the states which make it illegal have low rate of marijuana such as Utah, Iowa, and Nebraska.
+
+#### The Average Starting Age of Marijuana
+
+We are also interested in the average of the age that the youth first use marijuana. We tried to find if the mean starting age has a different pattern for each state. According to the plot in dashboard, although the mean starting age are relatively similar for each state, we found that Arizona still has the youngest starting age, which means that Arizona has severe problem of marijuana abuse not only for the proportion, but also for the starting age.
 
 ## Data Analysis
 
@@ -182,4 +201,28 @@ yrbss_state_tidy_additional<-
 * `smoke_age` : classified as "never","8 years old or younger","9 or 10 years old","11 or 12 years old", "13 or 14 years old","15 or 16 years old","17 years old or older"
 * `alcohol_age` : classified as "never","8 years old or younger","9 or 10 years old","11 or 12 years old", "13 or 14 years old","15 or 16 years old","17 years old or older"
 
-
+#### For the state-wise tidy dataset:
+* `sitecode` : the abbreviation of each state.
+* `sex` : the sex of each subject, 1 = "male", 2 = "female".
+* `race4` : race of subjects. Classified as "White", "Black or African American", "Hispanic/Latino", and "All other Races".
+* `age` : age of subjects.
+* `age_marijuana` : the starting age to use marijuana.
+* `marijuana` : the times of dose of marijuana during each subject's life.
+* `cocaine` : the times of dose of cocaine during each subject's life.
+* `inhale` : the times of sniffing glue, breathing the contents of aerosolspray cans, or inhaling any paints or sprays during each subject's life.
+* `heroin` : the times of dose of heroin during each subject's life.
+* `methamphetamine` : the times of dose of methamphetamine during each subject's life.
+* `ecstasy` : the times of dose of ecstasy during each subject's life.
+* `steroid` : the times of dose of steroid during each subject's life.
+* `illegal_injection` : the times of use of illegal injection during each subject's life.
+* `drug_use_sum` : 
+* `other_drug_sum` : 
+* `marijuana_use_freq` : the frequency of using marijuana. (No Drug Use = the subject never used marijuana; Light Dose = the subject used marijuana less than 40 times during life; Heavy Dose = the subject used marijuana more than 40 times during life)
+* `cocaine_use_freq` : the frequency of using cocaine (No Drug Use = the subject never used cocaine; Light Dose = the subject used cocaine less than 40 times during life; Heavy Dose = the subject used cocaine more than 40 times during life)
+* `inhale_use_freq` : the frequency of using inhale drug (No Drug Use = the subject never used inhale drug; Light Dose = the subject used inhale drug less than 40 times during life; Heavy Dose = the subject used inhale drug more than 40 times during life)
+* `heroin_use_freq` : the frequency of using heroin (No Drug Use = the subject never used heroin; Light Dose = the subject used heroin less than 40 times during life; Heavy Dose = the subject used heroin more than 40 times during life)
+* `methamphetamine_use_freq` : the frequency of using methamphetamine (No Drug Use = the subject never used methamphetamine; Light Dose = the subject used methamphetamine less than 40 times during life; Heavy Dose = the subject used methamphetamine more than 40 times during life)
+* `ecstasy_use_freq` : the frequency of using ecstasy (No Drug Use = the subject never used ecstasy; Light Dose = the subject used ecstasy less than 40 times during life; Heavy Dose = the subject used ecstasy more than 40 times during life)
+* `steroid_use_freq` : the frequency of using steroid (No Drug Use = the subject never used steroid; Light Dose = the subject used steroid less than 40 times during life; Heavy Dose = the subject used steroid more than 40 times during life)
+* `illegal_injection_use_freq` : the frequency of illegal injection. (No Drug Use = the subject never had illegal injection; Light Dose = the subject had illegal injection less than 40 times during life; Heavy Dose = the subject had illegal injection more than 40 times during life)
+* `drug_use_freq` : the frequency of using all illegal drugs as a whole. (No Drug Use = the subject never used any illegal drugs; Light Dose = the subject used illegal drugs less than 40 times during life; Heavy Dose = the subject used illegal drugs more than 40 times during life)

@@ -3,7 +3,7 @@ title: "Data_discription"
 output: html_document
 ---
 
-# Data Source
+# Data Source 
 
 In this project, we use data of Youth Risk Behavior Surveillance System (YRBSS) collected by Centers for Disease Control and Prevention (CDC). YRBSS was established in 1990 to monitor health behaviors among U.S. adolescents and adults that are leading causes of death, disability, and social problems. Information about YRBSS can be found at [*Youth Risk Behavior Surveillance System (YRBSS) Overview*](https://www.cdc.gov/healthyyouth/data/yrbs/overview.htm). Among six categories of health-related behaviors that YRBSS monitors, we mainly focus on drug use abuse among youth. The YRBSS data are collected every two years, and the most up-to-date data were collected in 2019. We will use the data collected in 2019 on the state level.
 

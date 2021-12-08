@@ -179,7 +179,7 @@ yrbss_state_tidy_additional<-
 * `binge_drinking` : classified as "No Binge Drinking", "Light Binge Drinking", and "Heavy Binge Drinking". Based on question 42 in original dataset, during the past 30 days, students who did not have binge drinking are classified as "No Binge Drinking", 1 to 5 days of binge drinking as "Light Binge Drinking", greater than 5days as "Heavy Binge Drinking".
 * `seat_belt` : classified as "Never or Rarely", "Sometimes", and "Most of the time or Always".
 * `grades_school` : classified as "Mostly A's", "Mostly B's", "Mostly C's", "Mostly Below C's", "None of these grades", and "Not sure".
-* `smoke_age` : classified as "never","8 years old or younger","9 or 10 years old","11 or 12 years old", "13 or 14 years old","15 or 16 years old","17 years old or older"
-* `alcohol_age` : classified as "never","8 years old or younger","9 or 10 years old","11 or 12 years old", "13 or 14 years old","15 or 16 years old","17 years old or older"
+* `smoke_age` : classified as "never","8 years old or younger","9 or 10 years old","11 or 12 years old", "13 or 14 years old","15 or 16 years old","17 years old or older". This is the age of starting to smoke. 
+* `alcohol_age` : classified as "never","8 years old or younger","9 or 10 years old","11 or 12 years old", "13 or 14 years old","15 or 16 years old","17 years old or older". This is the age of starting to drink alcohol.
 
 

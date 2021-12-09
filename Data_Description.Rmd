@@ -7,7 +7,9 @@ output:
     code_folding: hide
 ---
 
-# Data Source 
+# Data
+
+## Data Source 
 
 In this project, we use data of Youth Risk Behavior Surveillance System (YRBSS) collected by Centers for Disease Control and Prevention (CDC). YRBSS was established in 1990 to monitor health behaviors among U.S. adolescents and adults that are leading causes of death, disability, and social problems. Information about YRBSS can be found at [*Youth Risk Behavior Surveillance System (YRBSS) Overview*](https://www.cdc.gov/healthyyouth/data/yrbs/overview.htm). Among six categories of health-related behaviors that YRBSS monitors, we mainly focus on drug use abuse among youth. The YRBSS data are collected every two years, and the most up-to-date data were collected in 2019. We will use the data collected in 2019 on the state level.
 
@@ -25,7 +27,7 @@ yrbss_state_tidy <- read_csv("./data/yrbss_state_lite.csv")
 ```
 
 
-# Data Cleaning
+## Data Cleaning
 
 The most important variable we are concerned about is the overall drug use status, but there is no question asked about the overall drug use in the YRBSS questionnaire so we imputed a variable `drug_use_freq` based on the aggregation of the answers of specific drug types. The survey asked about the lifetime use frequency of eight different types of drugs include: marijuana, cocaine, heroine, methamphetamine, inhale drug, ecstasy, steroid and injection drug. Each question have six options of answer: 0 times, 1 or 2 times, 3 to 9 times, 10 to 19 times, 20 to 39 times and 40 or more times (There is one more option for marijuana, 99 or more times). We assigned a numeric value which equivalent to the average of the range for each drug type. For example, if the answer is 1 or 2 times, the value is 1.5. For the answer 40 or more times, the value is 40. Then, we summed up the value across all drug types for each observation and classified the drug use status according to the sum. If the sum is 0, the overall drug use frequency is a no drug use; if the sum is greater than 0 but less than 40, the overall drug use frequency is light dose; the rest are the heavy dose user. We omitted observations who have at least one missing value on any of the drug type since we have no information to impute the missing value. 
 
@@ -69,9 +71,9 @@ yrbss_state_tidy <-
     drug_use_freq = drug_use_frequency(drug_use_sum))
 ```
 
-## Data Exploration
+### Data Exploration
 
-### The State-wise Drug Use Analysis
+#### The State-wise Drug Use Analysis
 
 Firstly, we are interested in the drug use in each states, so we use our cleaned data according to states to do the following 5 topics of research. Each of the 5 researches are focusing on our interested topics across all the states.
 
@@ -89,7 +91,7 @@ Marijuana is the most abused drug, we are interested in the marijuana drug use p
 
 We are also interested in the average of the age that the youth first use marijuana. We tried to find if the mean starting age has a different pattern for each state. According to the plot in dashboard, although the mean starting age are relatively similar for each state, we found that Arizona still has the youngest starting age, which means that Arizona has severe problem of marijuana abuse not only for the proportion, but also for the starting age.
 
-## Data Analysis
+### Data Analysis
 
 The data analysis part explored the association between drug use status and other health-related behaviors. The original questionnaire used some ranges of frequency to set answers, but we are concerned about whether the student experienced the behavior or not, so we categorized some variables into bi-level(Yes/No), such as drunk driving, carrying weapon, suicide attempt, physical fight, etc. It is worth to mention that the screening time use is the combination of the time length of computer use and watching tv and we classify the heavy screening use based on the screening time use. However, there are some variables which are reasonable to reclassify into more than two categories, such as smoking, drinking, seat belt use and GPA. All these variables are reclassified and factorized. For the questions about age of first drinking and first smoking, we assigned a numeric value for the average of each range for convenience. Some demographic characteristics variables, initial smoking age, initial drinking age, grade, gender and race are converted to a readable text and factorized. The observations who had at least one missing value in any of the variables are removed. The resulted data set has 91854 observations with 20 variables.
 
@@ -185,7 +187,7 @@ yrbss_state_tidy_additional<-
   select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, sleeping_time, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age)
 ```
 
-# Variable desciribe
+## Variable desciribe
 
 #### For the `yrbss_state_tidy_additional` dataset:
 

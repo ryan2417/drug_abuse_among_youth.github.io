@@ -3,20 +3,20 @@ output_dir: "."
 navbar:
   title: "Home"
   right:
-    - text: "Data Source"
-      href: https://github.com/ryan2417/drug_abuse_among_youth.github.io.git
+    - text: "Data"
+      href: Data_Description.html
     - text: "Data Analysis"
       menu:
       - text: "Data Exploration"
-        href: Data-exploration.html
+        href: Data_exploration.html
       - text: "Data Analysis"
-        href: 
+        href:  Data_Analysis.html
     - text: "Interactive apps"
-      menu:
+      menu: 
       - text: "Drug Use Overview"
-        href:
-      - text: "Drug Use Prediction Model"
-        href:
+        href: https://meanstudent.shinyapps.io/yrbss_overview_shinyapp/
+      - text: "Drug Use Proportion & Marijuana Start Age"
+        href: https://meanstudent.shinyapps.io/new_shiny/
     - text: "Related Work"
       menu:
       - text: "1"

@@ -1,0 +1,4149 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Data Analysis</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/table1-1.0/table1_defaults.css" rel="stylesheet" />
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/ryan2417/drug_abuse_among_youth.github.io.git">Data Source</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Data-exploration.html">Data Exploration</a>
+    </li>
+    <li class="dropdown-header">Data Analysis</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Interactive apps
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Drug Use Overview</li>
+    <li class="dropdown-header">Drug Use Prediction Model</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Related Work
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">1</li>
+    <li class="dropdown-header">2</li>
+    <li class="dropdown-header">3</li>
+  </ul>
+</li>
+<li class="dropdown-header">Report</li>
+<li class="dropdown-header">about</li>
+<li>
+  <a href="mailto:&lt;kh3074@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/ryan2417/drug_abuse_among_youth.github.io.git">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Data Analysis</h1>
+
+</div>
+
+
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.4     v dplyr   1.0.7
+## v tidyr   1.1.3     v stringr 1.4.0
+## v readr   2.0.1     v forcats 0.5.1</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(survey)</code></pre>
+<pre><code>## 载入需要的程辑包：grid</code></pre>
+<pre><code>## 载入需要的程辑包：Matrix</code></pre>
+<pre><code>## 
+## 载入程辑包：&#39;Matrix&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:tidyr&#39;:
+## 
+##     expand, pack, unpack</code></pre>
+<pre><code>## 载入需要的程辑包：survival</code></pre>
+<pre><code>## 
+## 载入程辑包：&#39;survey&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:graphics&#39;:
+## 
+##     dotchart</code></pre>
+<pre class="r"><code>library(viridis)</code></pre>
+<pre><code>## 载入需要的程辑包：viridisLite</code></pre>
+<pre class="r"><code>library(table1)</code></pre>
+<pre><code>## Warning: 程辑包&#39;table1&#39;是用R版本4.1.2 来建造的</code></pre>
+<pre><code>## 
+## 载入程辑包：&#39;table1&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     units, units&lt;-</code></pre>
+<pre class="r"><code>library(kableExtra)</code></pre>
+<pre><code>## Warning: 程辑包&#39;kableExtra&#39;是用R版本4.1.2 来建造的</code></pre>
+<pre><code>## 
+## 载入程辑包：&#39;kableExtra&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     group_rows</code></pre>
+<pre class="r"><code>knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE
+)
+
+theme_set(theme_minimal() + theme(legend.position = &quot;bottom&quot;))
+
+options(
+  ggplot2.continuous.colour = &quot;viridis&quot;,
+  ggplot2.continuous.fill = &quot;viridis&quot;
+)
+
+scale_colour_discrete = scale_colour_viridis_d(option = &quot;viridis&quot;)
+scale_fill_discrete = scale_fill_viridis_d(option = &quot;viridis&quot;)</code></pre>
+<p>This data analysis uses the resulted data set cleaned by the processing described in data analysis part of <a href="%223,Data%20Description.html%22">Data</a>. According to our motivation, we are interested the relationship between drug use and youth behaviors. In this analysis, we will explore the association between drug use status and each health behavior variables.</p>
+<p>There are three kinds of health-related variables and we will use different methods to analyze: - Bi-level categorical variables: drunk driving, carrying weapon, suicide attempt, physical fight, quit-smoking, early-age sexual intercourse, heavy screening usage, enough sleeping - Multivariate categorical variables: smoking status, binge drinking status, seat belt usage, GPA(grades in school) - Quantitative Variables: initial smoking age, initial drinking age, BMI</p>
+<p>Here is a table summarized the overall distribution of important variables by drug use status.</p>
+<div id="three-line-table" class="section level2">
+<h2>Three-line-table</h2>
+<div class="Rtable1"><table class="Rtable1"><caption>Table 1: Distribution of risky behaviors by drug use status</caption>
+
+<thead>
+<tr>
+<th class='rowlabel firstrow lastrow'></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Heavy Dose<br><span class='stratn'>(N=1778)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Light Dose<br><span class='stratn'>(N=4257)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>No Drug Use<br><span class='stratn'>(N=13819)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Overall<br><span class='stratn'>(N=19854)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class='rowlabel firstrow'>Drunk Driving</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>1126 (63.3%)</td>
+<td>3382 (79.4%)</td>
+<td>12486 (90.4%)</td>
+<td>16994 (85.6%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>652 (36.7%)</td>
+<td class='lastrow'>875 (20.6%)</td>
+<td class='lastrow'>1333 (9.6%)</td>
+<td class='lastrow'>2860 (14.4%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Text Driving</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>496 (27.9%)</td>
+<td>1365 (32.1%)</td>
+<td>5628 (40.7%)</td>
+<td>7489 (37.7%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>1282 (72.1%)</td>
+<td class='lastrow'>2892 (67.9%)</td>
+<td class='lastrow'>8191 (59.3%)</td>
+<td class='lastrow'>12365 (62.3%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Weapon Carrying</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>1512 (85.0%)</td>
+<td>4078 (95.8%)</td>
+<td>13496 (97.7%)</td>
+<td>19086 (96.1%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>266 (15.0%)</td>
+<td class='lastrow'>179 (4.2%)</td>
+<td class='lastrow'>323 (2.3%)</td>
+<td class='lastrow'>768 (3.9%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Suicide Attempt</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>1110 (62.4%)</td>
+<td>3052 (71.7%)</td>
+<td>12174 (88.1%)</td>
+<td>16336 (82.3%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>668 (37.6%)</td>
+<td class='lastrow'>1205 (28.3%)</td>
+<td class='lastrow'>1645 (11.9%)</td>
+<td class='lastrow'>3518 (17.7%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Quit Smoking</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Never Smoke</td>
+<td>359 (20.2%)</td>
+<td>2245 (52.7%)</td>
+<td>12344 (89.3%)</td>
+<td>14948 (75.3%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>763 (42.9%)</td>
+<td>943 (22.2%)</td>
+<td>724 (5.2%)</td>
+<td>2430 (12.2%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>656 (36.9%)</td>
+<td class='lastrow'>1069 (25.1%)</td>
+<td class='lastrow'>751 (5.4%)</td>
+<td class='lastrow'>2476 (12.5%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Physical Fight</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>958 (53.9%)</td>
+<td>3177 (74.6%)</td>
+<td>12199 (88.3%)</td>
+<td>16334 (82.3%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>820 (46.1%)</td>
+<td class='lastrow'>1080 (25.4%)</td>
+<td class='lastrow'>1620 (11.7%)</td>
+<td class='lastrow'>3520 (17.7%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Sexual Intercourse</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>1037 (58.3%)</td>
+<td>3418 (80.3%)</td>
+<td>13012 (94.2%)</td>
+<td>17467 (88.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>741 (41.7%)</td>
+<td class='lastrow'>839 (19.7%)</td>
+<td class='lastrow'>807 (5.8%)</td>
+<td class='lastrow'>2387 (12.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Screening Use</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>3.80 (2.64)</td>
+<td>3.86 (2.48)</td>
+<td>3.65 (2.36)</td>
+<td>3.71 (2.41)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>3.50 [0, 10.0]</td>
+<td class='lastrow'>4.00 [0, 10.0]</td>
+<td class='lastrow'>3.50 [0, 10.0]</td>
+<td class='lastrow'>3.50 [0, 10.0]</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Sleeping Time</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>6.16 (1.38)</td>
+<td>6.36 (1.33)</td>
+<td>6.71 (1.30)</td>
+<td>6.59 (1.33)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>6.00 [4.00, 10.0]</td>
+<td class='lastrow'>6.00 [4.00, 10.0]</td>
+<td class='lastrow'>7.00 [4.00, 10.0]</td>
+<td class='lastrow'>7.00 [4.00, 10.0]</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Smoking Status</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Heavy Smoker</td>
+<td>58 (3.3%)</td>
+<td>15 (0.4%)</td>
+<td>11 (0.1%)</td>
+<td>84 (0.4%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Light Smoker</td>
+<td>642 (36.1%)</td>
+<td>499 (11.7%)</td>
+<td>212 (1.5%)</td>
+<td>1353 (6.8%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Never Smoker</td>
+<td class='lastrow'>1078 (60.6%)</td>
+<td class='lastrow'>3743 (87.9%)</td>
+<td class='lastrow'>13596 (98.4%)</td>
+<td class='lastrow'>18417 (92.8%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Binge Drinking</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Heavy Binge Drinking</td>
+<td>261 (14.7%)</td>
+<td>157 (3.7%)</td>
+<td>41 (0.3%)</td>
+<td>459 (2.3%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Light Binge Drinking</td>
+<td>596 (33.5%)</td>
+<td>792 (18.6%)</td>
+<td>419 (3.0%)</td>
+<td>1807 (9.1%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>No Binge Drinking</td>
+<td class='lastrow'>921 (51.8%)</td>
+<td class='lastrow'>3308 (77.7%)</td>
+<td class='lastrow'>13359 (96.7%)</td>
+<td class='lastrow'>17588 (88.6%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Seat Belt Use</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Most of the time or Always</td>
+<td>1190 (66.9%)</td>
+<td>3435 (80.7%)</td>
+<td>12291 (88.9%)</td>
+<td>16916 (85.2%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Never or Rarely</td>
+<td>284 (16.0%)</td>
+<td>307 (7.2%)</td>
+<td>526 (3.8%)</td>
+<td>1117 (5.6%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Sometimes</td>
+<td class='lastrow'>304 (17.1%)</td>
+<td class='lastrow'>515 (12.1%)</td>
+<td class='lastrow'>1002 (7.3%)</td>
+<td class='lastrow'>1821 (9.2%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Grades in School</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mostly A's</td>
+<td>431 (24.2%)</td>
+<td>1565 (36.8%)</td>
+<td>7325 (53.0%)</td>
+<td>9321 (46.9%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Mostly B's</td>
+<td>663 (37.3%)</td>
+<td>1627 (38.2%)</td>
+<td>4403 (31.9%)</td>
+<td>6693 (33.7%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Mostly Below C's</td>
+<td>177 (10.0%)</td>
+<td>172 (4.0%)</td>
+<td>304 (2.2%)</td>
+<td>653 (3.3%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Mostly C's</td>
+<td>418 (23.5%)</td>
+<td>744 (17.5%)</td>
+<td>1404 (10.2%)</td>
+<td>2566 (12.9%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>None of these grades</td>
+<td>17 (1.0%)</td>
+<td>10 (0.2%)</td>
+<td>28 (0.2%)</td>
+<td>55 (0.3%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Not sure</td>
+<td class='lastrow'>72 (4.0%)</td>
+<td class='lastrow'>139 (3.3%)</td>
+<td class='lastrow'>355 (2.6%)</td>
+<td class='lastrow'>566 (2.9%)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="hypothesis-testing-with-visualization-of-drug-status-comparison" class="section level2">
+<h2>Hypothesis Testing with visualization of drug status comparison</h2>
+<div id="chi-square-test" class="section level3">
+<h3>Chi-square Test</h3>
+<p>For bi-level and multi-level categorical variables, we test the independence of two categorical variables, so we should use the R X C chi-square test with hypotheses that</p>
+<p><span class="math display">\[
+H_0:\text{There is no association between drug use and the health-related variable of interest}
+H_1:\text{There is an association between drug use and the health-related variable of interest}
+\]</span> Other than the chi-square test, we also use the Cramer’s V Effect Size to measure the magnitude of the association. It is measure by the manner: <span class="math display">\[
+V = \sqrt{\frac{X^2}{n*df}}
+\]</span> where <span class="math inline">\(X^2\)</span> is the chi-square statistic, n is the sample size and <span class="math inline">\(df\)</span> is the degrees of freedom.<br />
+</p>
+<p>Usually, we use the table below to assess the association through the Cramer’s V effect size</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+small_effect
+</th>
+<th style="text-align:right;">
+medium_effect
+</th>
+<th style="text-align:right;">
+large_effect
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.10
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+0.50
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.21
+</td>
+<td style="text-align:right;">
+0.35
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.06
+</td>
+<td style="text-align:right;">
+0.17
+</td>
+<td style="text-align:right;">
+0.29
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.05
+</td>
+<td style="text-align:right;">
+0.15
+</td>
+<td style="text-align:right;">
+0.25
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.04
+</td>
+<td style="text-align:right;">
+0.13
+</td>
+<td style="text-align:right;">
+0.22
+</td>
+</tr>
+</tbody>
+</table>
+<p>Besides the crude analysis which test the association for all observations in the data set, we also perform a stratified analysis over grade, gender and race to investigate the interaction or confounding effect of these demographic variable on the crude association.</p>
+</div>
+<div id="drunk-driving" class="section level3">
+<h3>1. Drunk Driving</h3>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Table 2: Drug Use Status vs Drunk Driving
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stratum
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+cramer_v_effect_size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>crude</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall
+</td>
+<td style="text-align:right;">
+1099.24319
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3327652
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>grade</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+10th Grade
+</td>
+<td style="text-align:right;">
+292.83687
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3270364
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+11th Grade
+</td>
+<td style="text-align:right;">
+255.36494
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3195389
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+12th Grade
+</td>
+<td style="text-align:right;">
+315.05617
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4153781
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+9th Grade
+</td>
+<td style="text-align:right;">
+207.30809
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2691369
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sex</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+female
+</td>
+<td style="text-align:right;">
+468.87966
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2991335
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+male
+</td>
+<td style="text-align:right;">
+656.12915
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3741512
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>race</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+All other Races
+</td>
+<td style="text-align:right;">
+114.75455
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3174118
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Black or African American
+</td>
+<td style="text-align:right;">
+53.02572
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2281722
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hispanic/Latino
+</td>
+<td style="text-align:right;">
+133.39145
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2694694
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+White
+</td>
+<td style="text-align:right;">
+837.21536
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3756641
+</td>
+</tr>
+</tbody>
+</table>
+<p>From Table 2, we can see that the overall p-value is significantly small and the p-value of each stratum is significantly small to say that there is association between drug use status and drunk driving. There are differences of effect size among grade, gender and race, implying some interaction effect, but the lowest effect size is still above 0.22, suggesting a moderate association between drug use status and the drunk driving. The effect size demonstrates that the association might be stronger among higher grade, male and white race.</p>
+<p>Overall:</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Stratified Analysis:</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-5-2.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-5-3.png" width="672" /></p>
+<p>All proportion plots display that an increasing level of drug use frequency has a higher proportion of drunk driving. The dose-response relationship also verifies the existence of the association.</p>
+</div>
+<div id="cell-phone-use-while-driving" class="section level3">
+<h3>2. Cell Phone Use While Driving</h3>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Table 3: Drug Use Status vs Cell Phone Use During Driving
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stratum
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+cramer_v_effect_size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>crude</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall
+</td>
+<td style="text-align:right;">
+184.161787
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1362043
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>grade</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+10th Grade
+</td>
+<td style="text-align:right;">
+37.199427
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1165605
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+11th Grade
+</td>
+<td style="text-align:right;">
+96.546099
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1964765
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+12th Grade
+</td>
+<td style="text-align:right;">
+116.836271
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2529522
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+9th Grade
+</td>
+<td style="text-align:right;">
+2.514184
+</td>
+<td style="text-align:right;">
+0.2844800
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0296390
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sex</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+female
+</td>
+<td style="text-align:right;">
+80.399822
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1238688
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+male
+</td>
+<td style="text-align:right;">
+104.714674
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1494708
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>race</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+All other Races
+</td>
+<td style="text-align:right;">
+4.285642
+</td>
+<td style="text-align:right;">
+0.1173234
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0613403
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Black or African American
+</td>
+<td style="text-align:right;">
+6.351851
+</td>
+<td style="text-align:right;">
+0.0417555
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0789714
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hispanic/Latino
+</td>
+<td style="text-align:right;">
+25.164216
+</td>
+<td style="text-align:right;">
+0.0000034
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1170408
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+White
+</td>
+<td style="text-align:right;">
+170.964904
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1697597
+</td>
+</tr>
+</tbody>
+</table>
+<p>From Table 3, we can see that not all p-values are significant enough to conclude an association between drug_use status and cell phone use while driving. Since younger children have much less chance of driving than older children, it is make sense that the association is heavily impacted by the grade. However, it also shows no association between drug_use status and cell phone use while driving among Black or African American and all other races. In a conservative perspective, we would conclude that the association between drug_use status and cell phone use while driving is weak, especially among Black or African American and all other races students.</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-7-2.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-7-3.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-7-4.png" width="672" /></p>
+<p>The overall proportion of cell phone use while driving rises while the level of drug use rises. However, the increment is small and invisible after stratifying by races. Female tends to have higher proportion of cell phone use while driving regardless of drug use status.</p>
+</div>
+<div id="carrying-weapon" class="section level3">
+<h3>3. Carrying Weapon</h3>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Table 4: Drug Use Status vs Carrying Weapon
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stratum
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+cramer_v_effect_size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>crude</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall
+</td>
+<td style="text-align:right;">
+676.6931
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2610880
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>grade</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+10th Grade
+</td>
+<td style="text-align:right;">
+172.8207
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2512356
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+11th Grade
+</td>
+<td style="text-align:right;">
+139.7170
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2363566
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+12th Grade
+</td>
+<td style="text-align:right;">
+125.8154
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2624922
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+9th Grade
+</td>
+<td style="text-align:right;">
+275.8729
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3104700
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sex</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+female
+</td>
+<td style="text-align:right;">
+221.2204
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2054693
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+male
+</td>
+<td style="text-align:right;">
+416.7429
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2981856
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>race</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+All other Races
+</td>
+<td style="text-align:right;">
+151.6157
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3648465
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Black or African American
+</td>
+<td style="text-align:right;">
+150.6375
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3845794
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hispanic/Latino
+</td>
+<td style="text-align:right;">
+190.5880
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3221019
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+White
+</td>
+<td style="text-align:right;">
+257.4158
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2083045
+</td>
+</tr>
+</tbody>
+</table>
+<p>From Table 4, we can see that all p-values are significantly small to conclude that there is association between drug use status and carrying weapon. The overall effect size is around 0.26 while the lowest effect size is greater than 0.2, so we are confident to say that it is an medium association. However, the large difference of effect size among gender and race implies the interaction effects of gender and race on the association. The association between drug use status and carrying weapon is stronger among male compared to female; the association between drug use status and carrying weapon is strongest among Black or African American and weakest among White.</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-9-2.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-9-3.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
+<p>All plots demonstrate an rising trend of proportion of carrying weapon with the increase level of drug use frequency. The proportion of carrying weapon boosts from light dose drug use to heavy dose drug use. 9th Grade has highest proportion of carrying weapon regardless of drug use status while male has higher proportion of carrying weapon than female ar all drug use status. The proportion of Black and African American students carrying weapon suddenly escalates on heavy dose drug use.</p>
+</div>
+<div id="suicide-attempt" class="section level3">
+<h3>4. Suicide Attempt</h3>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Table 5: Drug Use Status vs Suicide Attempt
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stratum
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+cramer_v_effect_size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>crude</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall
+</td>
+<td style="text-align:right;">
+1128.37931
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3371464
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>grade</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+10th Grade
+</td>
+<td style="text-align:right;">
+370.52483
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3678679
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+11th Grade
+</td>
+<td style="text-align:right;">
+271.59791
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3295387
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+12th Grade
+</td>
+<td style="text-align:right;">
+159.41991
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2954751
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+9th Grade
+</td>
+<td style="text-align:right;">
+412.00584
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3794171
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sex</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+female
+</td>
+<td style="text-align:right;">
+716.88919
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3698796
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+male
+</td>
+<td style="text-align:right;">
+438.91473
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3060149
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>race</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+All other Races
+</td>
+<td style="text-align:right;">
+192.74839
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4113708
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Black or African American
+</td>
+<td style="text-align:right;">
+47.03447
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2148956
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hispanic/Latino
+</td>
+<td style="text-align:right;">
+189.10957
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3208501
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+White
+</td>
+<td style="text-align:right;">
+735.17942
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3520285
+</td>
+</tr>
+</tbody>
+</table>
+<p>From Table 5, we can see that all p-values are small enough, so we could reject the null hypothesis that there is association between drug use status and suicide attempt. The overall effect size is around 0.33 while the lowest effect size is greater than 0.21, so the association is moderately strong. The interaction effect of race in the association is detected by the difference of effect size among different races. The association is strongest for all other races while it is weakest for Black or African American.</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-11-2.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-11-3.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-11-4.png" width="672" /></p>
+<p>Based on these proportion plots, the proportion of suicide attempt increases while the level of drug use frequency goes up. This trend also shows up at each stratum in the stratified plot. The dose-response relationship supports our conclusion about the association between suicide attempt and drug use status.</p>
+</div>
+<div id="quit-smoking" class="section level3">
+<h3>5. Quit smoking</h3>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Table 6: Drug Use Status vs Quit Smoking
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stratum
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+cramer_v_effect_size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>crude</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall
+</td>
+<td style="text-align:right;">
+16.0233514
+</td>
+<td style="text-align:right;">
+0.0003316
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0808217
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>grade</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+10th Grade
+</td>
+<td style="text-align:right;">
+7.7000134
+</td>
+<td style="text-align:right;">
+0.0212796
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1090922
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+11th Grade
+</td>
+<td style="text-align:right;">
+1.9523859
+</td>
+<td style="text-align:right;">
+0.3767427
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0532514
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+12th Grade
+</td>
+<td style="text-align:right;">
+0.9685637
+</td>
+<td style="text-align:right;">
+0.6161395
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0394928
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+9th Grade
+</td>
+<td style="text-align:right;">
+17.1191810
+</td>
+<td style="text-align:right;">
+0.0001917
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1856872
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sex</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+female
+</td>
+<td style="text-align:right;">
+5.0835165
+</td>
+<td style="text-align:right;">
+0.0787279
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0650595
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+male
+</td>
+<td style="text-align:right;">
+9.5952996
+</td>
+<td style="text-align:right;">
+0.0082491
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0875441
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>race</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+All other Races
+</td>
+<td style="text-align:right;">
+1.9253531
+</td>
+<td style="text-align:right;">
+0.3818694
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0832959
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Black or African American
+</td>
+<td style="text-align:right;">
+18.0007244
+</td>
+<td style="text-align:right;">
+0.0001234
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3297965
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hispanic/Latino
+</td>
+<td style="text-align:right;">
+15.9987629
+</td>
+<td style="text-align:right;">
+0.0003357
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.2177240
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+White
+</td>
+<td style="text-align:right;">
+15.1210110
+</td>
+<td style="text-align:right;">
+0.0005206
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0950840
+</td>
+</tr>
+</tbody>
+</table>
+<p>For quit smoking, we should focus on students who smoke so the number of non-smokers won’t bias our results. After filtering out the nonsmokers, the resulted table is in Table 6. Some p-values are not significantly small enough to conclude the association. The overall effect size is around 0.08 and the difference of effect size among grades and among races are significantly large, so the confounding and interaction effects heavily impacted the analysis of association. We would conclude that there is no association between drug use status and quit smoking.</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-13-1.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-13-2.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-13-3.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-13-4.png" width="672" /></p>
+<p>The proportion bar plots do not demonstrate any dose-response relationship since the proportion has no trend of increasing or decreasing across the drug use status. Moreover, the difference of proportion is small between each drug use status. Thus, these plots support the conclusion in the analysis table that there is no association between quit smoking and drug use status.</p>
+</div>
+<div id="physical-fight" class="section level3">
+<h3>6. Physical Fight</h3>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Table 7: Drug Use Status vs Physical Fight
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stratum
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+cramer_v_effect_size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>crude</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall
+</td>
+<td style="text-align:right;">
+1494.64346
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3880251
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>grade</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+10th Grade
+</td>
+<td style="text-align:right;">
+477.08710
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4174285
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+11th Grade
+</td>
+<td style="text-align:right;">
+398.62480
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3992320
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+12th Grade
+</td>
+<td style="text-align:right;">
+271.52502
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3856155
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+9th Grade
+</td>
+<td style="text-align:right;">
+576.12126
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4486649
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sex</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+female
+</td>
+<td style="text-align:right;">
+848.99278
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4025190
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+male
+</td>
+<td style="text-align:right;">
+693.55868
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3846751
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>race</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+All other Races
+</td>
+<td style="text-align:right;">
+227.42897
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4468492
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Black or African American
+</td>
+<td style="text-align:right;">
+98.51405
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3110059
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hispanic/Latino
+</td>
+<td style="text-align:right;">
+296.64639
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4018509
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+White
+</td>
+<td style="text-align:right;">
+884.81376
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3861954
+</td>
+</tr>
+</tbody>
+</table>
+<p>From Table 7, we can see that all p-value are significantly small and the effect size are around 0.4, it is the association between drug use status and physical fight is strong. The effect size over each stratum is very close to each other, so the interaction effect is negligible.</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-15-1.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-15-2.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-15-3.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-15-4.png" width="672" /></p>
+<p>The plots illustrate a positive relationship between drug use status and proportion of physical fight, so the proportion of physical fight is higher when the drug use is heavier. This positive trend is stable in each stratum in the stratified plot. The plots are consistent with our conclusion based on the statistical analysis table and enhance the inference about the association between drug use status and physical fight.</p>
+</div>
+<div id="early-age-sexual-intercourse" class="section level3">
+<h3>7. Early-age Sexual Intercourse</h3>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Table 8: Drug Use Status vs Early-Age Sexual Intercourse
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stratum
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+cramer_v_effect_size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>crude</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall
+</td>
+<td style="text-align:right;">
+2215.3034
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4723975
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>grade</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+10th Grade
+</td>
+<td style="text-align:right;">
+689.4462
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.5018033
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+11th Grade
+</td>
+<td style="text-align:right;">
+541.0647
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4651229
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+12th Grade
+</td>
+<td style="text-align:right;">
+307.7284
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4105191
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+9th Grade
+</td>
+<td style="text-align:right;">
+925.9117
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.5687874
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sex</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+female
+</td>
+<td style="text-align:right;">
+1189.1246
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4763740
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+male
+</td>
+<td style="text-align:right;">
+1026.5625
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4679993
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>race</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+All other Races
+</td>
+<td style="text-align:right;">
+298.2025
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.5116745
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Black or African American
+</td>
+<td style="text-align:right;">
+114.6841
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.3355607
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hispanic/Latino
+</td>
+<td style="text-align:right;">
+456.4091
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4984511
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+White
+</td>
+<td style="text-align:right;">
+1402.3034
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4861856
+</td>
+</tr>
+</tbody>
+</table>
+<p>From Table 8, all p-value are significantly small and the effect size are around 0.4, it shows that the association between drug use status and early age sex is strong. The effect size over each stratum is close to each other, so the interaction effect is negligible.</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-17-1.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-17-2.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-17-3.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-17-4.png" width="672" /> The plots illustrate a positive relationship between drug use status and proportion of early age sex, so the proportion of early age sex is higher when the drug use is heavier. 9th Grade has highest proportion of having early age sex regardless of drug use status while male has higher proportion of having early age sex than female ar all drug use status. Hispanic race has higher proportion of having early age sex when they used heavy dose compared to did not use drug and used light dose drug, which implies a high risky sexual behavior can be triggered when they use heavy dose drug.</p>
+</div>
+<div id="screening-use" class="section level3">
+<h3>8. Screening Use</h3>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Table 9: Drug Use Status vs Heavy Screening Use
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stratum
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+cramer_v_effect_size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>crude</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall
+</td>
+<td style="text-align:right;">
+30.524402
+</td>
+<td style="text-align:right;">
+0.0000002
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0554517
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>grade</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+10th Grade
+</td>
+<td style="text-align:right;">
+10.164083
+</td>
+<td style="text-align:right;">
+0.0062072
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0609281
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+11th Grade
+</td>
+<td style="text-align:right;">
+16.490417
+</td>
+<td style="text-align:right;">
+0.0002625
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0812006
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+12th Grade
+</td>
+<td style="text-align:right;">
+2.739169
+</td>
+<td style="text-align:right;">
+0.2542126
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0387310
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+9th Grade
+</td>
+<td style="text-align:right;">
+25.638308
+</td>
+<td style="text-align:right;">
+0.0000027
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0946477
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sex</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+female
+</td>
+<td style="text-align:right;">
+49.915034
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0976001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+male
+</td>
+<td style="text-align:right;">
+2.420158
+</td>
+<td style="text-align:right;">
+0.2981737
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0227235
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>race</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+All other Races
+</td>
+<td style="text-align:right;">
+6.125398
+</td>
+<td style="text-align:right;">
+0.0467613
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0733340
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Black or African American
+</td>
+<td style="text-align:right;">
+4.444540
+</td>
+<td style="text-align:right;">
+0.1083628
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0660591
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hispanic/Latino
+</td>
+<td style="text-align:right;">
+2.091141
+</td>
+<td style="text-align:right;">
+0.3514913
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0337394
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+White
+</td>
+<td style="text-align:right;">
+15.533604
+</td>
+<td style="text-align:right;">
+0.0004236
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0511702
+</td>
+</tr>
+</tbody>
+</table>
+<p>From Table 9, p-value is not significantly small and effect size is small, implying that there is not a strong association between screening use and drug use frequency.</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-20-1.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-20-2.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-20-3.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-20-4.png" width="672" /> All plots show that there is not too much difference of screening use for different drug use frequency groups.</p>
+</div>
+<div id="sleeping-time" class="section level3">
+<h3>9. Sleeping Time</h3>
+<p>The density plot shows that heavy dose use subjects sleep less than no drug use subjects and light dose use subjects. Also, more portions of subjects sleep less than 5 hours for heavy dose use compared to no drug use and light dose use subjects.</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Table 10: Drug Use Status vs Enough Sleeping
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stratum
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+cramer_v_effect_size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>crude</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall
+</td>
+<td style="text-align:right;">
+224.523895
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1503911
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>grade</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+10th Grade
+</td>
+<td style="text-align:right;">
+38.283535
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1182468
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+11th Grade
+</td>
+<td style="text-align:right;">
+26.206480
+</td>
+<td style="text-align:right;">
+0.0000020
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1023641
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+12th Grade
+</td>
+<td style="text-align:right;">
+33.113961
+</td>
+<td style="text-align:right;">
+0.0000001
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1346651
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+9th Grade
+</td>
+<td style="text-align:right;">
+67.607132
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1536956
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sex</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+female
+</td>
+<td style="text-align:right;">
+90.411458
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1313548
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+male
+</td>
+<td style="text-align:right;">
+137.899449
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1715275
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>race</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+All other Races
+</td>
+<td style="text-align:right;">
+16.573826
+</td>
+<td style="text-align:right;">
+0.0002518
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1206284
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Black or African American
+</td>
+<td style="text-align:right;">
+8.871195
+</td>
+<td style="text-align:right;">
+0.0118480
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0933277
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hispanic/Latino
+</td>
+<td style="text-align:right;">
+68.553378
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1931790
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+White
+</td>
+<td style="text-align:right;">
+136.895936
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.1519065
+</td>
+</tr>
+</tbody>
+</table>
+<p>From Table 10, we can see that the overall p-value is significantly small. However, the effect size is around 0.1, suggesting the association is not that strong.</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-23-1.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-23-2.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-23-3.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-23-4.png" width="672" /> The “enough sleeping” plots shows that heavy dose subjects tend to have least proportions of having enough sleep in all grades and races. Male subjects tend to have more enough sleeping for no drug and use light dose, whereas they tend to have less enough sleeping time when use heavy dose of drug. It infers an association between sleeping time and drug use frequency.</p>
+</div>
+<div id="smoking-status" class="section level3">
+<h3>10. Smoking Status</h3>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Table 11: Drug Use Status vs Smoking Status
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stratum
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+cramer_v_effect_size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>crude</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall
+</td>
+<td style="text-align:right;">
+3588.1901
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.8502443
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>grade</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+10th Grade
+</td>
+<td style="text-align:right;">
+1001.8200
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.8554470
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+11th Grade
+</td>
+<td style="text-align:right;">
+906.6144
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.8514702
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+12th Grade
+</td>
+<td style="text-align:right;">
+543.8701
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.7718132
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+9th Grade
+</td>
+<td style="text-align:right;">
+1147.1991
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.8953639
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sex</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+female
+</td>
+<td style="text-align:right;">
+1762.6172
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.8202162
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+male
+</td>
+<td style="text-align:right;">
+1804.7565
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.8775600
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>race</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+All other Races
+</td>
+<td style="text-align:right;">
+546.7436
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.9798170
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Black or African American
+</td>
+<td style="text-align:right;">
+245.6196
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.6944900
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hispanic/Latino
+</td>
+<td style="text-align:right;">
+511.0736
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.7459370
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+White
+</td>
+<td style="text-align:right;">
+2396.6740
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.8988777
+</td>
+</tr>
+</tbody>
+</table>
+<p>From table 11, we can see that all p-values are significantly small and the effect sizes are around 0.8, which means there is a strong association between drug use and smoking status. The association between drug use and smoking status is weaker among 12th Grade compared to other grades. Among race, All Other Races has the strongest association between drug use and smoking status, and Black or African American has the weakest association.</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p>Based on the plot, it shows that heavy dose subjects tend to smoke more because there are more light dose and heavy dose smokers compared to no drug use and light dose drug use subjects. Higher portions of heavy smokers are 9th grade subjects and male gender. In addition, for heavy dose subjects, there are higher portions of heavy smokers in white race compared to Hispanic and Black race.</p>
+</div>
+<div id="binge-drinking" class="section level3">
+<h3>11. Binge Drinking</h3>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Table 12: Drug Use Status vs Binge Drinking
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stratum
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+cramer_v_effect_size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>crude</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall
+</td>
+<td style="text-align:right;">
+4031.0318
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.9011853
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>grade</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+10th Grade
+</td>
+<td style="text-align:right;">
+1015.7536
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.8613754
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+11th Grade
+</td>
+<td style="text-align:right;">
+914.2769
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.8550609
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+12th Grade
+</td>
+<td style="text-align:right;">
+715.6054
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.8853223
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+9th Grade
+</td>
+<td style="text-align:right;">
+1331.0011
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.9644271
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sex</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+female
+</td>
+<td style="text-align:right;">
+1958.3677
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.8645627
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+male
+</td>
+<td style="text-align:right;">
+2040.1988
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.9330475
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>race</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+All other Races
+</td>
+<td style="text-align:right;">
+541.1635
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.9748042
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Black or African American
+</td>
+<td style="text-align:right;">
+162.7432
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.5653090
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hispanic/Latino
+</td>
+<td style="text-align:right;">
+771.7241
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.9166245
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+White
+</td>
+<td style="text-align:right;">
+2685.8813
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.9515674
+</td>
+</tr>
+</tbody>
+</table>
+<p>From table 12, all p-values are significantly small and the overall effect size is as high as 0.9, which indicate that there is a very strong association between drug use and binge drinking. The association between drug use and binge drinking is stronger among 9th Grade compared to other grades, and is stronger among male compared to female. Among race, Black or African American has a relatively weak association between drug use and binge drinking compared to other classification of races.</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p>With the increase of drug use, the proportion of no binge drinking decreases, and the proportion of both light and heavy binge drinking increase. The trend of proportion of binge drinking is similar among grade and gender. Among race, no matter in what classification of drug use status, the proportion of no binge drinking among Black or African American is higher than other races, and the proportion of both light and heavy binge drinking is lower than other races.</p>
+</div>
+<div id="seat-belt-use" class="section level3">
+<h3>12. Seat belt use</h3>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Table 13: Drug Use Status vs Seat Belt Use
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stratum
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+cramer_v_effect_size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>crude</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall
+</td>
+<td style="text-align:right;">
+758.34933
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.3908775
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>grade</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+10th Grade
+</td>
+<td style="text-align:right;">
+192.13099
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.3746252
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+11th Grade
+</td>
+<td style="text-align:right;">
+171.55200
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.3703873
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+12th Grade
+</td>
+<td style="text-align:right;">
+156.53345
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.4140647
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+9th Grade
+</td>
+<td style="text-align:right;">
+301.94172
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.4593479
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sex</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+female
+</td>
+<td style="text-align:right;">
+384.79732
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.3832352
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+male
+</td>
+<td style="text-align:right;">
+367.71545
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.3961170
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>race</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+All other Races
+</td>
+<td style="text-align:right;">
+52.95343
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.3049300
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Black or African American
+</td>
+<td style="text-align:right;">
+57.11642
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.3348999
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hispanic/Latino
+</td>
+<td style="text-align:right;">
+139.06322
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.3891048
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+White
+</td>
+<td style="text-align:right;">
+547.86098
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.4297653
+</td>
+</tr>
+</tbody>
+</table>
+<p>From table 13, all p-values are significantly small, and generally the effect size is around 0.4, which indicate that there is a strong association between drug use and seat belt use. The association between drug use and seat belt use is the strongest among 12th Grade compared to other grades, and is stronger among White compared to other races. As for gender, the association between drug use and seat belt use among male and female are very similar.</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<p>With the increase of drug use, the proportion of both never and sometimes use seat belt increase, and the proportion of always use seat belt decreases. The trend of proportion of seat belt use is similar among grade, gender, and sex, with a slightly higher proportion of never use seat belt than sometimes use seat belt in heavy drug dose status among male.</p>
+</div>
+<div id="grades-in-school" class="section level3">
+<h3>13. Grades in school</h3>
+<table class=" lightable-paper lightable-hover" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Table 14: Drug Use Status vs Grades in School
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stratum
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+cramer_v_effect_size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>crude</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall
+</td>
+<td style="text-align:right;">
+1056.01928
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.5739685
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>grade</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+10th Grade
+</td>
+<td style="text-align:right;">
+318.89934
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.5999429
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+11th Grade
+</td>
+<td style="text-align:right;">
+331.21759
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.6401861
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+12th Grade
+</td>
+<td style="text-align:right;">
+136.69654
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.4793813
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+9th Grade
+</td>
+<td style="text-align:right;">
+335.68761
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.6052035
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>sex</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+female
+</td>
+<td style="text-align:right;">
+628.98011
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.6079389
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+male
+</td>
+<td style="text-align:right;">
+456.57736
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.5510378
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>race</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+All other Races
+</td>
+<td style="text-align:right;">
+182.43724
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.7076317
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Black or African American
+</td>
+<td style="text-align:right;">
+59.61303
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.4287210
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Hispanic/Latino
+</td>
+<td style="text-align:right;">
+124.03560
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.4594828
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+White
+</td>
+<td style="text-align:right;">
+742.64017
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.6204197
+</td>
+</tr>
+</tbody>
+</table>
+<p>From table 14, all p-values are significantly small, and the overall effect size is around 0.6, which means that there is a strong association between drug use and GPA. The association between drug use and GPA is the strongest among 11th Grade compared to other grades, and is the weakest among 10th Grade compared to other grades. Also, the association between drug use and GPA is stronger among female than male, and is stronger among students who are classified into all other races compared to students who are classified into other race groups.</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-41-1.png" width="672" /></p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
+<p>With the increase of drug use, the proportion of Mostly A’s decreases, the proportion of Mostly B’s has a little change, and the proportion of both mostly C’s and below C’s increase. The trend is particularly significant among 11th grade compared to other grades, and among all other races compared with White, Black or African American, and Hispanic/Latino.</p>
+</div>
+</div>
+<div id="part-3" class="section level2">
+<h2>Part 3</h2>
+<p>###2 Smoke initial age, Alcohol initial age, and BMI - More heavy dose subjects started to smoke when they were 9 to 10 and 11 to 12 years old compared to no drug use subjects and light dose drug use subjects. For those who used light dose drug, highest percentage of them started to smoke when they were 13 or 14 years old. For those who used heavy dose drug, most of them started to smoke when they were 15 or 16 years old. It shows that heavy dose subjects start to smoke earlier. - Similar things can be seen in drinking alcohol start age. More heavy dose subjects started to drink alcohol when they were 8 years old or younger and 11 or 12 years old compared to no drug use subjects and light dose drug use subjects. For no drug use and light dose drug use subjects, most of them started to drink alcohol when they were 15 or 16 years old. For heavy dose drug use subjects, most of them started to drink alcohol earlier at 13 or 14 years old. It shows that heavy dose subjects also start to drink alcohol earlier. - Density plots of BMI are all right-skewed, which means that the mean is greater than the median. Highest percentage of observations fall in 20-30 bmi. The box-plot shows that medians for three dose usgae groups are similar. In addition, one-way anova table implies that there is not a significant difference of BMI among three different drug use frequency groups.</p>
+</div>
+<div id="q11" class="section level2">
+<h2>Q11</h2>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-45-1.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-45-2.png" width="672" /></p>
+</div>
+<div id="q2-alcohol" class="section level2">
+<h2>## Q2-alcohol</h2>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-46-1.png" width="672" /><img src="Data_Analysis_files/figure-html/unnamed-chunk-46-2.png" width="672" /></p>
+</div>
+<div id="q3-bmi" class="section level2">
+<h2>Q3-BMI</h2>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
+<pre><code>##                  Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## drug_use_freq     2   1841   920.4   32.45 8.54e-15 ***
+## Residuals     18923 536712    28.4                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 因为不存在，928个观察量被删除了</code></pre>
+</div>
+<div id="logistic-regression" class="section level2">
+<h2>Logistic regression</h2>
+<p>Cross_Validation</p>
+<p><img src="Data_Analysis_files/figure-html/unnamed-chunk-49-1.png" width="672" /></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

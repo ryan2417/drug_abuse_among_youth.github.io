@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Data Description</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/ryan2417/drug_abuse_among_youth.github.io.git">Data Source</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Data-exploration.html">Data Exploration</a>
+    </li>
+    <li class="dropdown-header">Data Analysis</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Interactive apps
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Drug Use Overview</li>
+    <li class="dropdown-header">Drug Use Prediction Model</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Related Work
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">1</li>
+    <li class="dropdown-header">2</li>
+    <li class="dropdown-header">3</li>
+  </ul>
+</li>
+<li class="dropdown-header">Report</li>
+<li class="dropdown-header">about</li>
+<li>
+  <a href="mailto:&lt;kh3074@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/ryan2417/drug_abuse_among_youth.github.io.git">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Data Description</h1>
+
+</div>
+
+
+<div id="data-source" class="section level1">
+<h1>Data Source</h1>
+<p>In this project, we use data of Youth Risk Behavior Surveillance System (YRBSS) collected by Centers for Disease Control and Prevention (CDC). YRBSS was established in 1990 to monitor health behaviors among U.S. adolescents and adults that are leading causes of death, disability, and social problems. Information about YRBSS can be found at <a href="https://www.cdc.gov/healthyyouth/data/yrbs/overview.htm"><em>Youth Risk Behavior Surveillance System (YRBSS) Overview</em></a>. Among six categories of health-related behaviors that YRBSS monitors, we mainly focus on drug use abuse among youth. The YRBSS data are collected every two years, and the most up-to-date data were collected in 2019. We will use the data collected in 2019 on the state level.</p>
+<p>The dataset is so large that it exceeds the upload limit of github. Therefore, in order to download the dataset, you can use the code in <a href="https://github.com/ryan2417/drug_abuse_among_youth.github.io/blob/main/download_dataset.Rmd"><em>download_dataset.Rmd</em></a>.</p>
+<pre class="r"><code>yrbss_state_a &lt;- readRDS(&quot;data/2019 states a-m.rds&quot;)
+yrbss_state_z &lt;- readRDS(&quot;data/2019 states n-z.rds&quot;)
+yrbss_state = rbind(yrbss_state_a,yrbss_state_z)
+yrbss_state = as_tibble(yrbss_state)
+yrbss_state_tidy &lt;- read_csv(&quot;./data/yrbss_state_lite.csv&quot;)</code></pre>
+</div>
+<div id="data-cleaning" class="section level1">
+<h1>Data Cleaning</h1>
+<p>The most important variable we are concerned about is the overall drug use status, but there is no question asked about the overall drug use in the YRBSS questionnaire so we imputed a variable <code>drug_use_freq</code> based on the aggregation of the answers of specific drug types. The survey asked about the lifetime use frequency of eight different types of drugs include: marijuana, cocaine, heroine, methamphetamine, inhale drug, ecstasy, steroid and injection drug. Each question have six options of answer: 0 times, 1 or 2 times, 3 to 9 times, 10 to 19 times, 20 to 39 times and 40 or more times (There is one more option for marijuana, 99 or more times). We assigned a numeric value which equivalent to the average of the range for each drug type. For example, if the answer is 1 or 2 times, the value is 1.5. For the answer 40 or more times, the value is 40. Then, we summed up the value across all drug types for each observation and classified the drug use status according to the sum. If the sum is 0, the overall drug use frequency is a no drug use; if the sum is greater than 0 but less than 40, the overall drug use frequency is light dose; the rest are the heavy dose user. We omitted observations who have at least one missing value on any of the drug type since we have no information to impute the missing value.</p>
+<pre class="r"><code>drug_use_tidy &lt;- function(input_list){
+  output &lt;- case_when(input_list == 1 ~ 0,
+                      input_list == 2 ~ 1.5,
+                      input_list == 3 ~ 6,
+                      input_list == 4 ~ 14.5,
+                      input_list == 5 ~ 29.5,
+                      input_list &gt; 5 ~ 40)
+  return(output)
+}
+
+drug_use_frequency &lt;- function(input_list){
+  output &lt;- case_when(input_list == 0 ~ &quot;No Drug Use&quot;,
+                      input_list &gt; 0 &amp; input_list &lt; 40 ~ &quot;Light Dose&quot;,
+                      input_list &gt;= 40 ~ &quot;Heavy Dose&quot;)
+  factor(output, levels = c(&quot;No Drug Use&quot;, &quot;Light Dose&quot;, &quot;Heavy Dose&quot;))
+}
+
+
+yrbss_state_tidy &lt;- 
+  yrbss_state %&gt;% 
+  drop_na(q45, q46, q50, q51, q52, q53, q54, q55, q56) %&gt;% 
+  mutate(
+    age_initial_alcohol = age_tidy(q40),
+    age_initial_smoking = age_tidy(q31),
+    age_marijuana = age_tidy(q46),
+    marijuana = drug_use_tidy(q45),
+    cocaine = drug_use_tidy(q50),
+    inhale = drug_use_tidy(q51),
+    heroin = drug_use_tidy(q52),
+    methamphetamine = drug_use_tidy(q53),
+    ecstasy = drug_use_tidy(q54),
+    steroid = drug_use_tidy(q55),
+    illegal_injection = case_when(q56 == 1 ~ 0,
+                                  q56 == 2 ~ 20,
+                                  q56 == 3 ~ 40),
+    drug_use_sum = rowSums(across(marijuana:illegal_injection)),
+    drug_use_freq = drug_use_frequency(drug_use_sum))</code></pre>
+<div id="data-exploration" class="section level2">
+<h2>Data Exploration</h2>
+<div id="the-state-wise-drug-use-analysis" class="section level3">
+<h3>The State-wise Drug Use Analysis</h3>
+<p>Firstly, we are interested in the drug use in each states, so we use our cleaned data according to states to do the following 5 topics of research. Each of the 5 researches are focusing on our interested topics across all the states.</p>
+<div id="the-overall-drug-use" class="section level4">
+<h4>The Overall Drug Use</h4>
+</div>
+<div id="drug-use-proportion-for-each-race" class="section level4">
+<h4>Drug Use Proportion for Each Race</h4>
+</div>
+<div id="drug-use-proportion-of-different-age-and-gender" class="section level4">
+<h4>Drug Use Proportion of Different Age and Gender</h4>
+</div>
+<div id="marijuana-and-other-durgs-use-proportion" class="section level4">
+<h4>Marijuana and Other Durgs Use Proportion</h4>
+<p>Marijuana is the most abused drug, we are interested in the marijuana drug use proportion, as well as all other drugs use proportion across the states. The analysis plot is in the dashboard. According to the plot, we found that Arizona has the largest proportion of marijuana use among the youth, which is 52%. Arizona also has the highest other drug use proportion of 32%. We could also found in the plot that the states having high proportion of marijuana use are those in which marijuana use is legal, whereas the states which make it illegal have low rate of marijuana such as Utah, Iowa, and Nebraska.</p>
+</div>
+<div id="the-average-starting-age-of-marijuana" class="section level4">
+<h4>The Average Starting Age of Marijuana</h4>
+<p>We are also interested in the average of the age that the youth first use marijuana. We tried to find if the mean starting age has a different pattern for each state. According to the plot in dashboard, although the mean starting age are relatively similar for each state, we found that Arizona still has the youngest starting age, which means that Arizona has severe problem of marijuana abuse not only for the proportion, but also for the starting age.</p>
+</div>
+</div>
+</div>
+<div id="data-analysis" class="section level2">
+<h2>Data Analysis</h2>
+<p>The data analysis part explored the association between drug use status and other health-related behaviors. The original questionnaire used some ranges of frequency to set answers, but we are concerned about whether the student experienced the behavior or not, so we categorized some variables into bi-level(Yes/No), such as drunk driving, carrying weapon, suicide attempt, physical fight, etc. It is worth to mention that the screening time use is the combination of the time length of computer use and watching tv and we classify the heavy screening use based on the screening time use. However, there are some variables which are reasonable to reclassify into more than two categories, such as smoking, drinking, seat belt use and GPA. All these variables are reclassified and factorized. For the questions about age of first drinking and first smoking, we assigned a numeric value for the average of each range for convenience. Some demographic characteristics variables, initial smoking age, initial drinking age, grade, gender and race are converted to a readable text and factorized. The observations who had at least one missing value in any of the variables are removed. The resulted data set has 91854 observations with 20 variables.</p>
+<pre class="r"><code>age_tidy &lt;- function(input_list) {
+  output &lt;- case_when(input_list == 1 ~ NA_real_,
+                      input_list == 2 ~ 8,
+                      input_list == 3 ~ 9.5,
+                      input_list == 4 ~ 11.5,
+                      input_list == 5 ~ 13.5,
+                      input_list == 6 ~ 15.5,
+                      input_list == 7 ~ 17.5)
+}
+firstage_tidy &lt;- function(input_list){
+  output &lt;- case_when(input_list == 1 ~ &quot;never&quot;,
+                      input_list == 2 ~ &quot;8 years old or younger&quot;,
+                      input_list == 3 ~ &quot;9 or 10 years old&quot;,
+                      input_list == 4 ~ &quot;11 or 12 years old&quot;,
+                      input_list == 5 ~ &quot;13 or 14 years old&quot;,
+                      input_list == 6 ~ &quot;15 or 16 years old&quot;,
+                      input_list == 7 ~ &quot;17 years old or older&quot;)
+  return(output)
+}
+
+yrbss_state_tidy_additional&lt;-
+  yrbss_state_tidy %&gt;% 
+  drop_na(q31, q40, q9, q10, q14, q17, q26, q39,q59, q79, q80, q88, q33, q42, q89, q8, q11, grade, race4, sex) %&gt;% 
+  mutate(
+    grade = fct_recode(factor(grade, ordered = TRUE), 
+                       &quot;9th Grade&quot; = &quot;1&quot;,
+                       &quot;10th Grade&quot; = &quot;2&quot;,
+                       &quot;11th Grade&quot; = &quot;3&quot;,
+                       &quot;12th Grade&quot; = &quot;4&quot;),
+    sex = fct_recode(factor(sex, ordered = TRUE), 
+                       &quot;female&quot; = &quot;1&quot;,
+                       &quot;male&quot; = &quot;2&quot;),
+    race4 = fct_recode(factor(race4), 
+                       &quot;White&quot; = &quot;1&quot;,
+                       &quot;Black or African American&quot; = &quot;2&quot;,
+                       &quot;Hispanic/Latino&quot; = &quot;3&quot;,
+                       &quot;All other Races&quot; = &quot;4&quot;),
+    age_initial_alcohol = age_tidy(q40),
+    age_initial_smoking = age_tidy(q31),
+    drunk_driving = ifelse(q9 &gt; 1 | q10 &gt; 2, &quot;Yes&quot;, &quot;No&quot;),
+    drunk_driving = factor(drunk_driving, level = c(&quot;Yes&quot;, &quot;No&quot;)),
+    text_driving = ifelse(q11 == 2, &quot;No&quot;, &quot;Yes&quot;),
+    text_driving = factor(text_driving, level = c(&quot;Yes&quot;, &quot;No&quot;)),
+    carrying_weapon = ifelse(q14 == 1, &quot;No&quot;, &quot;Yes&quot;),
+    carrying_weapon = factor(carrying_weapon, level = c(&quot;Yes&quot;, &quot;No&quot;)),
+    suicide_attempt = ifelse(q26 == 1, &quot;Yes&quot;, &quot;No&quot;),
+    suicide_attempt = factor(suicide_attempt, level = c(&quot;Yes&quot;, &quot;No&quot;)),
+    quit_smoke = case_when(q39 == 1 ~ &quot;Never Smoke&quot;,
+                           q39 == 2 ~ &quot;Yes&quot;,
+                           q39 == 3 ~ &quot;No&quot;),
+    quit_smoke = factor(quit_smoke, level = c(&quot;Never Smoke&quot;, &quot;Yes&quot;, &quot;No&quot;)),
+    physical_fight = ifelse(q17 == 1, &quot;No&quot;, &quot;Yes&quot;),
+    physical_fight = factor(physical_fight, level = c(&quot;Yes&quot;, &quot;No&quot;)),
+    early_sex = ifelse(q59 &gt; 1 &amp; q59 &lt; 5 , &quot;Yes&quot;, &quot;No&quot;),
+    early_sex = factor(early_sex, level = c(&quot;Yes&quot;, &quot;No&quot;)),
+    q79 = as.numeric(q79),
+    q80 = as.numeric(q80),
+    tv_use = case_when(q79 == 1 ~ 0, 
+                       q79 == 2 ~ 0.5,
+                       q79 &gt; 2 ~ q79 - 2),
+    computer_use = q80 - 2,
+    computer_use = case_when(q80 == 1 ~ 0, 
+                       q80 == 2 ~ 0.5,
+                       q80 &gt; 2 ~ q80 - 2),
+    screening_use = tv_use + computer_use,
+    sleeping_time = as.numeric(q88) + 3,
+    smoking_status = case_when(q33 == 1 ~ &quot;Never Smoker&quot;,
+                               q33 &gt;= 2 &amp; q33 &lt;= 5 ~ &quot;Light Smoker&quot;,
+                               q33 &gt;=6 ~ &quot;Heavy Smoker&quot;),
+    smoking_status = factor(smoking_status, level = c(&quot;Never Smoker&quot;, &quot;Light Smoker&quot;, &quot;Heavy Smoker&quot;)),
+    binge_drinking = case_when(q42 == 1 ~ &quot;No Binge Drinking&quot;,
+                               q42 &gt;= 2 &amp; q42 &lt;= 4 ~ &quot;Light Binge Drinking&quot;,
+                               q42 &gt;=5 ~ &quot;Heavy Binge Drinking&quot;),
+    binge_drinking = factor(binge_drinking, level = c(&quot;No Binge Drinking&quot;, &quot;Light Binge Drinking&quot;, &quot;Heavy Binge Drinking&quot;)),
+    seat_belt = case_when(q8 &lt;= 2 ~ &quot;Never or Rarely&quot;,
+                          q8 == 3 ~ &quot;Sometimes&quot;,
+                          q8 &gt;= 4 ~ &quot;Most of the time or Always&quot;),
+    seat_belt = factor(seat_belt, level = c(&quot;Never or Rarely&quot;, &quot;Sometimes&quot;, &quot;Most of the time or Always&quot;)),
+    grades_school = case_when(q89 == 1 ~ &quot;Mostly A&#39;s&quot;,
+                       q89 == 2 ~ &quot;Mostly B&#39;s&quot;,
+                       q89 == 3 ~ &quot;Mostly C&#39;s&quot;,
+                       q89 %in% c(4,5) ~ &quot;Mostly Below C&#39;s&quot;,
+                       q89 == 6 ~ &quot;None of these grades&quot;,
+                       q89 == 7 ~ &quot;Not sure&quot;),
+    grades_school = factor(grades_school, level = c(&quot;Mostly A&#39;s&quot;, &quot;Mostly B&#39;s&quot;, &quot;Mostly C&#39;s&quot;, &quot;Mostly Below C&#39;s&quot;, &quot;None of these grades&quot;, &quot;Not sure&quot;)),
+    smoke_age = firstage_tidy(q31),
+    alcohol_age = firstage_tidy(q40)
+    ) %&gt;% 
+  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, sleeping_time, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age)</code></pre>
+</div>
+</div>
+<div id="variable-desciribe" class="section level1">
+<h1>Variable desciribe</h1>
+<div id="for-the-yrbss_state_tidy_additional-dataset" class="section level4">
+<h4>For the <code>yrbss_state_tidy_additional</code> dataset:</h4>
+<ul>
+<li><code>drug_use_freq</code> : frequency of drug use. Classified as “No Drug Use”, “Light Dose”, and “Heavy Dose”.</li>
+<li><code>grade</code> : classified as “9th Grade”, “10th Grade”, “11th Grade”, and “12th Grade”.</li>
+<li><code>sex</code> : classified as “female” or “male”.</li>
+<li><code>bmi</code> : body mass index. Extracted from the original dataset.</li>
+<li><code>race4</code> : race of subjects. Classified as “White”, “Black or African American”, “Hispanic/Latino”, and “All other Races”.</li>
+<li><code>drunk_driving</code> : classified as “Yes” or “No”. If a student ride in a vehicle driven by someone who had been drinking alcohol or himself/herself drive a vehicle when he/she had been drinking at least 1 time in the past 30 days, then is classified as “Yes”. Otherwise, “No”.</li>
+<li><code>text_driving</code> : classified as “Yes” or “No”. If a student text or e-mail while driving at least 1 days in the past 30 days, then is classified as “Yes”. Otherwise, “No”.</li>
+<li><code>carrying_weapon</code> : classified as “Yes” or “No”. If a student who carry a gun at least 1 days in the past 12 month, then is classified as “Yes”. Otherwise, “No”.</li>
+<li><code>suicide_attempt</code> : classified as “Yes” or “No”. If a student ever seriously consider attempting suicide during the past 12 months, then is classified as “Yes”. Otherwise, “No”.</li>
+<li><code>quit_smoke</code> : whether a student ever try to quit using all tobacco products during the past 12 months. Classified as “Never Smoke”, “Yes” and “No”.</li>
+<li><code>physical_fight</code> : classified as “Yes” or “No”. If a student were in a physical fight at least 1 time during the past 12 months, then is classified as “Yes”. Otherwise, “No”.</li>
+<li><code>early_sex</code> : classified as “Yes” or “No”. If a student had sexual intercourse for the first time before the age of 14, then is classified as “Yes”. Otherwise, “No”.</li>
+<li><code>screening_use</code>: hours of watching TV and using a computer on an average school day.</li>
+<li><code>sleeping_time</code> : hours of sleep on an average school night.</li>
+<li>`smoking_status : classified as “Never Smoker”, “Light Smoker”, and “Heavy Smokers”. During the past 30 days, students who did not smoke are classified as “Never Smoker”, 1 to 10 cigarettes per day are classified as “Light Smoker”, greater than 10 cigarettes per day are classified as “Heavy Smokers”.</li>
+<li><code>binge_drinking</code> : classified as “No Binge Drinking”, “Light Binge Drinking”, and “Heavy Binge Drinking”. Based on question 42 in original dataset, during the past 30 days, students who did not have binge drinking are classified as “No Binge Drinking”, 1 to 5 days of binge drinking as “Light Binge Drinking”, greater than 5days as “Heavy Binge Drinking”.</li>
+<li><code>seat_belt</code> : classified as “Never or Rarely”, “Sometimes”, and “Most of the time or Always”.</li>
+<li><code>grades_school</code> : classified as “Mostly A’s”, “Mostly B’s”, “Mostly C’s”, “Mostly Below C’s”, “None of these grades”, and “Not sure”.</li>
+<li><code>smoke_age</code> : classified as “never”,“8 years old or younger”,“9 or 10 years old”,“11 or 12 years old”, “13 or 14 years old”,“15 or 16 years old”,“17 years old or older”. This is the age of starting to smoke.</li>
+<li><code>alcohol_age</code> : classified as “never”,“8 years old or younger”,“9 or 10 years old”,“11 or 12 years old”, “13 or 14 years old”,“15 or 16 years old”,“17 years old or older”. This is the age of starting to drink alcohol.</li>
+</ul>
+</div>
+<div id="for-the-state-wise-tidy-dataset" class="section level4">
+<h4>For the state-wise tidy dataset:</h4>
+<ul>
+<li><code>sitecode</code> : the abbreviation of each state.</li>
+<li><code>sex</code> : the sex of each subject, 1 = “male”, 2 = “female”.</li>
+<li><code>race4</code> : race of subjects. Classified as “White”, “Black or African American”, “Hispanic/Latino”, and “All other Races”.</li>
+<li><code>age</code> : age of subjects.</li>
+<li><code>age_marijuana</code> : the starting age to use marijuana.</li>
+<li><code>marijuana</code> : the times of dose of marijuana during each subject’s life.</li>
+<li><code>cocaine</code> : the times of dose of cocaine during each subject’s life.</li>
+<li><code>inhale</code> : the times of sniffing glue, breathing the contents of aerosolspray cans, or inhaling any paints or sprays during each subject’s life.</li>
+<li><code>heroin</code> : the times of dose of heroin during each subject’s life.</li>
+<li><code>methamphetamine</code> : the times of dose of methamphetamine during each subject’s life.</li>
+<li><code>ecstasy</code> : the times of dose of ecstasy during each subject’s life.</li>
+<li><code>steroid</code> : the times of dose of steroid during each subject’s life.</li>
+<li><code>illegal_injection</code> : the times of use of illegal injection during each subject’s life.</li>
+<li><code>drug_use_sum</code> :</li>
+<li><code>other_drug_sum</code> :</li>
+<li><code>marijuana_use_freq</code> : the frequency of using marijuana. (No Drug Use = the subject never used marijuana; Light Dose = the subject used marijuana less than 40 times during life; Heavy Dose = the subject used marijuana more than 40 times during life)</li>
+<li><code>cocaine_use_freq</code> : the frequency of using cocaine (No Drug Use = the subject never used cocaine; Light Dose = the subject used cocaine less than 40 times during life; Heavy Dose = the subject used cocaine more than 40 times during life)</li>
+<li><code>inhale_use_freq</code> : the frequency of using inhale drug (No Drug Use = the subject never used inhale drug; Light Dose = the subject used inhale drug less than 40 times during life; Heavy Dose = the subject used inhale drug more than 40 times during life)</li>
+<li><code>heroin_use_freq</code> : the frequency of using heroin (No Drug Use = the subject never used heroin; Light Dose = the subject used heroin less than 40 times during life; Heavy Dose = the subject used heroin more than 40 times during life)</li>
+<li><code>methamphetamine_use_freq</code> : the frequency of using methamphetamine (No Drug Use = the subject never used methamphetamine; Light Dose = the subject used methamphetamine less than 40 times during life; Heavy Dose = the subject used methamphetamine more than 40 times during life)</li>
+<li><code>ecstasy_use_freq</code> : the frequency of using ecstasy (No Drug Use = the subject never used ecstasy; Light Dose = the subject used ecstasy less than 40 times during life; Heavy Dose = the subject used ecstasy more than 40 times during life)</li>
+<li><code>steroid_use_freq</code> : the frequency of using steroid (No Drug Use = the subject never used steroid; Light Dose = the subject used steroid less than 40 times during life; Heavy Dose = the subject used steroid more than 40 times during life)</li>
+<li><code>illegal_injection_use_freq</code> : the frequency of illegal injection. (No Drug Use = the subject never had illegal injection; Light Dose = the subject had illegal injection less than 40 times during life; Heavy Dose = the subject had illegal injection more than 40 times during life)</li>
+<li><code>drug_use_freq</code> : the frequency of using all illegal drugs as a whole. (No Drug Use = the subject never used any illegal drugs; Light Dose = the subject used illegal drugs less than 40 times during life; Heavy Dose = the subject used illegal drugs more than 40 times during life)</li>
+</ul>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -786,7 +786,7 @@ yrbss_state_tidy_additional %>%
 All plots show that there is not too much difference of screening use for different drug use frequency groups.
 
 ### Sleeping time
-The density plot shows that heavy dose use subjects sleep less than no drug use subjects and light dose use subjects. Also, there are more portions of subjects who sleep less than 5 hours for heavy dose use compared to no drug use and light dose use. 
+The density plot shows that heavy dose use subjects sleep less than no drug use subjects and light dose use subjects. Also, more portions of subjects sleep less than 5 hours for heavy dose use compared to no drug use and light dose use subjects. 
 
 ```{r}
 yrbss_state_tidy_additional %>% 
@@ -865,6 +865,8 @@ The "enough sleeping" plots shows that heavy dose subjects tend to have least pr
 
 Based on question 33 in the 2019 YOUTH RISK BEHAVIOR SURVEY, the researchers care about whether students smoked more than 10 cigarettes per day on the days they smoked during the 30 days before the survey. Therefore, we define students who did not smoke as "Never Smoker", 1 to 10 cigarettes per day as "Light Smoker", greater than 10 cigarettes per day as "Heavy Smokers".
 
+Based on association analysis, p-value are significantly small and effect size is around 0.8. It implies that there is a association between smoking status and drug use frequency.  
+
 ```{r}
 association_analysis(yrbss_state_tidy_additional, "smoking_status", "crude") %>% 
   mutate(type = "crude")
@@ -891,12 +893,13 @@ smoking_status_grade =
              df = parameter, 
              cramer_v_effect_size) %>% 
   mutate(type = "grade")
+smoking_status_grade
 
 # chi-square of gender
 smoking_status_gender = 
   association_analysis(yrbss_state_tidy_additional, "smoking_status", "sex") %>% 
   mutate(type = "sex")
-
+smoking_status_gender
 # chi-square of race
 smoking_status_race = 
   yrbss_state_tidy_additional %>% 
@@ -919,7 +922,7 @@ smoking_status_race =
              df = parameter, 
              cramer_v_effect_size) %>% 
   mutate(type = "race")
-
+smoking_status_race
 output = 
   bind_rows(smoking_status_crude, smoking_status_grade,smoking_status_gender, smoking_status_race) %>% 
   mutate(type = factor(type, levels = c("crude","grade", "sex", "race")))
@@ -928,6 +931,7 @@ kbl(output[, -6], caption = "Table **: Drug Use Status vs Binge Drinking") %>%
     kable_paper("hover", full_width = F) %>% 
     pack_rows(index = table(output$type))
 ```
+Based on the plot, it shows that heavy dose subjects tend to smoke more because there are more light dose and heavy dose smokers compared to no drug use and light dose drug use subjects. Higher portions of heavy smokers are 9th grade subjects and male gender. In addition, for heavy dose subjects, there are higher portions of heavy smokers in white race compared to Hispanic and Black race.
 
 ```{r}
 yrbss_state_tidy_additional %>% 
@@ -1190,9 +1194,9 @@ yrbss_state_tidy_additional_grades_school %>%
 
 ## Part 3
 ###2 Smoke initial age, Alcohol initial age, and BMI 
--  More heavy dose subjects started to smoke when they were 9 to 10 and 11 to 12 years old compared to no drug use subjects and light dose drug use subjects. For those who used light dose drug, highest percentage of them started to smoke when they were 13 or 14 years old. For those who used heavy dose drug, most of them started to smoke when they were 15 or 16 years old. It shows that heavy dose subjects start to smoke earlier.
+-  More heavy dose subjects started to smoke when they were 9 to 10 and 11 to 12 years old compared to no drug use subjects and light dose drug use subjects. For those who used light dose drug, most of them started to smoke when they were 13 or 14 years old. For those who used heavy dose drug, most of them started to smoke when they were 15 or 16 years old. It shows that heavy dose subjects start to smoke earlier.
 -  Similar things can be seen in drinking alcohol start age. More heavy dose subjects started to drink alcohol when they were 8 years old or younger and 11 or 12 years old compared to no drug use subjects and light dose drug use subjects. For no drug use and light dose drug use subjects, most of them started to drink alcohol when they were 15 or 16 years old. For heavy dose drug use subjects, most of them started to drink alcohol earlier at 13 or 14 years old. It shows that heavy dose subjects also start to drink alcohol earlier.
--  Density plots of BMI are all right-skewed, which means that the mean is greater than the median. Highest percentage of observations fall in 20-30 bmi. The box-plot shows that medians for three dose usgae groups are similar. In addition, one-way anova table implies that there is not a significant difference of BMI among three different drug use frequency groups.
+-  Density plots of BMI are all right-skewed, which means that the mean is greater than the median. Highest percentage of observations fall in 20-30 bmi. The box-plot shows that medians for three dose usage groups are similar. In addition, one-way anova table implies that there is not a significant difference of BMI among three different drug use frequency groups.
 ## Q11
 ```{r}
 #function for plotting first smoke_age

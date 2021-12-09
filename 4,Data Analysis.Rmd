@@ -225,7 +225,7 @@ This data analysis uses the resulted data set cleaned by the processing describe
 
 There are three kinds of health-related variables and we will use different methods to analyze: 
  - Bi-level categorical variables: drunk driving, carrying weapon, suicide attempt, physical fight, quit-smoking, early-age sexual intercourse, heavy screening usage, enough sleeping
- - Multivariate categorical variables: smoking status, binge drinking status, seat belt usage, GPA
+ - Multivariate categorical variables: smoking status, binge drinking status, seat belt usage, GPA(grades in school)
  - Quantitative Variables: initial smoking age, initial drinking age, BMI
  
 Here is a table summarized the overall distribution of important variables by drug use status.
@@ -244,7 +244,7 @@ label(yrbss_state_tidy_additional$early_sex) = "Sexual Intercourse"
 label(yrbss_state_tidy_additional$screening_use) = "Screening Use"
 label(yrbss_state_tidy_additional$sleeping_time) = "Sleeping Time"
 label(yrbss_state_tidy_additional$smoking_status) = "Smoking Status"
-label(yrbss_state_tidy_additional$binge_drinking) = "Binge Dringking"
+label(yrbss_state_tidy_additional$binge_drinking) = "Binge Drinking"
 label(yrbss_state_tidy_additional$seat_belt) = "Seat Belt Use"
 label(yrbss_state_tidy_additional$grades_school) = "Grades in School"
 
@@ -285,7 +285,7 @@ tibble(
 
 Besides the crude analysis which test the association for all observations in the data set, we also perform a stratified analysis over grade, gender and race to investigate the interaction or confounding effect of these demographic variable on the crude association. 
 
-### Drunk driving
+### 1. Drunk Driving
 
 ```{r}
 test_of_association(input_name = "drunk_driving", table_name = "Table 2: Drug Use Status vs Drunk Driving")
@@ -353,7 +353,7 @@ yrbss_state_tidy_additional %>%
 
 All proportion plots display that an increasing level of drug use frequency has a higher proportion of drunk driving. The dose-response relationship also verifies the existence of the association.
 
-### cell phone use while driving
+### 2. Cell Phone Use While Driving
 
 
 ```{r}
@@ -413,7 +413,7 @@ yrbss_state_tidy_additional %>%
 The overall proportion of cell phone use while driving rises while the level of drug use rises. However, the increment is small and invisible after stratifying by races. Female tends to have higher proportion of cell phone use while driving regardless of drug use status.
 
 
-### Carrying weapon
+### 3. Carrying Weapon
 
 ```{r}
 test_of_association(input_name = "carrying_weapon", table_name = "Table 4: Drug Use Status vs Carrying Weapon")
@@ -471,7 +471,7 @@ yrbss_state_tidy_additional %>%
 All plots demonstrate an rising trend of proportion of carrying weapon with the increase level of drug use frequency. The proportion of carrying weapon boosts from light dose drug use to heavy dose drug use. 9th Grade has highest proportion of carrying weapon regardless of drug use status while male has higher proportion of carrying weapon than female ar all drug use status. The proportion of Black and African American students carrying weapon suddenly escalates on heavy dose drug use.  
 
 
-### Suicide Attempt
+### 4. Suicide Attempt
 
 
 ```{r}
@@ -529,7 +529,7 @@ yrbss_state_tidy_additional %>%
 Based on these proportion plots, the proportion of suicide attempt increases while the level of drug use frequency goes up. This trend also shows up at each stratum in the stratified plot. The dose-response relationship supports our conclusion about the association between suicide attempt and drug use status. 
 
 
-### Quit smoking
+### 5. Quit smoking
 
 
 ```{r}
@@ -591,7 +591,7 @@ yrbss_state_tidy_quit_smoke %>%
 The proportion bar plots do not demonstrate any dose-response relationship since the proportion has no trend of increasing or decreasing across the drug use status. Moreover, the difference of proportion is small between each drug use status. Thus, these plots support the conclusion in the analysis table that there is no association between quit smoking and drug use status.
 
 
-### physical fight
+### 6. Physical Fight
 
 ```{r}
 test_of_association(input_name = "physical_fight", table_name = "Table 7: Drug Use Status vs Physical Fight")
@@ -651,7 +651,7 @@ yrbss_state_tidy_additional %>%
 The plots illustrate a positive relationship between drug use status and proportion of physical fight, so the proportion of physical fight is higher when the drug use is heavier. This positive trend is stable in each stratum in the stratified plot. The plots are consistent with our conclusion based on the statistical analysis table and enhance the inference about the association between drug use status and physical fight.
 
 
-### Early-age Sexual Intercourse
+### 7. Early-age Sexual Intercourse
 
 ```{r}
 test_of_association(input_name = "early_sex", table_name = "Table 8: Drug Use Status vs Early-Age Sexual Intercourse")
@@ -683,7 +683,7 @@ yrbss_state_tidy_additional %>%
        title = "Plot 7.1: Proportion of Early-Age Sexual Intercourse Among Drug Use Status")
 
 
-yrbss_state_tidy_additional%>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq, sex) %>% 
   summarize(
     prop_early_sex = sum(early_sex == "Yes")/n()
@@ -712,7 +712,7 @@ The plots illustrate a positive relationship between drug use status and proport
 Hispanic race has higher proportion of having early age sex when they used heavy dose compared to did not use drug and used light dose drug, which implies a high risky sexual behavior can be triggered when they use heavy dose drug.
 
 
-### Screening Use
+### 8. Screening Use
 
 ```{r}
 yrbss_state_tidy_additional %>% 
@@ -785,7 +785,7 @@ yrbss_state_tidy_additional %>%
 ```
 All plots show that there is not too much difference of screening use for different drug use frequency groups.
 
-### Sleeping time
+### 9. Sleeping Time
 The density plot shows that heavy dose use subjects sleep less than no drug use subjects and light dose use subjects. Also, more portions of subjects sleep less than 5 hours for heavy dose use compared to no drug use and light dose use subjects. 
 
 ```{r}
@@ -861,77 +861,13 @@ yrbss_state_tidy_additional %>%
 The "enough sleeping" plots shows that heavy dose subjects tend to have least proportions of having enough sleep in all grades and races. Male subjects tend to have more enough sleeping for no drug and use light dose, whereas they tend to have less enough sleeping time when use heavy dose of drug. It infers an association between sleeping time and drug use frequency. 
 
 
-### Smoking Status
-
-Based on question 33 in the 2019 YOUTH RISK BEHAVIOR SURVEY, the researchers care about whether students smoked more than 10 cigarettes per day on the days they smoked during the 30 days before the survey. Therefore, we define students who did not smoke as "Never Smoker", 1 to 10 cigarettes per day as "Light Smoker", greater than 10 cigarettes per day as "Heavy Smokers".
-
-Based on association analysis, p-value are significantly small and effect size is around 0.8. It implies that there is a association between smoking status and drug use frequency.  
+### 10. Smoking Status
 
 ```{r}
-association_analysis(yrbss_state_tidy_additional, "smoking_status", "crude") %>% 
-  mutate(type = "crude")
-
-# chi-square of grade
-smoking_status_grade =
-  yrbss_state_tidy_additional %>% 
-      group_by(across(all_of("grade")), drug_use_freq, across(all_of("smoking_status"))) %>%
-      count() %>% 
-      pivot_wider(values_from = n, names_from = starts_with("smoking_status"), names_prefix = "smoking_status") %>% 
-  mutate(`smoking_statusHeavy Smoker` = ifelse(is.na(`smoking_statusHeavy Smoker`), 0 , `smoking_statusHeavy Smoker`)) %>% 
-      ungroup() %>% 
-      select(-drug_use_freq) %>% 
-      nest(data = starts_with("smoking_status")) %>% 
-      mutate(
-      chisq_tests = map(.x = data, ~chisq.test(x = .x)),
-      chisq_result = map(chisq_tests, broom::tidy),
-      totaln = map(data, colSums),
-      totaln = map_dbl(.x = totaln, ~reduce(.x, sum))) %>% 
-      unnest(chisq_result) %>% 
-      mutate(cramer_v_effect_size = sqrt(statistic / totaln*parameter)) %>% 
-      select(stratum = starts_with("grade"), 
-             statistic, p.value, 
-             df = parameter, 
-             cramer_v_effect_size) %>% 
-  mutate(type = "grade")
-smoking_status_grade
-
-# chi-square of gender
-smoking_status_gender = 
-  association_analysis(yrbss_state_tidy_additional, "smoking_status", "sex") %>% 
-  mutate(type = "sex")
-smoking_status_gender
-# chi-square of race
-smoking_status_race = 
-  yrbss_state_tidy_additional %>% 
-      group_by(across(all_of("race4")), drug_use_freq, across(all_of("smoking_status"))) %>%
-      count() %>% 
-      pivot_wider(values_from = n, names_from = starts_with("smoking_status"), names_prefix = "smoking_status") %>% 
-  mutate(`smoking_statusHeavy Smoker` = ifelse(is.na(`smoking_statusHeavy Smoker`), 0 , `smoking_statusHeavy Smoker`)) %>% 
-      ungroup() %>% 
-      select(-drug_use_freq) %>% 
-      nest(data = starts_with("smoking_status")) %>% 
-      mutate(
-      chisq_tests = map(.x = data, ~chisq.test(x = .x)),
-      chisq_result = map(chisq_tests, broom::tidy),
-      totaln = map(data, colSums),
-      totaln = map_dbl(.x = totaln, ~reduce(.x, sum))) %>% 
-      unnest(chisq_result) %>% 
-      mutate(cramer_v_effect_size = sqrt(statistic / totaln*parameter)) %>% 
-      select(stratum = starts_with("race4"), 
-             statistic, p.value, 
-             df = parameter, 
-             cramer_v_effect_size) %>% 
-  mutate(type = "race")
-smoking_status_race
-output = 
-  bind_rows(smoking_status_crude, smoking_status_grade,smoking_status_gender, smoking_status_race) %>% 
-  mutate(type = factor(type, levels = c("crude","grade", "sex", "race")))
-  
-kbl(output[, -6], caption = "Table **: Drug Use Status vs Binge Drinking") %>%
-    kable_paper("hover", full_width = F) %>% 
-    pack_rows(index = table(output$type))
+test_of_association(input_name = "smoking_status", table_name = "Table 11: Drug Use Status vs Smoking Status")
 ```
-Based on the plot, it shows that heavy dose subjects tend to smoke more because there are more light dose and heavy dose smokers compared to no drug use and light dose drug use subjects. Higher portions of heavy smokers are 9th grade subjects and male gender. In addition, for heavy dose subjects, there are higher portions of heavy smokers in white race compared to Hispanic and Black race.
+
+From table 11, we can see that all p-values are significantly small and the effect sizes are around 0.8, which means there is a strong association between drug use and smoking status. The association between drug use and smoking status is weaker among 12th Grade compared to other grades. Among race, All Other Races has the strongest association between drug use and smoking status, and Black or African American has the weakest association.
 
 ```{r}
 yrbss_state_tidy_additional %>% 
@@ -941,7 +877,7 @@ yrbss_state_tidy_additional %>%
   ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = smoking_status)) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = c('#00CC00', '#FFA500', '#FF4500')) + 
-  labs(title = "Proportion of Smoking Status Among Drug Use Status",
+  labs(title = "Plot 10: Proportion of Smoking Status Among Drug Use Status",
        x = "Drug Use Status",
        y = "Proportion",
        fill = "Smoking Status") 
@@ -957,9 +893,10 @@ yrbss_state_tidy_additional %>%
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = c('#00CC00', '#FFA500', '#FF4500')) + 
   facet_grid(. ~ grade) +
-  labs(title = "Stratified Analysis of Smoking Stauts over Grade",
-       x = "Drug Use Frequency",
-       y = "Proportion") 
+  labs(title = "Plot 10.1: Proportion of Smoking Status Among Drug Use Status",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "Smoking Status") 
 ```
 
 ```{r}
@@ -971,13 +908,12 @@ yrbss_state_tidy_additional %>%
   ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = smoking_status)) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = c('#00CC00', '#FFA500', '#FF4500')) + 
-  facet_grid(. ~ sex)
-  labs(title = "Stratified Analysis of Smoking Stauts over Gender",
-       x = "Drug Use Frequency",
-       y = "Proportion") 
+  facet_grid(. ~ sex) +
+  labs(title = "Plot 10.2: Proportion of Smoking Status Among Drug Use Status",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "Smoking Status") 
 ```
-
-
 
 
 ```{r}
@@ -988,20 +924,25 @@ yrbss_state_tidy_additional %>%
   mutate(prop_smoking_status = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_smoking_status, fill = smoking_status)) +
   geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c('#00CC00', '#FFA500', '#FF4500')) + 
   facet_grid(. ~ race4) + 
-  labs(title = "Stratified Analysis of Smoking Stauts over Race",
-       x = "Drug Use Frequency",
-       y = "Proportion") 
+  labs(title = "Plot 10.3: Proportion of Smoking Status Among Drug Use Status",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "Smoking Status") 
 ```
 
 
-### Binge Drinking 
+Based on the plot, it shows that heavy dose subjects tend to smoke more because there are more light dose and heavy dose smokers compared to no drug use and light dose drug use subjects. Higher portions of heavy smokers are 9th grade subjects and male gender. In addition, for heavy dose subjects, there are higher portions of heavy smokers in white race compared to Hispanic and Black race.
 
-Based on question 42 in the 2019 YOUTH RISK BEHAVIOR SURVEY, we define students who did not have binge drinking as "No Binge Drinking", 1 to 5 days of binge drinking in the past 30 days as "Light Binge Drinking", greater than 5days as "Heavy Binge Drinking".
+### 11. Binge Drinking 
 
 ```{r}
-test_of_association(yrbss_state_tidy_additional, "binge_drinking", "Table **: Drug Use Status vs Binge Drinking")
+test_of_association(input_name = "binge_drinking", table_name = "Table 12: Drug Use Status vs Binge Drinking")
 ```
+
+From table 12, all p-values are significantly small and the overall effect size is as high as 0.9, which indicate that there is a very strong association between drug use and binge drinking. The association between drug use and binge drinking is stronger among 9th Grade compared to other grades, and is stronger among male compared to female. Among race, Black or African American has a relatively weak association between drug use and binge drinking compared to other classification of  races.
+
 
 ```{r}
 yrbss_state_tidy_additional %>% 
@@ -1010,9 +951,11 @@ yrbss_state_tidy_additional %>%
   mutate(prop_binge_drinking = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_binge_drinking, fill = binge_drinking)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Proportion of Binge Drinking Among Drug Use Status",
-       x = "Drug Use Frequency",
-       y = "Proportion")
+  scale_fill_manual(values = c('#00CC00', '#FFA500', '#FF4500')) + 
+  labs(title = "Plot 11: Proportion of Binge Drinking Among Drug Use Status",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "Binge Drinking")
 ```
 
 
@@ -1024,10 +967,12 @@ yrbss_state_tidy_additional %>%
   mutate(prop_binge_drinking = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_binge_drinking, fill = binge_drinking)) +
   geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c('#00CC00', '#FFA500', '#FF4500')) + 
   facet_grid(. ~ grade) + 
-  labs(title = "Stratified Analysis of Binge Drinking over Grade",
-       x = "Drug Use Frequency",
-       y = "Proportion") 
+  labs(title = "Plot 11.1: Proportion of Binge Drinking Among Drug Use Status",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "Binge Drinking") 
 ```
 
 
@@ -1039,10 +984,12 @@ yrbss_state_tidy_additional %>%
   mutate(prop_binge_drinking = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_binge_drinking, fill = binge_drinking)) +
   geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c('#00CC00', '#FFA500', '#FF4500')) + 
   facet_grid(. ~ sex) +
-  labs(title = "Stratified Analysis of Binge Drinking over Gender",
-       x = "Drug Use Frequency",
-       y = "Proportion") 
+  labs(title = "Plot 11.2: Proportion of Binge Drinking Among Drug Use Status",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "Binge Drinking") 
 ```
 
 
@@ -1054,20 +1001,24 @@ yrbss_state_tidy_additional %>%
   mutate(prop_binge_drinking = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_binge_drinking, fill = binge_drinking)) +
   geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c('#00CC00', '#FFA500', '#FF4500')) + 
   facet_grid(. ~ race4) + 
-  labs(title = "Stratified Analysis of Binge Drinking over Race",
-       x = "Drug Use Frequency",
-       y = "Proportion") 
+  labs(title = "Plot 11.3: Proportion of Binge Drinking Among Drug Use Status",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "Binge Drinking") 
 ```
 
+With the increase of drug use, the proportion of no binge drinking decreases, and the proportion of both light and heavy binge drinking increase. The trend of proportion of binge drinking is similar among grade and gender. Among race, no matter in what classification of drug use status, the proportion of no binge drinking among Black or African American is higher than other races, and the proportion of both light and heavy binge drinking is lower than other races.
 
-### Seat belt use 
-Resource: question 8
+### 12. Seat belt use 
 
 ```{r}
-test_of_association(yrbss_state_tidy_additional, "seat_belt", "Table **: Drug Use Status vs Seat Belt Use")
-
+test_of_association(input_name = "seat_belt", table_name = "Table 13: Drug Use Status vs Seat Belt Use")
 ```
+
+From table 13, all p-values are significantly small,  and generally the effect size is around 0.4, which indicate that there is a strong association between drug use and seat belt use. The association between drug use and seat belt use is the strongest among 12th Grade compared to other grades, and is stronger among White compared to other races. As for gender, the association between drug use and seat belt use among male and female are very similar. 
+
 
 ```{r}
 yrbss_state_tidy_additional %>% 
@@ -1076,23 +1027,27 @@ yrbss_state_tidy_additional %>%
   mutate(prop_seat_belt = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_seat_belt, fill = seat_belt)) +
   geom_bar(stat = "identity", position = "dodge") + 
-  labs(title = "Proportion of Seat Belt Use Among Drug Use Frequency",
-       x = "Drug Use Frequency",
-       y = "Proportion")
+  scale_fill_manual(values = c('#FF4500', '#FFA500', '#00CC00')) +
+  labs(title = "Plot 12: Proportion of Seat Belt Use Among Drug Use Status",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "Seat Belt Use")
 ```
 
 ```{r}
 # Stratified Analysis over Grade
-yrbss_state_tidy_additional%>% 
+yrbss_state_tidy_additional %>% 
   group_by(drug_use_freq,grade, seat_belt) %>% 
   summarize(n = n()) %>% 
   mutate(prop_seat_belt = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_seat_belt, fill = seat_belt)) +
   geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c('#FF4500', '#FFA500', '#00CC00')) +
   facet_grid(. ~ grade) +
-  labs(title = "Stratified Analysis of Seat Belt Use over Grade",
-       x = "Drug Use Frequency",
-       y = "Proportion")
+  labs(title = "Plot 12.1: Proportion of Seat Belt Use Among Drug Use Status",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "Seat Belt Use")
 ```
 
 ```{r}
@@ -1103,10 +1058,12 @@ yrbss_state_tidy_additional %>%
   mutate(prop_seat_belt = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_seat_belt, fill = seat_belt)) +
   geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c('#FF4500', '#FFA500', '#00CC00')) +
   facet_grid(. ~ sex) +
-  labs(title = "Stratified Analysis of Seat Belt Use over Gender",
-       x = "Drug Use Frequency",
-       y = "Proportion") 
+  labs(title = "Plot 12.2: Proportion of Seat Belt Use Among Drug Use Status",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "Seat Belt Use") 
 ```
 
 ```{r}
@@ -1117,25 +1074,31 @@ yrbss_state_tidy_additional %>%
   mutate(prop_seat_belt = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_seat_belt, fill = seat_belt)) +
   geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c('#FF4500', '#FFA500', '#00CC00')) +
   facet_grid(. ~ race4) + 
-  labs(title = "Stratified Analysis of Seat Belt Use over Race",
-       x = "Drug Use Frequency",
-       y = "Proportion")
+  labs(title = "Plot 12.3: Proportion of Seat Belt Use Among Drug Use Status",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "Seat Belt Use")
 ```
 
-### Grades in school 
-Resource: question 89
-exclude option "None of these grades" and "Not sure"
+With the increase of drug use, the proportion of both never and sometimes use seat belt increase, and the proportion of always use seat belt decreases. The trend of proportion of seat belt use is similar among grade, gender, and sex, with a slightly higher proportion of never use seat belt than sometimes use seat belt in heavy drug dose status among male. 
+
+### 13. Grades in school 
 
 ```{r}
 yrbss_state_tidy_additional_grades_school <- 
   yrbss_state_tidy_additional %>% 
   filter(grades_school %in% c("Mostly A's", "Mostly B's", "Mostly C's","Mostly Below C's"))
+
 ```
 
 ```{r}
-test_of_association(yrbss_state_tidy_additional_grades_school, "grades_school", "Table **: Drug Use Status vs Grades in School")
+test_of_association(yrbss_state_tidy_additional_grades_school, "grades_school", "Table 14: Drug Use Status vs Grades in School")
 ```
+
+From table 14, all p-values are significantly small, and the overall effect size is around 0.6, which means that there is a strong association between drug use and GPA. The association between drug use and GPA is the strongest among 11th Grade compared to other grades, and is the weakest among 10th Grade compared to other grades. Also, the association between drug use and GPA is stronger among female than male, and is stronger among students who are classified into all other races compared to students who are classified into other race groups.
+
 
 ```{r}
 yrbss_state_tidy_additional_grades_school %>% 
@@ -1144,9 +1107,11 @@ yrbss_state_tidy_additional_grades_school %>%
   mutate(prop_grades_school = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_grades_school, fill = grades_school)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Proportion of Grades in School Among Drug Use Frequency",
-       x = "Drug Use Frequency",
-       y = "Proportion")
+  scale_fill_manual(values = c('#00CC00', '#FFA500', "#CC00FF", '#FF4500')) +
+  labs(title = "Plot 13: Proportion of Grades in School Among Drug Use Frequency",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "GPA")
 ```
 
 ```{r}
@@ -1157,10 +1122,12 @@ yrbss_state_tidy_additional_grades_school %>%
   mutate(prop_grades_school = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_grades_school, fill = grades_school)) +
   geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c('#00CC00', '#FFA500', "#CC00FF", '#FF4500')) +
   facet_grid(.~ grade) +
-  labs(title = "Stratified Analysis of Grades in School over Grade",
-       x = "Drug Use Frequency",
-       y = "Proportion")
+  labs(title = "Plot 13.1: Proportion of Grades in School Among Drug Use Frequency",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "GPA")
 ```
 
 ```{r}
@@ -1171,10 +1138,12 @@ yrbss_state_tidy_additional_grades_school %>%
   mutate(prop_grades_school = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_grades_school, fill = grades_school)) +
   geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c('#00CC00', '#FFA500', "#CC00FF", '#FF4500')) +
   facet_grid(. ~ sex) +
-  labs(title = "Stratified Analysis of Grades in School over Grade",
-       x = "Drug Use Frequency",
-       y = "Proportion")
+  labs(title = "Plot 13.2: Proportion of Grades in School Among Drug Use Frequency",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "GPA")
 ```
 
 ```{r}
@@ -1185,12 +1154,15 @@ yrbss_state_tidy_additional_grades_school %>%
   mutate(prop_grades_school = n/sum(n)) %>% 
   ggplot(aes(x = drug_use_freq, y = prop_grades_school, fill = grades_school)) +
   geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c('#00CC00', '#FFA500', "#CC00FF", '#FF4500')) +
   facet_grid( . ~ race4) +
-  labs(title = "Stratified Analysis of Grades in School over Grade",
-       x = "Drug Use Frequency",
-       y = "Proportion")
+  labs(title = "Plot 13.3: Proportion of Grades in School Among Drug Use Frequency",
+       x = "Drug Use Status",
+       y = "Proportion",
+       fill = "GPA")
 ```
 
+With the increase of drug use, the proportion of Mostly A's decreases, the proportion of Mostly B's has a little change, and the proportion of both mostly C's and below C's increase. The trend is particularly significant among 11th grade compared to other grades, and among all other races compared with White, Black or African American, and Hispanic/Latino.
 
 ## Part 3
 ###2 Smoke initial age, Alcohol initial age, and BMI 
@@ -1202,9 +1174,6 @@ yrbss_state_tidy_additional_grades_school %>%
 #function for plotting first smoke_age
 drug1_smoke=
   yrbss_state_tidy_additional %>%
-  mutate(
-    smoke_age = firstage_tidy(q31),
-  ) %>%
   group_by(drug_use_freq, smoke_age) %>%
   filter(smoke_age != "never") %>%
   summarize(n = n()) %>% 
@@ -1217,7 +1186,9 @@ drug1_smoke=
                                        "11 or 12 years old",
                                        "13 or 14 years old",
                                        "15 or 16 years old",
-                                       "17 years old or older"))) %>% 
+                                       "17 years old or older"))) 
+
+drug1_smoke %>% 
   ggplot(
        aes(x = drug_use_freq, y = percentage,
            fill = smoke_age)
@@ -1234,7 +1205,7 @@ drug1_smoke=
 
 
 #boxplot
-ggplot(drug1_smoke, 
+ggplot(yrbss_state_tidy_additional, 
        aes(x = factor(drug_use_freq), 
            y = age_initial_smoking,fill=factor(drug_use_freq))) +     
   geom_boxplot() +
@@ -1250,10 +1221,6 @@ ggplot(drug1_smoke,
 #function for plotting first alcohol_age
 drug1_alcohol=
   yrbss_state_tidy_additional %>%
-  mutate(
-    alcohol_age = firstage_tidy(q40)
-  ) %>%
-  drop_na(q40) %>%
   drop_na(drug_use_freq) %>%
   group_by(drug_use_freq, alcohol_age) %>%
     filter(alcohol_age != "never") %>%
@@ -1267,7 +1234,9 @@ drug1_alcohol=
                                        "11 or 12 years old",
                                        "13 or 14 years old",
                                        "15 or 16 years old",
-                                       "17 years old or older"))) %>% 
+                                       "17 years old or older")))
+  
+drug1_alcohol %>% 
   ggplot(
        aes(x = drug_use_freq, y = percentage,
            fill = alcohol_age)
@@ -1283,7 +1252,7 @@ drug1_alcohol=
   labs(title="alcohol start age")
 
 #boxplot
-ggplot(drug1_alcohol, 
+ggplot(yrbss_state_tidy_additional, 
        aes(x = factor(drug_use_freq), 
            y = age_initial_alcohol,fill=factor(drug_use_freq))) +        
   geom_boxplot() +

@@ -30,44 +30,6 @@ scale_fill_discrete = scale_fill_viridis_d(option = "viridis")
 
 
 ```{r, functions}
-drug_use_tidy <- function(input_list){
-  output <- case_when(input_list == 1 ~ 0,
-                      input_list == 2 ~ 1.5,
-                      input_list == 3 ~ 6,
-                      input_list == 4 ~ 14.5,
-                      input_list == 5 ~ 29.5,
-                      input_list > 5 ~ 40)
-  return(output)
-}
-drug_use_frequency <- function(input_list){
-  output <- case_when(input_list == 0 ~ "No Drug Use",
-                      input_list > 0 & input_list < 40 ~ "Light Dose",
-                      input_list >= 40 ~ "Heavy Dose")
-  factor(output, levels = c("No Drug Use", "Light Dose", "Heavy Dose"))
-}
-
-age_tidy <- function(input_list) {
-  output <- case_when(input_list == 1 ~ NA_real_,
-                      input_list == 2 ~ 8,
-                      input_list == 3 ~ 9.5,
-                      input_list == 4 ~ 11.5,
-                      input_list == 5 ~ 13.5,
-                      input_list == 6 ~ 15.5,
-                      input_list == 7 ~ 17.5)
-}
-
-firstage_tidy <- function(input_list){
-  output <- case_when(input_list == 1 ~ "never",
-                      input_list == 2 ~ "8 years old or younger",
-                      input_list == 3 ~ "9 or 10 years old",
-                      input_list == 4 ~ "11 or 12 years old",
-                      input_list == 5 ~ "13 or 14 years old",
-                      input_list == 6 ~ "15 or 16 years old",
-                      input_list == 7 ~ "17 years old or older")
-  return(output)
-}
-
-
 association_analysis <- function(input_df, input_name, type){
   if (type == "crude") {
     totaln <- input_df %>% nrow()
@@ -126,100 +88,9 @@ test_of_association <- function(input_df = yrbss_state_tidy_additional, input_na
 ```
 
 ```{r import data}
-yrbss_state_a <- readRDS("data/2019 states a-m.rds")
-yrbss_state_z <- readRDS("data/2019 states n-z.rds")
-yrbss_state = rbind(yrbss_state_a,yrbss_state_z)
-yrbss_state = as_tibble(yrbss_state)
+yrbss_state = read_csv("./data/yrbss_stae_tidy_additional")
 ```
 
-
-```{r tidy data}
-yrbss_state_tidy_additional <-
-  yrbss_state %>% 
-  drop_na(q31, q40, q45, q46, q50, q51, q52, q53, q54, q55, q56, q9, q10, q14, q17, q26, q39,q59, q79, q80, q88, q33, q42, q89, q8, q11, grade, race4, sex) %>% 
-  mutate(
-    grade = fct_recode(factor(grade, ordered = TRUE), 
-                       "9th Grade" = "1",
-                       "10th Grade" = "2",
-                       "11th Grade" = "3",
-                       "12th Grade" = "4"),
-    sex = fct_recode(factor(sex, ordered = TRUE), 
-                       "female" = "1",
-                       "male" = "2"),
-    race4 = fct_recode(factor(race4), 
-                       "White" = "1",
-                       "Black or African American" = "2",
-                       "Hispanic/Latino" = "3",
-                       "All other Races" = "4"),
-    age_initial_alcohol = age_tidy(q40),
-    age_initial_smoking = age_tidy(q31),
-    age_marijuana = age_tidy(q46),
-    marijuana = drug_use_tidy(q45),
-    cocaine = drug_use_tidy(q50),
-    inhale = drug_use_tidy(q51),
-    heroin = drug_use_tidy(q52),
-    methamphetamine = drug_use_tidy(q53),
-    ecstasy = drug_use_tidy(q54),
-    steroid = drug_use_tidy(q55),
-    illegal_injection = case_when(q56 == 1 ~ 0,
-                                  q56 == 2 ~ 20,
-                                  q56 == 3 ~ 40),
-    drug_use_sum = rowSums(across(marijuana:illegal_injection)),
-    other_drug_sum = rowSums(across(cocaine:illegal_injection)),
-    drug_use_freq = drug_use_frequency(drug_use_sum),
-    drunk_driving = ifelse(q9 > 1 | q10 > 2, "Yes", "No"),
-    drunk_driving = factor(drunk_driving, level = c("Yes", "No")),
-    text_driving = ifelse(q11 == 2, "No", "Yes"),
-    text_driving = factor(text_driving, level = c("Yes", "No")),
-    carrying_weapon = ifelse(q14 == 1, "No", "Yes"),
-    carrying_weapon = factor(carrying_weapon, level = c("Yes", "No")),
-    suicide_attempt = ifelse(q26 == 1, "Yes", "No"),
-    suicide_attempt = factor(suicide_attempt, level = c("Yes", "No")),
-    quit_smoke = case_when(q39 == 1 ~ "Never Smoke",
-                           q39 == 2 ~ "Yes",
-                           q39 == 3 ~ "No"),
-    quit_smoke = factor(quit_smoke, level = c("Never Smoke", "Yes", "No")),
-    physical_fight = ifelse(q17 == 1, "No", "Yes"),
-    physical_fight = factor(physical_fight, level = c("Yes", "No")),
-    early_sex = ifelse(q59 > 1 & q59 <= 5 , "Yes", "No"),
-    early_sex = factor(early_sex, level = c("Yes", "No")),
-    q79 = as.numeric(q79),
-    q80 = as.numeric(q80),
-    tv_use = case_when(q79 == 1 ~ 0, 
-                       q79 == 2 ~ 0.5,
-                       q79 > 2 ~ q79 - 2),
-    computer_use = q80 - 2,
-    computer_use = case_when(q80 == 1 ~ 0, 
-                       q80 == 2 ~ 0.5,
-                       q80 > 2 ~ q80 - 2),
-    screening_use = tv_use + computer_use,
-    heavy_screen_use = ifelse(screening_use >= 5, "Yes", "No"),
-    sleeping_time = as.numeric(q88) + 3,
-    enough_sleep = ifelse(sleeping_time >= 8, "Yes", "No"),
-    smoking_status = case_when(q33 == 1 ~ "Never Smoker",
-                               q33 >= 2 & q33 <= 5 ~ "Light Smoker",
-                               q33 >=6 ~ "Heavy Smoker"),
-    smoking_status = factor(smoking_status, level = c("Never Smoker", "Light Smoker", "Heavy Smoker")),
-    binge_drinking = case_when(q42 == 1 ~ "No Binge Drinking",
-                               q42 >= 2 & q42 <= 4 ~ "Light Binge Drinking",
-                               q42 >=5 ~ "Heavy Binge Drinking"),
-    binge_drinking = factor(binge_drinking, level = c("No Binge Drinking", "Light Binge Drinking", "Heavy Binge Drinking")),
-    seat_belt = case_when(q8 <= 2 ~ "Never or Rarely",
-                          q8 == 3 ~ "Sometimes",
-                          q8 >= 4 ~ "Most of the time or Always"),
-    seat_belt = factor(seat_belt, level = c("Never or Rarely", "Sometimes", "Most of the time or Always")),
-    grades_school = case_when(q89 == 1 ~ "Mostly A's",
-                       q89 == 2 ~ "Mostly B's",
-                       q89 == 3 ~ "Mostly C's",
-                       q89 %in% c(4,5) ~ "Mostly Below C's",
-                       q89 == 6 ~ "None of these grades",
-                       q89 == 7 ~ "Not sure"),
-    grades_school = factor(grades_school, level = c("Mostly A's", "Mostly B's", "Mostly C's", "Mostly Below C's", "None of these grades", "Not sure")),
-    smoke_age = firstage_tidy(q31),
-    alcohol_age = firstage_tidy(q40)
-    ) %>% 
-  select(drug_use_freq, grade, sex, bmi, race4, drunk_driving, text_driving, carrying_weapon, suicide_attempt, quit_smoke, physical_fight, early_sex, screening_use, heavy_screen_use, sleeping_time, enough_sleep, smoking_status, binge_drinking, seat_belt, grades_school, smoke_age, alcohol_age, age_initial_alcohol, age_initial_smoking)
-```
 
 This data analysis uses the resulted data set cleaned by the processing described in data analysis part of [Data]("3,Data Description.html"). According to our motivation, we are interested the relationship between drug use and youth behaviors. In this analysis, we will explore the association between drug use status and each health behavior variables.
 
@@ -552,8 +423,6 @@ yrbss_state_tidy_quit_smoke %>%
        x = "Drug Use Status",
        title = "Plot 5: Proportion of Quit Smoking Among Drug Use Status")
   
-
-
 yrbss_state_tidy_quit_smoke %>% 
   group_by(drug_use_freq, grade) %>% 
   summarize(
@@ -866,83 +735,13 @@ yrbss_state_tidy_additional %>%
 The "enough sleeping" plots shows that heavy dose subjects tend to have least proportions of having enough sleep in all grades and races. Male subjects tend to have more enough sleeping for no drug and use light dose, whereas they tend to have less enough sleeping time when use heavy dose of drug. It infers an association between sleeping time and drug use frequency. 
 
 
-<<<<<<< HEAD
 ### Smoking Status
-
-Based on question 33 in the 2019 YOUTH RISK BEHAVIOR SURVEY, the researchers care about whether students smoked more than 10 cigarettes per day on the days they smoked during the 30 days before the survey. Therefore, we define students who did not smoke as "Never Smoker", 1 to 10 cigarettes per day as "Light Smoker", greater than 10 cigarettes per day as "Heavy Smokers".
-
-```{r}
-association_analysis(yrbss_state_tidy_additional, "smoking_status", "crude") %>% 
-  mutate(type = "crude")
-
-# chi-square of grade
-smoking_status_grade =
-  yrbss_state_tidy_additional %>% 
-      group_by(across(all_of("grade")), drug_use_freq, across(all_of("smoking_status"))) %>%
-      count() %>% 
-      pivot_wider(values_from = n, names_from = starts_with("smoking_status"), names_prefix = "smoking_status") %>% 
-  mutate(`smoking_statusHeavy Smoker` = ifelse(is.na(`smoking_statusHeavy Smoker`), 0 , `smoking_statusHeavy Smoker`)) %>% 
-      ungroup() %>% 
-      select(-drug_use_freq) %>% 
-      nest(data = starts_with("smoking_status")) %>% 
-      mutate(
-      chisq_tests = map(.x = data, ~chisq.test(x = .x)),
-      chisq_result = map(chisq_tests, broom::tidy),
-      totaln = map(data, colSums),
-      totaln = map_dbl(.x = totaln, ~reduce(.x, sum))) %>% 
-      unnest(chisq_result) %>% 
-      mutate(cramer_v_effect_size = sqrt(statistic / totaln*parameter)) %>% 
-      select(stratum = starts_with("grade"), 
-             statistic, p.value, 
-             df = parameter, 
-             cramer_v_effect_size) %>% 
-  mutate(type = "grade")
-
-# chi-square of gender
-smoking_status_gender = 
-  association_analysis(yrbss_state_tidy_additional, "smoking_status", "sex") %>% 
-  mutate(type = "sex")
-
-# chi-square of race
-smoking_status_race = 
-  yrbss_state_tidy_additional %>% 
-      group_by(across(all_of("race4")), drug_use_freq, across(all_of("smoking_status"))) %>%
-      count() %>% 
-      pivot_wider(values_from = n, names_from = starts_with("smoking_status"), names_prefix = "smoking_status") %>% 
-  mutate(`smoking_statusHeavy Smoker` = ifelse(is.na(`smoking_statusHeavy Smoker`), 0 , `smoking_statusHeavy Smoker`)) %>% 
-      ungroup() %>% 
-      select(-drug_use_freq) %>% 
-      nest(data = starts_with("smoking_status")) %>% 
-      mutate(
-      chisq_tests = map(.x = data, ~chisq.test(x = .x)),
-      chisq_result = map(chisq_tests, broom::tidy),
-      totaln = map(data, colSums),
-      totaln = map_dbl(.x = totaln, ~reduce(.x, sum))) %>% 
-      unnest(chisq_result) %>% 
-      mutate(cramer_v_effect_size = sqrt(statistic / totaln*parameter)) %>% 
-      select(stratum = starts_with("race4"), 
-             statistic, p.value, 
-             df = parameter, 
-             cramer_v_effect_size) %>% 
-  mutate(type = "race")
-
-output = 
-  bind_rows(smoking_status_crude, smoking_status_grade,smoking_status_gender, smoking_status_race) %>% 
-  mutate(type = factor(type, levels = c("crude","grade", "sex", "race")))
-  
-kbl(output[, -6], caption = "Table **: Drug Use Status vs Binge Drinking") %>%
-    kable_paper("hover", full_width = F) %>% 
-    pack_rows(index = table(output$type))
-```
-=======
-### 10. Smoking Status
 
 ```{r}
 test_of_association(input_name = "smoking_status", table_name = "Table 11: Drug Use Status vs Smoking Status")
 ```
 
 From table 11, we can see that all p-values are significantly small and the effect sizes are around 0.8, which means there is a strong association between drug use and smoking status. The association between drug use and smoking status is weaker among 12th Grade compared to other grades. Among race, All Other Races has the strongest association between drug use and smoking status, and Black or African American has the weakest association.
->>>>>>> 5651c56db318bbb88a60cd10b212adabc46651ad
 
 ```{r}
 yrbss_state_tidy_additional %>% 
@@ -1009,6 +808,8 @@ yrbss_state_tidy_additional %>%
 
 
 Based on the plot, it shows that heavy dose subjects tend to smoke more because there are more light dose and heavy dose smokers compared to no drug use and light dose drug use subjects. Higher portions of heavy smokers are 9th grade subjects and male gender. In addition, for heavy dose subjects, there are higher portions of heavy smokers in white race compared to Hispanic and Black race.
+
+
 
 ### 11. Binge Drinking 
 
@@ -1165,7 +966,6 @@ With the increase of drug use, the proportion of both never and sometimes use se
 yrbss_state_tidy_additional_grades_school <- 
   yrbss_state_tidy_additional %>% 
   filter(grades_school %in% c("Mostly A's", "Mostly B's", "Mostly C's","Mostly Below C's"))
-
 ```
 
 ```{r}
@@ -1239,25 +1039,22 @@ yrbss_state_tidy_additional_grades_school %>%
 
 With the increase of drug use, the proportion of Mostly A's decreases, the proportion of Mostly B's has a little change, and the proportion of both mostly C's and below C's increase. The trend is particularly significant among 11th grade compared to other grades, and among all other races compared with White, Black or African American, and Hispanic/Latino.
 
+
+
+
+
+
 ## Part 3
 ###2 Smoke initial age, Alcohol initial age, and BMI 
 -  More heavy dose subjects started to smoke when they were 9 to 10 and 11 to 12 years old compared to no drug use subjects and light dose drug use subjects. For those who used light dose drug, highest percentage of them started to smoke when they were 13 or 14 years old. For those who used heavy dose drug, most of them started to smoke when they were 15 or 16 years old. It shows that heavy dose subjects start to smoke earlier.
 -  Similar things can be seen in drinking alcohol start age. More heavy dose subjects started to drink alcohol when they were 8 years old or younger and 11 or 12 years old compared to no drug use subjects and light dose drug use subjects. For no drug use and light dose drug use subjects, most of them started to drink alcohol when they were 15 or 16 years old. For heavy dose drug use subjects, most of them started to drink alcohol earlier at 13 or 14 years old. It shows that heavy dose subjects also start to drink alcohol earlier.
-<<<<<<< HEAD
 -  Density plots of BMI are all right-skewed, which means that the mean is greater than the median. Highest percentage of observations fall in 20-30 bmi. The box-plot shows that medians for three dose usage groups are similar. In addition, one-way anova table implies that there is not a significant difference of BMI among three different drug use frequency groups.
-
-=======
 -  Density plots of BMI are all right-skewed, which means that the mean is greater than the median. Highest percentage of observations fall in 20-30 bmi. The box-plot shows that medians for three dose usgae groups are similar. In addition, one-way anova table implies that there is not a significant difference of BMI among three different drug use frequency groups.
->>>>>>> 51015057ae055165b0cd58b6f545c76adacaf755
 ## Q11
 ```{r}
 #function for plotting first smoke_age
 drug1_smoke=
   yrbss_state_tidy_additional %>%
-<<<<<<< HEAD
-
-=======
->>>>>>> 5651c56db318bbb88a60cd10b212adabc46651ad
   group_by(drug_use_freq, smoke_age) %>%
   filter(smoke_age != "never") %>%
   summarize(n = n()) %>% 

@@ -785,13 +785,10 @@ yrbss_state_tidy_additional %>%
 ```
 All plots show that there is not too much difference of screening use for different drug use frequency groups.
 
-<<<<<<< HEAD
-### Sleeping time
-The density plot shows that heavy dose use subjects sleep less than no drug use subjects and light dose use subjects. Also, there are more portions of subjects who sleep less than 5 hours for heavy dose use compared to no drug use and light dose use. 
-=======
+
 ### 9. Sleeping Time
 The density plot shows that heavy dose use subjects sleep less than no drug use subjects and light dose use subjects. Also, more portions of subjects sleep less than 5 hours for heavy dose use compared to no drug use and light dose use subjects. 
->>>>>>> 5651c56db318bbb88a60cd10b212adabc46651ad
+
 
 ```{r}
 yrbss_state_tidy_additional %>% 
@@ -866,7 +863,6 @@ yrbss_state_tidy_additional %>%
 The "enough sleeping" plots shows that heavy dose subjects tend to have least proportions of having enough sleep in all grades and races. Male subjects tend to have more enough sleeping for no drug and use light dose, whereas they tend to have less enough sleeping time when use heavy dose of drug. It infers an association between sleeping time and drug use frequency. 
 
 
-<<<<<<< HEAD
 ### Smoking Status
 
 Based on question 33 in the 2019 YOUTH RISK BEHAVIOR SURVEY, the researchers care about whether students smoked more than 10 cigarettes per day on the days they smoked during the 30 days before the survey. Therefore, we define students who did not smoke as "Never Smoker", 1 to 10 cigarettes per day as "Light Smoker", greater than 10 cigarettes per day as "Heavy Smokers".
@@ -934,7 +930,8 @@ kbl(output[, -6], caption = "Table **: Drug Use Status vs Binge Drinking") %>%
     kable_paper("hover", full_width = F) %>% 
     pack_rows(index = table(output$type))
 ```
-=======
+
+
 ### 10. Smoking Status
 
 ```{r}
@@ -942,7 +939,7 @@ test_of_association(input_name = "smoking_status", table_name = "Table 11: Drug 
 ```
 
 From table 11, we can see that all p-values are significantly small and the effect sizes are around 0.8, which means there is a strong association between drug use and smoking status. The association between drug use and smoking status is weaker among 12th Grade compared to other grades. Among race, All Other Races has the strongest association between drug use and smoking status, and Black or African American has the weakest association.
->>>>>>> 5651c56db318bbb88a60cd10b212adabc46651ad
+
 
 ```{r}
 yrbss_state_tidy_additional %>% 

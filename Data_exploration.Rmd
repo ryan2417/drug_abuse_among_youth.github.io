@@ -13,6 +13,7 @@ library(patchwork)
 library(usmap)
 library(hash)
 library(plotly)
+library(ggplot2)
 yrbss_state = 
   read_csv("data/yrbss_state_lite")%>%
   rename(state = sitecode)%>%
@@ -67,7 +68,7 @@ Heavy_dose_df =
     filter(drug_type == "All_drug",dose == "Heavy Dose")
 
 Heavy_dose_map =   plot_usmap(data = Heavy_dose_df,values = "proportion", color = color_dict[["Heavy Dose"]],labels = TRUE) + 
-  scale_fill_continuous(
+  scale_fill_gradient(
     low = "white", high = color_dict[["Heavy Dose"]], name = "Proportion", label = scales::comma
   ) + theme(legend.position = "right")
 
@@ -82,7 +83,7 @@ Light_dose_df =
     filter(drug_type == "All_drug",dose == "Light Dose")
 
 Light_dose_map =   plot_usmap(data = Light_dose_df,values = "proportion", color = color_dict[["Light Dose"]],labels = TRUE) + 
-  scale_fill_continuous(
+  scale_fill_gradient(
     low = "white", high = color_dict[["Light Dose"]], name = "Proportion", label = scales::comma
   ) + theme(legend.position = "right")
 Light_dose_map = ggplotly(Light_dose_map)
@@ -96,7 +97,7 @@ No_dose_df =
     filter(drug_type == "All_drug",dose == "No Drug Use")
 
 No_dose_map =   plot_usmap(data = No_dose_df,values = "proportion", color = color_dict[["No Drug Use"]],labels = TRUE) + 
-  scale_fill_continuous(
+  scale_fill_gradient(
     low = "white", high = color_dict[["No Drug Use"]], name = "Proportion", label = scales::comma
   ) + theme(legend.position = "right")
 

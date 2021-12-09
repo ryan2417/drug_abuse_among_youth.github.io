@@ -1204,7 +1204,7 @@ lambda_opt = lasso_cv$lambda.min
 
 Cross_Validation
 
-```{r}
+```{r eval=FALSE}
 library(modelr)
 cv_df <- crossv_mc(yrbss_state_tidy_glm, 100, id = "group_id") %>% 
   mutate(

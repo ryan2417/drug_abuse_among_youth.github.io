@@ -654,13 +654,8 @@ yrbss_state_tidy_additional %>%
 ```
 All plots show that there is not too much difference of screening use for different drug use frequency groups.
 
-<<<<<<< HEAD
-### Sleeping time
-The density plot shows that heavy dose use subjects sleep less than no drug use subjects and light dose use subjects. Also, there are more portions of subjects who sleep less than 5 hours for heavy dose use compared to no drug use and light dose use. 
-=======
 ### 9. Sleeping Time
 The density plot shows that heavy dose use subjects sleep less than no drug use subjects and light dose use subjects. Also, more portions of subjects sleep less than 5 hours for heavy dose use compared to no drug use and light dose use subjects. 
->>>>>>> 5651c56db318bbb88a60cd10b212adabc46651ad
 
 ```{r}
 yrbss_state_tidy_additional %>% 

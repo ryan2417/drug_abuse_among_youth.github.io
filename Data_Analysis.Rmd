@@ -1,6 +1,10 @@
 ---
 title: "Data Analysis"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
 ---
 
 ```{r}
@@ -88,7 +92,7 @@ test_of_association <- function(input_df = yrbss_state_tidy_additional, input_na
 ```
 
 ```{r import data}
-yrbss_state = read_csv("./data/yrbss_stae_tidy_additional")
+yrbss_state_tidy_additional = read_csv("data/yrbss_state_tidy_additional.csv")
 ```
 
 
@@ -732,76 +736,6 @@ yrbss_state_tidy_additional %>%
 The "enough sleeping" plots shows that heavy dose subjects tend to have least proportions of having enough sleep in all grades and races. Male subjects tend to have more enough sleeping for no drug and use light dose, whereas they tend to have less enough sleeping time when use heavy dose of drug. It infers an association between sleeping time and drug use frequency. 
 
 
-### Smoking Status
-
-<<<<<<< HEAD
-Based on question 33 in the 2019 YOUTH RISK BEHAVIOR SURVEY, the researchers care about whether students smoked more than 10 cigarettes per day on the days they smoked during the 30 days before the survey. Therefore, we define students who did not smoke as "Never Smoker", 1 to 10 cigarettes per day as "Light Smoker", greater than 10 cigarettes per day as "Heavy Smokers".
-
-```{r}
-association_analysis(yrbss_state_tidy_additional, "smoking_status", "crude") %>% 
-  mutate(type = "crude")
-
-# chi-square of grade
-smoking_status_grade =
-  yrbss_state_tidy_additional %>% 
-      group_by(across(all_of("grade")), drug_use_freq, across(all_of("smoking_status"))) %>%
-      count() %>% 
-      pivot_wider(values_from = n, names_from = starts_with("smoking_status"), names_prefix = "smoking_status") %>% 
-  mutate(`smoking_statusHeavy Smoker` = ifelse(is.na(`smoking_statusHeavy Smoker`), 0 , `smoking_statusHeavy Smoker`)) %>% 
-      ungroup() %>% 
-      select(-drug_use_freq) %>% 
-      nest(data = starts_with("smoking_status")) %>% 
-      mutate(
-      chisq_tests = map(.x = data, ~chisq.test(x = .x)),
-      chisq_result = map(chisq_tests, broom::tidy),
-      totaln = map(data, colSums),
-      totaln = map_dbl(.x = totaln, ~reduce(.x, sum))) %>% 
-      unnest(chisq_result) %>% 
-      mutate(cramer_v_effect_size = sqrt(statistic / totaln*parameter)) %>% 
-      select(stratum = starts_with("grade"), 
-             statistic, p.value, 
-             df = parameter, 
-             cramer_v_effect_size) %>% 
-  mutate(type = "grade")
-
-# chi-square of gender
-smoking_status_gender = 
-  association_analysis(yrbss_state_tidy_additional, "smoking_status", "sex") %>% 
-  mutate(type = "sex")
-
-# chi-square of race
-smoking_status_race = 
-  yrbss_state_tidy_additional %>% 
-      group_by(across(all_of("race4")), drug_use_freq, across(all_of("smoking_status"))) %>%
-      count() %>% 
-      pivot_wider(values_from = n, names_from = starts_with("smoking_status"), names_prefix = "smoking_status") %>% 
-  mutate(`smoking_statusHeavy Smoker` = ifelse(is.na(`smoking_statusHeavy Smoker`), 0 , `smoking_statusHeavy Smoker`)) %>% 
-      ungroup() %>% 
-      select(-drug_use_freq) %>% 
-      nest(data = starts_with("smoking_status")) %>% 
-      mutate(
-      chisq_tests = map(.x = data, ~chisq.test(x = .x)),
-      chisq_result = map(chisq_tests, broom::tidy),
-      totaln = map(data, colSums),
-      totaln = map_dbl(.x = totaln, ~reduce(.x, sum))) %>% 
-      unnest(chisq_result) %>% 
-      mutate(cramer_v_effect_size = sqrt(statistic / totaln*parameter)) %>% 
-      select(stratum = starts_with("race4"), 
-             statistic, p.value, 
-             df = parameter, 
-             cramer_v_effect_size) %>% 
-  mutate(type = "race")
-
-output = 
-  bind_rows(smoking_status_crude, smoking_status_grade,smoking_status_gender, smoking_status_race) %>% 
-  mutate(type = factor(type, levels = c("crude","grade", "sex", "race")))
-  
-kbl(output[, -6], caption = "Table **: Drug Use Status vs Binge Drinking") %>%
-    kable_paper("hover", full_width = F) %>% 
-    pack_rows(index = table(output$type))
-```
-
-
 ### 10. Smoking Status
 
 ```{r}
@@ -1253,45 +1187,19 @@ yrbss_state_tidy_glm <-
   yrbss_state_tidy_additional %>% 
   mutate(drug_use = ifelse(drug_use_freq == "No Drug Use", 0, 1))
 
-model_fit <- glm(drug_use ~ grade + sex + race4 + drunk_driving + drunk_driving : grade + drunk_driving : sex + drunk_driving : race4 + carrying_weapon + carrying_weapon : race4 + carrying_weapon : sex + + suicide_attempt + suicide_attempt : race4 + physical_fight + early_sex + binge_drinking + smoking_status + seat_belt + grades_school + sleeping_time + smoking_status:race4 + binge_drinking:race4 + seat_belt:race4 + 
-    grades_school:race4 + grades_school:grade + smoke_age + alcohol_age, data = yrbss_state_tidy_glm)
-
-step(model_fit, direction = "both")
-
-model_fit_AIC <-  glm(formula = drug_use ~ grade + sex + race4 + drunk_driving + 
-    carrying_weapon + suicide_attempt + physical_fight + early_sex + 
-    binge_drinking + smoking_status + grades_school + sleeping_time + 
-    smoke_age + alcohol_age + grade:drunk_driving + sex:drunk_driving + 
-    race4:carrying_weapon, data = yrbss_state_tidy_glm)
-
-step(model_fit, direction = "both", k = log(19854))
-
-model_fit_BIC <- glm(formula = drug_use ~ grade + sex + race4 + suicide_attempt + 
-    physical_fight + early_sex + smoking_status + binge_drinking + 
-    grades_school + smoke_age + alcohol_age, data = yrbss_state_tidy_glm)
 
 y <- yrbss_state_tidy_glm %>% pull(drug_use)
 x <- model.matrix(drug_use ~ grade + sex + race4 + drunk_driving + drunk_driving : grade + drunk_driving : sex + drunk_driving : race4 + carrying_weapon + carrying_weapon : race4 + carrying_weapon : sex + + suicide_attempt + suicide_attempt : race4 + physical_fight + early_sex + binge_drinking + smoking_status + seat_belt + grades_school + sleeping_time + smoking_status:race4 + binge_drinking:race4 + seat_belt:race4 + 
     grades_school:race4 + grades_school:grade + smoke_age + alcohol_age, data = yrbss_state_tidy_glm)[, -1]
 lambda = 10^(seq(3, -2, -0.1))
 
-lasso_fit =
-  glmnet(x, y, lambda = lambda_opt)
-
 lasso_cv =
   cv.glmnet(x, y, lambda = lambda)
 
 lambda_opt = lasso_cv$lambda.min
 
-lasso_fit %>% 
-  broom::tidy() %>% 
-  complete(term, lambda, fill = list(estimate = 0)) %>% 
-  filter(term != "(Intercept)") %>% 
-  ggplot(aes(x = log(lambda), y = estimate, color = term)) +
-  geom_line() +
-  geom_vline(xintercept = log(lambda_opt))
 
-model_fit_lasso <- glm(drug_use ~ grade + race4 + drunk_driving + suicide_attempt + physical_fight + early_sex + smoking_status + binge_drinking + grades_school + seat_belt + sleeping_time + race4:grades_school + smoke_age + alcohol_age, data = yrbss_state_tidy_glm)
+
 ```
 
 Cross_Validation

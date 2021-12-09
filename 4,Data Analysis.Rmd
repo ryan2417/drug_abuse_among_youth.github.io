@@ -1296,6 +1296,7 @@ summary(one.way)
 
 
 ## Logistic regression
+
 ```{r}
 
 library(glmnet)
@@ -1378,4 +1379,3 @@ cv_results %>% select(group_id, starts_with("rmse_")) %>%
   geom_density(alpha = 0.3)
 
 ```
-

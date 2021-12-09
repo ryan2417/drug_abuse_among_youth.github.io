@@ -2,4 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
+data
 .DS_Store
+.data_tidy.Rmd

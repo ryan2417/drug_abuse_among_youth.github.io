@@ -1240,12 +1240,21 @@ With the increase of drug use, the proportion of Mostly A's decreases, the propo
 ###2 Smoke initial age, Alcohol initial age, and BMI 
 -  More heavy dose subjects started to smoke when they were 9 to 10 and 11 to 12 years old compared to no drug use subjects and light dose drug use subjects. For those who used light dose drug, highest percentage of them started to smoke when they were 13 or 14 years old. For those who used heavy dose drug, most of them started to smoke when they were 15 or 16 years old. It shows that heavy dose subjects start to smoke earlier.
 -  Similar things can be seen in drinking alcohol start age. More heavy dose subjects started to drink alcohol when they were 8 years old or younger and 11 or 12 years old compared to no drug use subjects and light dose drug use subjects. For no drug use and light dose drug use subjects, most of them started to drink alcohol when they were 15 or 16 years old. For heavy dose drug use subjects, most of them started to drink alcohol earlier at 13 or 14 years old. It shows that heavy dose subjects also start to drink alcohol earlier.
+<<<<<<< HEAD
+-  Density plots of BMI are all right-skewed, which means that the mean is greater than the median. Highest percentage of observations fall in 20-30 bmi. The box-plot shows that medians for three dose usage groups are similar. In addition, one-way anova table implies that there is not a significant difference of BMI among three different drug use frequency groups.
+
+=======
 -  Density plots of BMI are all right-skewed, which means that the mean is greater than the median. Highest percentage of observations fall in 20-30 bmi. The box-plot shows that medians for three dose usgae groups are similar. In addition, one-way anova table implies that there is not a significant difference of BMI among three different drug use frequency groups.
+>>>>>>> 51015057ae055165b0cd58b6f545c76adacaf755
 ## Q11
 ```{r}
 #function for plotting first smoke_age
 drug1_smoke=
   yrbss_state_tidy_additional %>%
+<<<<<<< HEAD
+
+=======
+>>>>>>> 5651c56db318bbb88a60cd10b212adabc46651ad
   group_by(drug_use_freq, smoke_age) %>%
   filter(smoke_age != "never") %>%
   summarize(n = n()) %>% 
